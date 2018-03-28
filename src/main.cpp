@@ -11,7 +11,6 @@ using namespace CMath;
 
 
 
-
 int main(void)
 {
 	/**/
