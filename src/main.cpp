@@ -4,12 +4,27 @@
 #include <iostream>
 using namespace std;
 
-#include "maths/maths.h"
-
-using namespace CMath;
 
 
+#include "IMath//IMaths.h"
 
+typedef float scalar;
+
+typedef IMath::IVector2D<scalar>       Vector2;
+typedef IMath::IVector3D<scalar>       Vector3;
+typedef IMath::IVector4D<scalar>       Vector4;
+typedef IMath::ILorentzVector<scalar>  LorentzVector;
+typedef IMath::IMatrix2x2<scalar>      Matrix2;
+typedef IMath::IMatrix3x3<scalar>      Matrix3;
+typedef IMath::IMatrix4x4<scalar>      Matrix4;
+typedef IMath::IQuaternion<scalar>     Quaternion;
+typedef IMath::IRay<scalar>            Ray;
+typedef IMath::ITransform<scalar>      Transform;
+typedef IMath::IComplex<scalar>        Complex;
+typedef IMath::IOctonion<scalar>       Octonion;
+typedef IMath::ILine3D<scalar>         Line3;
+typedef IMath::ILineSegment3D<scalar>  LineSegment3;
+typedef IMath::IPlane<scalar>          Plane;
 
 int main(void)
 {
@@ -556,12 +571,12 @@ int main(void)
 		cout<< "---- Unit test Matrix_4x4 -----" <<endl<<endl;
 
 		Matrix4 m0( -2.0 , 7.0 , 1.1 , 2.2 ,
-			    	-4.0 , 2.0 , 2.5 , 3.3 ,
+				-4.0 , 2.0 , 2.5 , 3.3 ,
 				     2.0 , 1.0 , 1.0 , 2.3 ,
-			    	 1.0 , 2.0 , 4.0 , 8.8);
+				 1.0 , 2.0 , 4.0 , 8.8);
 
 		Matrix4 m1( 3.0 , 1.0 , 1.1 , 2.0 ,
-			    	2.0 , 4.0 , 2.1 , 1.0 ,
+				2.0 , 4.0 , 2.1 , 1.0 ,
 				    1.0 , 5.0 , 1.0 , 2.2 ,
 				    1.0 , 2.0 , 2.0 , 3.3);
 
@@ -755,5 +770,5 @@ int main(void)
     /**/
 
 
-	return EXIT_SUCCESS;
+        return EXIT_SUCCESS;
 }
