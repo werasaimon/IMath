@@ -17,6 +17,8 @@ add_executable(Math
                IMath/ITransform.h
                IMath/IVector2D.h
                IMath/IVector3D.h
-               IMath/IVector4D.h )
+               IMath/IVector4D.h
+               IMath/IComplex.h
+               IMath/IOctonion)
 
 
