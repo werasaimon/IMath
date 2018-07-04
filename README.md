@@ -1,9 +1,9 @@
-# CMath
+# IMath
 
 
 
 
-CMath is set of C++ classes for Vector and Matrix algebra used in computer graphics and relativity physics . The library consits of these classes:
+IMath is set of C++ classes for Vector and Matrix algebra used in computer graphics and relativity physics . The library consits of these classes:
 
 
     
