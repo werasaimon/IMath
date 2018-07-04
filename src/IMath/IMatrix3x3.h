@@ -1,3 +1,33 @@
+ /********************************************************************************
+ *
+ * IMatrix3x3.h
+ *
+ * IMath : 3d_math library,
+ * Copyright (c)  *
+ * Created on: 3 July. 2018 г.
+ * Author: werasaimon                                     *
+ *********************************************************************************
+ *                                                                               *
+ * This software is provided 'as-is', without any express or implied warranty.   *
+ * In no event will the authors be held liable for any damages arising from the  *
+ * use of this software.                                                         *
+ *                                                                               *
+ * Permission is granted to anyone to use this software for any purpose,         *
+ * including commercial applications, and to alter it and redistribute it        *
+ * freely, subject to the following restrictions:                                *
+ *                                                                               *
+ * 1. The origin of this software must not be misrepresented; you must not claim *
+ *    that you wrote the original software. If you use this software in a        *
+ *    product, an acknowledgment in the product documentation would be           *
+ *    appreciated but is not required.                                           *
+ *                                                                               *
+ * 2. Altered source versions must be plainly marked as such, and must not be    *
+ *    misrepresented as being the original software.                             *
+ *                                                                               *
+ * 3. This notice may not be removed or altered from any source distribution.    *
+ *                                                                               *
+ ********************************************************************************/
+
 #ifndef IMATRIX3X3_H_
 #define IMATRIX3X3_H_
 
@@ -686,9 +716,8 @@ template<class T> class IMatrix3x3
        * Gramm schmidt process
        * https://www.math.hmc.edu/calculus/tutorials/gramschmidt/gramschmidt.pdf
        */
-      IMatrix3x3<T> GrammSchmidt(const IVector3D<T>& dir)
+      static SIMD_INLINE IMatrix3x3<T> GrammSchmidt(const IVector3D<T>& dir)
       {
-
           IVector3D<T> up = IVector3D<T>::ZERO;
           IVector3D<T> right = IVector3D<T>::ZERO;
           IVector3D<T> front (dir);
@@ -706,10 +735,12 @@ template<class T> class IMatrix3x3
           right = right * (T(1.0f) / ISqrt(right.dot(right)));
           up = right.cross(front);
 
-          mRows[0] = front;
-          mRows[1] = up;
-          mRows[2] = right;
+          IMatrix3x3<T> m;
+          m.mRows[0] = front;
+          m.mRows[1] = up;
+          m.mRows[2] = right;
 
+          return m;
       }
 
       /// Return a skew-symmetric matrix using a given vector that can be used
