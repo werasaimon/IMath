@@ -34,7 +34,7 @@ Features
     v.s = 0; v.t = 1; v.u = 0.5;
     // use color coordinates
     v.r = 1; v.g = 0.5; v.b = 0;
-    conversion constructor and assign operators - so you can assign a value of rpVector3D<T1> type to a variable of rpVector3D<T2> type for any convertable T1, T2 type pairs. In other words, you can do this:
+    conversion constructor and assign operators - so you can assign a value of IVector3D<T1> type to a variable of IVector3D<T2> type for any convertable T1, T2 type pairs. In other words, you can do this:
     Vector3f f3; Vector3d d3 = f3;
     ...
     f3 = d3;
@@ -42,9 +42,9 @@ Features
     
 Status
 
-    Classes rpVector2D<T>, rpVector3D<T>, rpVector4D<T> are supposed to be stable. I have been using these libraries for two or three years.
-    Classes rpMatrix3x3<T>, rpMatrix4x4<T> were tested for barely all operations and seems to be everything OK.
-    Class rpQuaternion<T> was tested for barely all operations and seems to be good.
+    Classes IVector2D<T>, IVector3D<T>, IVector4D<T> are supposed to be stable. I have been using these libraries for two or three years.
+    Classes IMatrix3x3<T>, IMatrix4x4<T> were tested for barely all operations and seems to be everything OK.
+    Class   IQuaternion<T> was tested for barely all operations and seems to be good.
 
     
 Tricks
