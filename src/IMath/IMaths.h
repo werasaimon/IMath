@@ -40,7 +40,7 @@
 #include "IMatrix3x3.h"
 #include "IMatrix4x4.h"
 #include "IQuaternion.h"
-#include "IOctonion.hpp"
+#include "IOctonion.h"
 #include "IComplex.h"
 #include "IRay.h"
 #include "ITransform.h"
