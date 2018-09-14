@@ -396,9 +396,8 @@ namespace IMath
 //        }
 
        /// Quaternion using camera look direction
-       SIMD_INLINE IQuaternion<T> LookRotation(IVector3D<T>& forward, IVector3D<T>& up)
-         {
-               forward.Normalize();
+       SIMD_INLINE IQuaternion<T> LookRotation(const IVector3D<T>& forward, const IVector3D<T>& up)
+        {
 
                IVector3D<T> vector = (forward.Normalized());
                IVector3D<T> vector2 =(up.Cross(vector)).Normalized();
