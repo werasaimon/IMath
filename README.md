@@ -16,8 +16,10 @@ IMath is set of C++ classes for Vector and Matrix algebra used in computer graph
     Matrix4 - matrix 4x4 for general geometrix transformations
     Quaternion - quaternion re 3x im 1x, for rotation_3D
     Octonion - Octonion re 7x im 1x, for rotation_6D
-   
-    
+
+
+
+
     
 Note that this library is set of C++ class that has all(!) method inlined. (for performance reasons)
 
