@@ -1,4 +1,4 @@
- /********************************************************************************
+/********************************************************************************
  *
  * ITransform.h
  *
@@ -56,240 +56,248 @@ template<class T> class  ITransform
 public:
 
 
-  //---------------------------------- Attributes ---------------------------------//
+    //---------------------------------- Attributes ---------------------------------//
 
-  T                    mTime;
-  IVector3D<T>         mPosition;
-  IMatrix3x3<T>        mBasis;
-
-
-
-  //--------------------------------  Constructor ---------------------------------//
-
-  // Constructor
-  SIMD_INLINE ITransform()
-   : mPosition(IVector3D<T>::ZERO) , mBasis(IMatrix3x3<T>::IDENTITY) , mTime(1.0)
-  {
-
-  }
-  // Constructor
-  SIMD_INLINE ITransform(const IVector3D<T>& position , const IMatrix3x3<T>& _basis = IMatrix3x3<T>::IDENTITY ,T  _time = 1.0)
-  : mPosition(position) , mBasis(_basis) , mTime(_time)
-  {
-
-  }
-
-
-  // Constructor
-  SIMD_INLINE ITransform(const IVector3D<T>& position , const IQuaternion<T>& _quaternion = IQuaternion<T>::IDENTITY ,T  _time = 1.0)
-  : mPosition(position) , mTime(_time)
-  {
-      mBasis = IMatrix3x3<T>::createRotation(_quaternion);
-  }
-
-
-  // Copy-constructor
-  SIMD_INLINE ITransform(const ITransform<T>& transform)
-  : mPosition(transform.mPosition) , mBasis(transform.mBasis) ,  mTime(transform.mTime)
-  {
-
-  }
-
-  //-------------------------------   Methods ---------------------------------//
-
-  /// Return the identity transform
-  static SIMD_INLINE ITransform<T> identity()
-  {
-      return ITransform<T>();
-  }
-
-
-  ///**@brief Return a quaternion representing the rotation */
-   IQuaternion<T> getRotation() const
-   {
-       IQuaternion<T> q(mBasis);
-       return q;
-   }
-
-
-  SIMD_INLINE T getTime() const
-  {
-     return mTime;
-  }
-
-  SIMD_INLINE void setTime(const T &time)
-  {
-     mTime = time;
-  }
-
-
-  SIMD_INLINE IVector3D<T> getPosition() const
-  {
-      return mPosition;
-  }
-
-  SIMD_INLINE void setPosition(const IVector3D<T> &position)
-  {
-      mPosition = position;
-  }
-
-
-  SIMD_INLINE IMatrix3x3<T> getBasis() const
-  {
-      return mBasis;
-  }
-
-  SIMD_INLINE void setBasis(const IMatrix3x3<T> &basis)
-  {
-      mBasis = basis;
-  }
+    T                    mTime;
+    IVector3D<T>         mPosition;
+    IMatrix3x3<T>        mBasis;
 
 
 
-  /**@brief Return the inverse of this transform */
-  SIMD_INLINE ITransform<T> getInverse() const
-  {
-      IMatrix3x3<T> inv = mBasis.getInverse();
-      return ITransform<T>(inv * -mPosition , inv , T(1.0) / mTime);
-  }
+    //--------------------------------  Constructor ---------------------------------//
+
+    // Constructor
+    SIMD_INLINE ITransform()
+        : mPosition(IVector3D<T>::ZERO) ,
+          mBasis(IMatrix3x3<T>::IDENTITY) ,
+          mTime(1.0)
+    {
+
+    }
+    // Constructor
+    SIMD_INLINE ITransform(const IVector3D<T>& position , const IMatrix3x3<T>& _basis = IMatrix3x3<T>::IDENTITY ,T  _time = 1.0)
+        : mPosition(position) ,
+          mBasis(_basis) ,
+          mTime(_time)
+    {
+
+    }
 
 
-  SIMD_INLINE IVector3D<T> invXform(const IVector3D<T>& inVec) const
-  {
-      IVector3D<T> v = inVec - mPosition;
-      return (mBasis.getTranspose() * v);
-  }
+    // Constructor
+    SIMD_INLINE ITransform(const IVector3D<T>& position , const IQuaternion<T>& _quaternion = IQuaternion<T>::IDENTITY ,T  _time = 1.0)
+        : mPosition(position) ,
+          mTime(_time)
+    {
+        mBasis = IMatrix3x3<T>::CreateRotation(_quaternion);
+    }
 
 
-  /**@brief Return the transform of the vector */
-  SIMD_INLINE IVector3D<T> operator()(const IVector3D<T>& x) const
-  {
-      return mBasis * x + mPosition;
-  }
+    // Copy-constructor
+    SIMD_INLINE ITransform(const ITransform<T>& transform)
+        : mPosition(transform.mPosition) ,
+          mBasis(transform.mBasis) ,
+          mTime(transform.mTime)
+    {
 
-  /**@brief Return the transform of the vector */
-  SIMD_INLINE IVector3D<T> operator*(const IVector3D<T>& x) const
-  {
-      return (*this)(x);
-  }
+    }
 
-  //**@brief Return the transform of the btQuaternion */
-  SIMD_INLINE IQuaternion<T> operator*(const IQuaternion<T>& q) const
-  {
-      return getRotation() * q;
-  }
+    //-------------------------------   Methods ---------------------------------//
 
-
-  SIMD_INLINE ITransform<T> operator*(const ITransform<T>& t) const
-  {
-      return ITransform<T>( (*this)(t.mPosition) , mBasis * t.mBasis , mTime * t.mTime);
-  }
+    /// Return the identity transform
+    static SIMD_INLINE ITransform<T> Identity()
+    {
+        return ITransform<T>();
+    }
 
 
-  SIMD_INLINE bool operator == (const ITransform<T>& transform2) const
-  {
-    return  (mTime     == transform2.mTime)     &&
-            (mPosition == transform2.mPosition) &&
-            (mBasis    == transform2.mBasis);
-  }
+    ///**@brief Return a quaternion representing the rotation */
+    IQuaternion<T> GetRotation() const
+    {
+        IQuaternion<T> q(mBasis);
+        return q;
+    }
 
 
-  SIMD_INLINE bool operator !=(const ITransform<T>& transform2) const
-  {
-    return !(*this == transform2);
-  }
+    SIMD_INLINE T GetTime() const
+    {
+        return mTime;
+    }
 
-  //--------------------------------- function OpenGL -----------------------------------//
-
-
-  /// Set the transform from an OpenGL transform matrix
-  SIMD_INLINE void setFromOpenGL(T* openglMatrix)
-  {
-      IMatrix3x3<T> matrix(openglMatrix[0], openglMatrix[4], openglMatrix[8],
-                            openglMatrix[1], openglMatrix[5], openglMatrix[9],
-                            openglMatrix[2], openglMatrix[6], openglMatrix[10]);
-
-      mBasis = (matrix.getTranspose());
-
-      IVector3D<T> pos( openglMatrix[12],
-                         openglMatrix[13],
-                         openglMatrix[14]);
-
-      mPosition = pos;
+    SIMD_INLINE void SetTime(const T &time)
+    {
+        mTime = time;
+    }
 
 
-  }
+    SIMD_INLINE IVector3D<T> GetPosition() const
+    {
+        return mPosition;
+    }
+
+    SIMD_INLINE void SetPosition(const IVector3D<T> &position)
+    {
+        mPosition = position;
+    }
 
 
-  /// Get the OpenGL matrix of the transform
-  SIMD_INLINE void getOpenGLMatrix(T* openglMatrix) const
-  {
+    SIMD_INLINE IMatrix3x3<T> GetBasis() const
+    {
+        return mBasis;
+    }
 
-      const IMatrix3x3<T>& matrix = getBasis();
-
-      openglMatrix[0]  = matrix[0][0];
-      openglMatrix[1]  = matrix[1][0];
-      openglMatrix[2]  = matrix[2][0];
-      openglMatrix[3]  = 0.0;
-
-      openglMatrix[4]  = matrix[0][1];
-      openglMatrix[5]  = matrix[1][1];
-      openglMatrix[6]  = matrix[2][1];
-      openglMatrix[7]  = 0.0;
-
-      openglMatrix[8]  = matrix[0][2];
-      openglMatrix[9]  = matrix[1][2];
-      openglMatrix[10] = matrix[2][2];
-      openglMatrix[11] = 0.0;
-
-      openglMatrix[12] = mPosition.x;
-      openglMatrix[13] = mPosition.y;
-      openglMatrix[14] = mPosition.z;
-      openglMatrix[15] = 1.0;
-
-  }
+    SIMD_INLINE void SetBasis(const IMatrix3x3<T> &basis)
+    {
+        mBasis = basis;
+    }
 
 
+
+    /**@brief Return the inverse of this transform */
+    SIMD_INLINE ITransform<T> GetInverse() const
+    {
+        IMatrix3x3<T> inv = mBasis.GetInverse();
+        return ITransform<T>(inv * -mPosition , inv , T(1.0) / mTime);
+    }
+
+
+    SIMD_INLINE IVector3D<T> InvXform(const IVector3D<T>& inVec) const
+    {
+        IVector3D<T> v = inVec - mPosition;
+        return (mBasis.GetTranspose() * v);
+    }
+
+
+    /**@brief Return the transform of the vector */
+    SIMD_INLINE IVector3D<T> operator()(const IVector3D<T>& x) const
+    {
+        return mBasis * x + mPosition;
+    }
+
+    /**@brief Return the transform of the vector */
+    SIMD_INLINE IVector3D<T> operator*(const IVector3D<T>& x) const
+    {
+        return (*this)(x);
+    }
+
+    //**@brief Return the transform of the btQuaternion */
+    SIMD_INLINE IQuaternion<T> operator*(const IQuaternion<T>& q) const
+    {
+        return GetRotation() * q;
+    }
+
+
+    SIMD_INLINE ITransform<T> operator*(const ITransform<T>& t) const
+    {
+        return ITransform<T>( (*this)(t.mPosition) , mBasis * t.mBasis , mTime * t.mTime);
+    }
+
+
+    SIMD_INLINE bool operator == (const ITransform<T>& transform2) const
+    {
+        return  (mTime     == transform2.mTime)     &&
+                (mPosition == transform2.mPosition) &&
+                (mBasis    == transform2.mBasis);
+    }
+
+
+    SIMD_INLINE bool operator !=(const ITransform<T>& transform2) const
+    {
+        return !(*this == transform2);
+    }
+
+    //--------------------------------- function OpenGL -----------------------------------//
+
+
+    /// Set the transform from an OpenGL transform matrix
+    SIMD_INLINE void setFromOpenGL(T* openglMatrix)
+    {
+        IMatrix3x3<T> matrix(openglMatrix[0], openglMatrix[4], openglMatrix[8],
+                openglMatrix[1], openglMatrix[5], openglMatrix[9],
+                openglMatrix[2], openglMatrix[6], openglMatrix[10]);
+
+        mBasis = (matrix.GetTranspose());
+
+        IVector3D<T> pos( openglMatrix[12],
+                openglMatrix[13],
+                openglMatrix[14]);
+
+        mPosition = pos;
+
+
+    }
+
+
+    /// Get the OpenGL matrix of the transform
+    SIMD_INLINE void GetOpenGLMatrix(T* openglMatrix) const
+    {
+
+        const IMatrix3x3<T>& matrix = GetBasis();
+
+        openglMatrix[0]  = matrix[0][0];
+        openglMatrix[1]  = matrix[1][0];
+        openglMatrix[2]  = matrix[2][0];
+        openglMatrix[3]  = 0.0;
+
+        openglMatrix[4]  = matrix[0][1];
+        openglMatrix[5]  = matrix[1][1];
+        openglMatrix[6]  = matrix[2][1];
+        openglMatrix[7]  = 0.0;
+
+        openglMatrix[8]  = matrix[0][2];
+        openglMatrix[9]  = matrix[1][2];
+        openglMatrix[10] = matrix[2][2];
+        openglMatrix[11] = 0.0;
+
+        openglMatrix[12] = mPosition.x;
+        openglMatrix[13] = mPosition.y;
+        openglMatrix[14] = mPosition.z;
+        openglMatrix[15] = 1.0;
+
+    }
+
+
+    /**
 
   ///========================== Plugin ==============================///
 
-  static ITransform<T> integrateTransform( const ITransform<T>& curTrans , const IVector3D<T>& linvel, const IVector3D<T>& angvel, T timeStep)
-  {
-	  //Exponential map
-	  //google for "Practical Parameterization of Rotations Using the Exponential Map", F. Sebastian Grassia
-      IVector3D<T> axis;
-	  T fAngle = angvel.length();
-
-	  if (fAngle < T(0.001))
-	  {
-		  // use Taylor's expansions of sync function
-		  axis = angvel * (T(0.5) * timeStep -
-				  (timeStep * timeStep * timeStep) *
-				  (T(0.020833333333)) * fAngle * fAngle);
-	  }
-	  else
-	  {
-		  axis = angvel * (Sin(T(0.5) * fAngle * timeStep) / fAngle);
-	  }
-
-
-
-      IQuaternion<T> dorn(axis, ICos(fAngle * timeStep * T(0.5)));
-      IQuaternion<T> predictedOrn = dorn * IQuaternion<T>(curTrans.getBasis());
-	  predictedOrn.normalize();
-
-
-          return ITransform<T>( curTrans.getPosition() + linvel * timeStep ,  predictedOrn.getMatrix() , curTrans.getTime() );
-
-  }
-
-
-  static IQuaternion<T> integrateAngular( const IQuaternion<T>& curQuaternion , const IVector3D<T>& angvel, T timeStep )
+  static ITransform<T> IntegrateTransform( const ITransform<T>& curTrans , const IVector3D<T>& linvel, const IVector3D<T>& angvel, T timeStep)
   {
       //Exponential map
       //google for "Practical Parameterization of Rotations Using the Exponential Map", F. Sebastian Grassia
       IVector3D<T> axis;
-      T fAngle = angvel.length();
+      T fAngle = angvel.Length();
+
+      if (fAngle < T(0.001))
+      {
+          // use Taylor's expansions of sync function
+          axis = angvel * (T(0.5) * timeStep -
+                  (timeStep * timeStep * timeStep) *
+                  (T(0.020833333333)) * fAngle * fAngle);
+      }
+      else
+      {
+          axis = angvel * (Sin(T(0.5) * fAngle * timeStep) / fAngle);
+      }
+
+
+
+      IQuaternion<T> dorn(axis, ICos(fAngle * timeStep * T(0.5)));
+      IQuaternion<T> predictedOrn = dorn * IQuaternion<T>(curTrans.GetBasis());
+      predictedOrn.Normalize();
+
+
+          return ITransform<T>( curTrans.GetPosition() + linvel * timeStep ,  predictedOrn.GetRotMatrix(), curTrans.GetTime() );
+
+  }
+
+
+  static IQuaternion<T> IntegrateAngular( const IQuaternion<T>& curQuaternion , const IVector3D<T>& angvel, T timeStep )
+  {
+      //Exponential map
+      //google for "Practical Parameterization of Rotations Using the Exponential Map", F. Sebastian Grassia
+      IVector3D<T> axis;
+      T fAngle = angvel.Length();
 
 
       if (fAngle < (0.001))
@@ -308,17 +316,19 @@ public:
 
       IQuaternion<T> dorn(axis, ICos(fAngle * timeStep * (0.5)));
       IQuaternion<T> predictedOrn = dorn * curQuaternion;
-      predictedOrn.normalize();
+      predictedOrn.Normalize();
 
       return predictedOrn;
 
   }
 
 
-  static IVector3D<T> integrateLinear( const IVector3D<T>& curPosition , const IVector3D<T>& linvel, T timeStep )
+  static IVector3D<T> IntegrateLinear( const IVector3D<T>& curPosition , const IVector3D<T>& linvel, T timeStep )
   {
       return curPosition + linvel * timeStep;
   }
+
+  /**/
 
 };
 

@@ -68,24 +68,24 @@ template<class T> class  IComplex
 
 
 	// return the real part
-	SIMD_INLINE T getReal(void) const { return(this->real); }
+    SIMD_INLINE T GetReal(void) const { return(this->real); }
 
 	// return the imagimary part
-	SIMD_INLINE T getImag(void) const { return(this->imag); }
+    SIMD_INLINE T GetImag(void) const { return(this->imag); }
 
 
 	// return the phase argument
-	SIMD_INLINE T getArgument(void) const { return atan2(this->imag,this->real); }
+    SIMD_INLINE T GetArgument(void) const { return atan2(this->imag,this->real); }
 
 	// return the magnitude square
-	SIMD_INLINE T lengthSquare(void) const { return (real*real+imag*imag); }
+    SIMD_INLINE T LengthSquare(void) const { return (real*real+imag*imag); }
 
 	// return the magnitude
-	SIMD_INLINE T length(void) const { return ISqrt(real*real+imag*imag); }
+    SIMD_INLINE T Length(void) const { return ISqrt(real*real+imag*imag); }
 
 
 	// return the real matrix
-	SIMD_INLINE IMatrix2x2<T> getMatrix() const
+    SIMD_INLINE IMatrix2x2<T> GetMatrix() const
 	{
 	  return IMatrix2x2<T> ( real , -imag ,
 			                 imag ,  real );
@@ -93,7 +93,7 @@ template<class T> class  IComplex
 
 
 	// return the complex conjugate
-	SIMD_INLINE IComplex<T> getConjugate(void) { return IComplex<T>(this->real,-this->imag); }
+    SIMD_INLINE IComplex<T> GetConjugate(void) { return IComplex<T>(this->real,-this->imag); }
 
 
 	// overload the + operator to add 2 complex numbers
@@ -161,8 +161,8 @@ template<class T> class  IComplex
 	// overload the / operator to divide two complex numbers
 	SIMD_INLINE IComplex<T> operator/(IComplex<T> z) const
 	{
-		IComplex<T> top((*this)*z.getConjugate());
-		T bottom(z.lengthSquare());
+        IComplex<T> top((*this)*z.GetConjugate());
+        T bottom(z.LengthSquare());
 		IComplex<T> quo(top/bottom);
 		return quo;
 	}
@@ -176,8 +176,8 @@ template<class T> class  IComplex
 	// overload the / operator to divide a T by a complex
 	friend SIMD_INLINE IComplex<T> operator/(T a, IComplex<T> z)
 	{
-		IComplex<T> top((a)*z.getConjugate());
-		T bottom(z.lengthSquare());
+        IComplex<T> top((a)*z.GetConjugate());
+        T bottom(z.LengthSquare());
 		IComplex<T> quo(top/bottom);
 		return quo;
 	}
@@ -202,7 +202,7 @@ template<class T> class  IComplex
 	SIMD_INLINE bool operator==(IComplex<T> z)
 	{
 		if (this->real == z.real &&
-				this->imag == z.imag)
+            this->imag == z.imag)
 		{
 			return true;
 		}
@@ -221,14 +221,14 @@ template<class T> class  IComplex
 	//--------------------------//
 
 	// take the square root of a complex number
-	static SIMD_INLINE IComplex<T> sqrt(IComplex<T> z)
+    static SIMD_INLINE IComplex<T> Sqrt(IComplex<T> z)
     {
 		T zsqre,zsqim;
 
-		zsqre = ISqrt(0.5*(z.length()+z.getReal()));
-		zsqim = ISqrt(0.5*(z.length()-z.getImag()));
+        zsqre = ISqrt(0.5*(z.Length()+z.GetReal()));
+        zsqim = ISqrt(0.5*(z.Length()-z.GetImag()));
 
-		if (z.getImag() >= 0.0)
+        if (z.GetImag() >= 0.0)
 		{
 			return IComplex<T>(zsqre,zsqim);
 		}
@@ -239,124 +239,123 @@ template<class T> class  IComplex
 	}
 
 	// take the natural log of a complex number
-	static SIMD_INLINE IComplex<T> log(IComplex<T> z)
+    static SIMD_INLINE IComplex<T> Log(IComplex<T> z)
 	{
 		if (z.real < 0 && z.imag == 0.0)
 		{
-			return ILog(z.length())+j*M_PI;
+            return ILog(z.Length())+j*M_PI;
 		}
 		else
 		{
-			return ILog(z.length())+j*z.getArgument();
+            return ILog(z.Length())+j*z.GetArgument();
 		}
 	}
 
 	//========= Triqonometriya Function ==========//
 
 	// raise e to a complex number
-	static SIMD_INLINE IComplex<T> exp(IComplex<T> z)
+    static SIMD_INLINE IComplex<T> Exp(IComplex<T> z)
 	{
 		return IExp(z.real)*(ICos(z.imag)+j*ISin(z.imag));
 	}
 
 	// raise a complex number to a T
-	static SIMD_INLINE IComplex<T> pow(IComplex<T> z, T c)
+    static SIMD_INLINE IComplex<T> Pow(IComplex<T> z, T c)
 	{
-		return exp(c*log(z));
+        return Exp(c*log(z));
 	}
 
 
 	// take the sin of a complex number
-	static SIMD_INLINE IComplex<T> sin(IComplex<T> z)
+    static SIMD_INLINE IComplex<T> Sin(IComplex<T> z)
 	{
-		return 0.5*(-j)*exp(j*z)-0.5*(-j)*exp(-j*z);
+        return 0.5*(-j)*Exp(j*z)-0.5*(-j)*Exp(-j*z);
 	}
 
 	// take the cos of a complex number
-	static SIMD_INLINE IComplex<T> cos(IComplex<T> z)
+    static SIMD_INLINE IComplex<T> Cos(IComplex<T> z)
 	{
-		return 0.5*exp(j*z)+0.5*exp(-j*z);
+        return 0.5*Exp(j*z)+0.5*Exp(-j*z);
 	}
 
 	// take the tan of a complex number
-	static SIMD_INLINE IComplex<T> tan(IComplex<T> z) { return sin(z)/cos(z); }
+    static SIMD_INLINE IComplex<T> Tan(IComplex<T> z) { return Sin(z)/Cos(z); }
 
 	// take the sec of a complex number
-	static SIMD_INLINE IComplex<T> sec(IComplex<T> z) { return 1/cos(z); }
+    static SIMD_INLINE IComplex<T> Sec(IComplex<T> z) { return 1/Cos(z); }
 
 	// take the csc of a complex number
-	static SIMD_INLINE IComplex<T> csc(IComplex<T> z) { return 1/sin(z); }
+    static SIMD_INLINE IComplex<T> Csc(IComplex<T> z) { return 1/Sin(z); }
 
 	// take the cot of a complex number
-	static SIMD_INLINE IComplex<T> cot(IComplex<T> z) { return cos(z)/sin(z); }
+    static SIMD_INLINE IComplex<T> Cot(IComplex<T> z) { return Cos(z)/Sin(z); }
 
 	// take the sinh of a complex number
-	static SIMD_INLINE IComplex<T> sinh(IComplex<T> z) { return (exp(z)-exp(-z))/2.0; }
+    static SIMD_INLINE IComplex<T> Sinh(IComplex<T> z) { return (Exp(z)-Exp(-z))/2.0; }
 
 	// take the cosh of a complex number
-	static SIMD_INLINE IComplex<T> cosh(IComplex<T> z) { return (exp(z)+exp(-z))/2.0; }
+    static SIMD_INLINE IComplex<T> Cosh(IComplex<T> z) { return (Exp(z)+Exp(-z))/2.0; }
 
 	// take the tanh of a complex number
-	static SIMD_INLINE IComplex<T> tanh(IComplex<T> z) { return sinh(z)/cosh(z); }
+    static SIMD_INLINE IComplex<T> Tanh(IComplex<T> z) { return Sinh(z)/Cosh(z); }
 
 	// take the sech of a complex number
-	static SIMD_INLINE IComplex<T> sech(IComplex<T> z) { return 1/cosh(z); }
+    static SIMD_INLINE IComplex<T> Sech(IComplex<T> z) { return 1/Cosh(z); }
 
 	// take the csch of a complex number
-	static SIMD_INLINE IComplex<T> csch(IComplex<T> z) { return 1/sinh(z); }
+    static SIMD_INLINE IComplex<T> Csch(IComplex<T> z) { return 1/Sinh(z); }
 
 	// take the coth of a complex number
-	static SIMD_INLINE IComplex<T> coth(IComplex<T> z) { return cosh(z)/sinh(z); }
+    static SIMD_INLINE IComplex<T> Coth(IComplex<T> z) { return Cosh(z)/Sinh(z); }
 
 	// take the asin of a complex number
-	static SIMD_INLINE IComplex<T> asin(IComplex<T> z) { return -j*log(j*z+sqrt(1.0-z*z)); }
+    static SIMD_INLINE IComplex<T> Asin(IComplex<T> z) { return -j*Log(j*z+Sqrt(1.0-z*z)); }
 
 	// take the acos of a complex number
-	static SIMD_INLINE IComplex<T> acos(IComplex<T> z) { return -j*log(z+sqrt(z*z-1.0)); }
+    static SIMD_INLINE IComplex<T> Acos(IComplex<T> z) { return -j*Log(z+Sqrt(z*z-1.0)); }
 
 	// take the atan of a complex number
-	static SIMD_INLINE IComplex<T> atan(IComplex<T> z) { return (0.5*j)*log((j+z)/(j-z)); }
+    static SIMD_INLINE IComplex<T> Atan(IComplex<T> z) { return (0.5*j)*Log((j+z)/(j-z)); }
 
 	// take the asinh of a complex number
-	static SIMD_INLINE IComplex<T> asinh(IComplex<T> z) { return log(z+sqrt(z*z+1.0)); }
+    static SIMD_INLINE IComplex<T> Asinh(IComplex<T> z) { return Log(z+Sqrt(z*z+1.0)); }
 
 	// take the acosh of a complex number
-	static SIMD_INLINE IComplex<T> acosh(IComplex<T> z) { return log(z+sqrt(z*z-1.0)); }
+    static SIMD_INLINE IComplex<T> Acosh(IComplex<T> z) { return Log(z+Sqrt(z*z-1.0)); }
 
 	// take the atanh of a complex number
-	static SIMD_INLINE IComplex<T> atanh(IComplex<T> z) { return 0.5*log((1.0+z)/(1.0-z)); }
+    static SIMD_INLINE IComplex<T> Atanh(IComplex<T> z) { return 0.5*Log((1.0+z)/(1.0-z)); }
 
 
 
 	// round a complex number
-	SIMD_INLINE IComplex<T> rnd(int precision)
+    SIMD_INLINE IComplex<T> Rnd(int precision)
 	{
 		T rnum,inum;
 		int tnum;
 
 		rnum = this->real*pow(10,precision);
-		tnum = (int)(rnum < 0 ? rnum-0.5 : rnum + 0.5);
+        tnum = (rnum < 0 ? rnum-0.5 : rnum + 0.5);
 		rnum = tnum/pow(10,precision);
 
 		inum = this->imag*pow(10,precision);
-		tnum = (int)(inum < 0 ? inum-0.5 : inum + 0.5);
+        tnum = (inum < 0 ? inum-0.5 : inum + 0.5);
 		inum = tnum/pow(10,precision);
-
 
 		return IComplex<T>(rnum,inum);
 	}
 
-	static SIMD_INLINE IComplex<T> rnd(IComplex<T> z, int precision)
+    static SIMD_INLINE IComplex<T> Rnd(IComplex<T> z, int precision)
 	{
 		T rnum,inum;
 		int tnum;
 
 		rnum = z.real*pow(10,precision);
-		tnum = (int)(rnum < 0 ? rnum-0.5 : rnum + 0.5);
+        tnum = (rnum < 0 ? rnum-0.5 : rnum + 0.5);
 		rnum = tnum/pow(10,precision);
 
 		inum = z.imag*pow(10,precision);
-		tnum = (int)(inum < 0 ? inum-0.5 : inum + 0.5);
+        tnum = (inum < 0 ? inum-0.5 : inum + 0.5);
 		inum = tnum/pow(10,precision);
 
 
@@ -367,13 +366,13 @@ template<class T> class  IComplex
 	//=========================================================================
 
 	// round a number
-	static SIMD_INLINE T rnd(T num, int precision)
+    static SIMD_INLINE T Rnd(T num, int precision)
 	{
 		T rnum;
 		int tnum;
 
 		rnum = num*pow(10,precision);
-		tnum = (int)(rnum < 0 ? rnum-0.5 : rnum + 0.5);
+        tnum = (rnum < 0 ? rnum-0.5 : rnum + 0.5);
 		rnum = tnum/pow(10,precision);
 
 		return rnum;
@@ -391,9 +390,9 @@ template<class T> class  IComplex
 
 
 	  /**
-	  * Gets string representation.
+      * Gets string representation.
 	  */
-	  std::string toString() const
+      std::string ToString() const
 	  {
 	      std::ostringstream oss;
 	      oss << *this;
@@ -407,14 +406,17 @@ template<class T> const IComplex<T> IComplex<T>::i = IComplex<T>(0.0f, 1.0f);
 template<class T> const IComplex<T> IComplex<T>::j = IComplex<T>(0.0f, 1.0f);
 
 
+//--------------------------------------
+// Typedef shortcuts for Complex
+//-------------------------------------
 
-/// Three dimensional Complex of floats
-typedef IComplex<float> IComplexf;
-/// Three dimensional Complex of doubles
-typedef IComplex<double> IComplexd;
-/// Three dimensional Complex of ints
-typedef IComplex<int> IComplexi;
-
+using IComplexr    = IComplex<Real>;
+using IComplexf    = IComplex<float>;
+using IComplexd    = IComplex<double>;
+using IComplexi    = IComplex<std::int32_t>;
+using IComplexui   = IComplex<std::uint32_t>;
+using IComplexb    = IComplex<std::int8_t>;
+using IComplexub   = IComplex<std::uint8_t>;
 
 } /* namespace */
 

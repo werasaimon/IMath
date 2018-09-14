@@ -107,6 +107,39 @@ template<typename T> bool is_valid(const T &value)
 }
 
 
+//-----------------------------------------------------//
+
+    /**
+    \brief Computes a linear interpolation between the point 'a' and the point 'b'.
+    \return Equivalent to: a*(1-t) + b*t
+    */
+    template <typename T, typename I>
+    void Lerp(T& x, const T& a, const T& b, const I& t)
+    {
+        x = b;
+        x -= a;
+        x *= t;
+        x += a;
+    }
+
+    /**
+    \brief Computes a linear interpolation between the point 'a' and the point 'b'.
+    \return Equivalent to: a*(1-t) + b*t
+    */
+    template <typename T, typename I>
+    T Lerp(const T& a, const T& b, const I& t)
+    {
+        /* Return (b - a) * t + a */
+        T x = b;
+        x -= a;
+        x *= t;
+        x += a;
+        return x;
+    }
+
+//-----------------------------------------------------//
+
+
 
 // ---------- Mathematics functions ---------- //
 
@@ -158,21 +191,21 @@ template<typename T> SIMD_INLINE T ISign(T  x)
 
 template<typename T> SIMD_INLINE T IPi(void)
 {
-    static const T  gPi = (T ) atan(1.0f) * 4.0f;
+    static const T  gPi = atan(1.0f) * 4.0f;
     return gPi;
 }
 template<typename T> SIMD_INLINE T ITwoPi(void)
 {
-    static const T  gTwoPi = (T ) atan(1.0f) * 8.0f;
+    static const T  gTwoPi = atan(1.0f) * 8.0f;
     return gTwoPi;
 }
 template<typename T> SIMD_INLINE T IModulo(T  x, T  div)
 {
-    return (T ) fmod((double) x, (double) div);
+    return  fmod( x, div);
 }
 template<typename T> SIMD_INLINE T IAbs(T  x)
 {
-    return (T ) fabs(x);
+    return fabs(x);
 }
 
 template<typename T>  bool IsZero( T a, T epsilon = MACHINE_EPSILON )
@@ -200,101 +233,96 @@ template<typename T> SIMD_INLINE T IRadiansToDegrees(T  Radians)
 
 template<typename T> SIMD_INLINE T ISin(T  Radians)
 {
-    return (T ) sin(Radians);
+    return  sin(Radians);
 }
 template<typename T> SIMD_INLINE T ICos(T  Radians)
 {
-    return (T ) cos(Radians);
+    return  cos(Radians);
 }
 
 template<typename T> SIMD_INLINE T ISinh(T  Radians)
 {
-    return (T ) sinh(Radians);
+    return  sinh(Radians);
 }
 template<typename T> SIMD_INLINE T ICosh(T  Radians)
 {
-    return (T ) cosh(Radians);
+    return  cosh(Radians);
 }
 
 template<typename T> SIMD_INLINE T ISinc_pi(T x)
 {
-  return (T) sin(x) / x;
+  return  sin(x) / x;
 }
 
 template<typename T> SIMD_INLINE T ICosc_pi(T x)
 {
-  return (T) cos(x) / x;
+  return  cos(x) / x;
 }
 
 template<typename T> SIMD_INLINE T ISinhc_pi(T x)
 {
-	return (T) sinh(x) / x;
+    return  sinh(x) / x;
 }
 
 template<typename T> SIMD_INLINE T ICoshc_pi(T x)
 {
-	return (T) cosh(x) / x;
+    return  cosh(x) / x;
 }
 
 
-template<typename T> SIMD_INLINE T ITangent(T  Radians)
+template<typename T> SIMD_INLINE T ITan(T  Radians)
 {
-    return (T ) tan(Radians);
+    return  tan(Radians);
 }
-template<typename T> SIMD_INLINE T IArcTangent(T  X)
+template<typename T> SIMD_INLINE T IAtan(T  X)
 {
-    return (T ) atan(X);
-}
-template<typename T> SIMD_INLINE T IArcTang(T  X, T  Y)
-{
-    return (T ) atan(X);
+    return  atan(X);
 }
 
-
-template<typename T> SIMD_INLINE T IArcSin(T  X)
+template<typename T> SIMD_INLINE T IASin(T  X)
 {
-    return (T ) asin(X);
+    return  asin(X);
 }
-template<typename T> SIMD_INLINE T IArcCos(T  X)
+template<typename T> SIMD_INLINE T IACos(T  X)
 {
-    return (T ) acos(X);
+    return  acos(X);
 }
 
 
 template<typename T> SIMD_INLINE T IAtan2(T  X , T  Y)
 {
-    return (T ) atan2(X , Y);
+    return  atan2(X , Y);
 }
 
 template<typename T> SIMD_INLINE T ILog(T  X)
 {
-    return (T ) log(X);
+    return  log(X);
 }
 
 
 template<typename T> SIMD_INLINE T ILog2(T  X )
 {
-    return (T ) log2(X);
+    return  log2(X);
 }
 
 template<typename T> SIMD_INLINE T IExp(T  X )
 {
-    return (T ) exp(X);
+    return  exp(X);
 }
 
 template<typename T> SIMD_INLINE T IExp2(T  X )
 {
-    return (T ) exp2(X);
+    return  exp2(X);
 }
 
 template<typename T> SIMD_INLINE T ISqrt(T  In)
 {
-    return (T)sqrt(In);
+    return sqrt(In);
 }
 
 template<typename T> SIMD_INLINE T IRand(T  r = 1.0f)
 {
-    return rand() / ((T ) RAND_MAX) * r;
+    return rand() / ( RAND_MAX) * r;
 }
 template<typename T> SIMD_INLINE T IRand(T  min, T  max)
 {
@@ -303,7 +331,7 @@ template<typename T> SIMD_INLINE T IRand(T  min, T  max)
 
 template<typename T> SIMD_INLINE T IPow(T  X , T  Y)
 {
-    return (T ) pow(X , Y);
+    return  pow(X , Y);
 }
 
 

@@ -49,7 +49,9 @@ class IPlane
 
 protected:
 
-    IVector3D<T> mNormal;
+
+   // IVector3D<T>  mOrigin;
+    IVector3D<T>  mNormal;
     T             mOffset;
 
 
@@ -68,7 +70,8 @@ public:
     IPlane(const IVector3D<T>& _normal, const IVector3D<T>& _point)
     {
         mNormal = _normal;
-        mOffset = _normal.dot(_point);
+        mOffset = _normal.Dot(_point);
+       // mOrigin = _point;
     }
 
     IPlane( const IVector3D<T>& p0,
@@ -91,9 +94,6 @@ public:
     {
 
     }
-
-
-
 
 
     SIMD_INLINE ~IPlane() {}
@@ -184,7 +184,7 @@ public:
     void Set( const IVector3D<T>& p0, const IVector3D<T>& p1, const IVector3D<T>& p2 )
     {
         mNormal = (IVector3D<T>::triNormal(p0,p1,p2));
-        mOffset = mNormal.dot(p0);
+        mOffset = mNormal.Dot(p0);
     }
 
     // ---------------------------------------------------------------------------
@@ -202,7 +202,7 @@ public:
 
         // transform to get offset
         IVector3D<T> newTrans = translate*rotmatrix;
-        plane.mOffset = -newTrans.dot( mNormal )/scale + mOffset;
+        plane.mOffset = -newTrans.Dot( mNormal )/scale + mOffset;
 
         return plane;
     }
@@ -219,7 +219,7 @@ public:
 
         // transform to get offset
         IVector3D<T> newTrans = translate*rotmatrix;
-        plane.mOffset = -newTrans.dot( mNormal )/scale + mOffset;
+        plane.mOffset = -newTrans.Dot( mNormal )/scale + mOffset;
 
         return plane;
     }
@@ -241,27 +241,27 @@ public:
     // result of plane test
     SIMD_INLINE T Test( const IVector3D<T>& point ) const
     {
-        return mNormal.dot(point) - mOffset;
+        return mNormal.Dot(point) - mOffset;
     }
 
     // result of plane test
-    SIMD_INLINE T invTest( const IVector3D<T>& point ) const
+    SIMD_INLINE T InvTest( const IVector3D<T>& point ) const
     {
-        return mOffset - mNormal.dot(point);
+        return mOffset - mNormal.Dot(point);
     }
 
 
     // vIntersectionLineToPlane(): find the 3D intersection of a segment and a plane
     //    Input:  S = a segment, and Pn = a plane = {Point V0;  Vector n;}
     //    Output: *I0 = the intersect point (when it exists)
-    IVector3D<T> vIntersectionLineToPlane( const ILineSegment3D<T>& _edge , bool parallel_test) const
+    IVector3D<T> VIntersectionLineToPlane( const ILineSegment3D<T>& _edge , bool parallel_test) const
     {
         IVector3D<T> N = mNormal;
         IVector3D<T> P = _edge.GetEndpoint0();
         IVector3D<T> W = _edge.GetDirection();
 
-        T  d =  invTest(P);
-        T  e =  N.dot(W);
+        T  d =  InvTest(P);
+        T  e =  N.Dot(W);
 
         if(parallel_test)
         if( IAbs(e) < MACHINE_EPSILON  ) return P;
@@ -270,25 +270,26 @@ public:
         return P + W * param;
     }
 
-
-
     // vIntersectionLineToRay(): find the 3D intersection of a segment and a plane
     //    Input:  S = a segment, and Pn = a plane = {Point V0;  Vector n;}
     //    Output: *I0 = the intersect point (when it exists)
-    IVector3D<T> vIntersectionRayToPlane( const IVector3D<T>& _ray_origin , const IVector3D<T>& _ray_dir ) const
+    IVector3D<T> VIntersectionRayToPlane( const IVector3D<T>& _ray_origin , const IVector3D<T>& _ray_dir ) const
     {
         IVector3D<T> N = mNormal;
         IVector3D<T> P = _ray_origin;
         IVector3D<T> W = _ray_dir;
 
-        T  d =  invTest(P);
-        T  e =  N.dot(W);
+        T  d =  InvTest(P);
+        T  e =  N.Dot(W);
 
         if( IAbs(e) < MACHINE_EPSILON  ) return P;
 
         T param = d/e;
+
         return P + W * param;
     }
+
+
 
     //----------[ output operator ]----------------------------
      /**
@@ -303,7 +304,7 @@ public:
      /**
      * Gets string representation.
      */
-     std::string toString() const
+     std::string ToString() const
      {
          std::ostringstream oss;
          oss << *this;
@@ -311,22 +312,21 @@ public:
      }
 
 
-
-private:
 };
 
 
 
 //--------------------------------------
-// Typedef shortcuts for Plane
+// Typedef shortcuts for IPlane
 //-------------------------------------
-/// Three dimensional Plane of floats
-typedef IPlane<float> IPlanef;
-/// Three dimensional Plane of doubles
-typedef IPlane<double> IPlaned;
-/// Three dimensional Plane of ints
-typedef IPlane<int> IPlanei;
 
+using IPlaner    = IPlane<Real>;
+using IPlanef    = IPlane<float>;
+using IPlaned    = IPlane<double>;
+using IPlanei    = IPlane<std::int32_t>;
+using IPlaneui   = IPlane<std::uint32_t>;
+using IPlaneb    = IPlane<std::int8_t>;
+using IPlaneub   = IPlane<std::uint8_t>;
 
 }
 

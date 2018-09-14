@@ -162,7 +162,7 @@ public:
     ILineSegment3D Transform( T scale, const IQuaternion<T>& quat, const IVector3D<T>& translate ) const
     {
         ILineSegment3D<T> segment;
-        IMatrix3x3<T>  rotate = quat.getMatrix();
+        IMatrix3x3<T>  rotate = quat.GetRotMatrix();
 
         segment.mDirection = rotate * mDirection;
         segment.mDirection *= scale;
@@ -201,11 +201,11 @@ public:
     {
             // compute intermediate parameters
             IVector3D<T> w0 = segment0.mOrigin - segment1.mOrigin;
-            T a = segment0.mDirection.dot( segment0.mDirection );
-            T b = segment0.mDirection.dot( segment1.mDirection );
-            T c = segment1.mDirection.dot( segment1.mDirection );
-            T d = segment0.mDirection.dot( w0 );
-            T e = segment1.mDirection.dot( w0 );
+            T a = segment0.mDirection.Dot( segment0.mDirection );
+            T b = segment0.mDirection.Dot( segment1.mDirection );
+            T c = segment1.mDirection.Dot( segment1.mDirection );
+            T d = segment0.mDirection.Dot( w0 );
+            T e = segment1.mDirection.Dot( w0 );
 
             T denom = a*c - b*b;
             // parameters to compute s_c, t_c
@@ -289,7 +289,7 @@ public:
 
             // compute difference vector and distance squared
             IVector3D<T> wc = w0 + s_c*segment0.mDirection - t_c*segment1.mDirection;
-            return wc.dot(wc);
+            return wc.Dot(wc);
     }
 
     // ---------------------------------------------------------------------------
@@ -300,11 +300,11 @@ public:
     {
         // compute intermediate parameters
         IVector3D<T> w0 = segment.mOrigin - line.GetOrigin();
-        T a = segment.mDirection.dot( segment.mDirection );
-        T b = segment.mDirection.dot( line.GetDirection() );
-        T c = line.GetDirection().dot( line.GetDirection() );
-        T d = segment.mDirection.dot( w0 );
-        T e = line.GetDirection().dot( w0 );
+        T a = segment.mDirection.Dot( segment.mDirection );
+        T b = segment.mDirection.Dot( line.GetDirection() );
+        T c = line.GetDirection().Dot( line.GetDirection() );
+        T d = segment.mDirection.Dot( w0 );
+        T e = line.GetDirection().Dot( w0 );
 
         T denom = a*c - b*b;
 
@@ -315,7 +315,7 @@ public:
             t_c = e/c;
             // compute difference vector and distance squared
             IVector3D<T> wc = w0 - t_c*line.GetDirection();
-            return wc.dot(wc);
+            return wc.Dot(wc);
         }
         else
         {
@@ -345,7 +345,7 @@ public:
 
             // compute difference vector and distance squared
             IVector3D<T> wc = w0 + s_c*segment.mDirection - t_c*line.GetDirection();
-            return wc.dot(wc);
+            return wc.Dot(wc);
         }
     }
 
@@ -360,27 +360,27 @@ public:
     static T DistanceSquared( const ILineSegment3D<T>& segment,  const IVector3D<T>& point,  T& t_c )
     {
         IVector3D<T> w = point - segment.mOrigin;
-        T proj = w.dot(segment.mDirection);
+        T proj = w.Dot(segment.mDirection);
         // endpoint 0 is closest point
         if ( proj <= 0 )
         {
             t_c = 0.0f;
-            return w.dot(w);
+            return w.Dot(w);
         }
         else
         {
-            T vsq = segment.mDirection.dot(segment.mDirection);
+            T vsq = segment.mDirection.Dot(segment.mDirection);
             // endpoint 1 is closest point
             if ( proj >= vsq )
             {
                 t_c = 1.0f;
-                return w.dot(w) - 2.0f*proj + vsq;
+                return w.Dot(w) - 2.0f*proj + vsq;
             }
             // otherwise somewhere else in segment
             else
             {
                 t_c = proj/vsq;
-                return w.dot(w) - t_c*proj;
+                return w.Dot(w) - t_c*proj;
             }
         }
     }
@@ -394,11 +394,11 @@ public:
     {
             // compute intermediate parameters
             IVector3D<T> w0 = segment0.mOrigin - segment1.mOrigin;
-            T a = segment0.mDirection.dot( segment0.mDirection );
-            T b = segment0.mDirection.dot( segment1.mDirection );
-            T c = segment1.mDirection.dot( segment1.mDirection );
-            T d = segment0.mDirection.dot( w0 );
-            T e = segment1.mDirection.dot( w0 );
+            T a = segment0.mDirection.Dot( segment0.mDirection );
+            T b = segment0.mDirection.Dot( segment1.mDirection );
+            T c = segment1.mDirection.Dot( segment1.mDirection );
+            T d = segment0.mDirection.Dot( w0 );
+            T e = segment1.mDirection.Dot( w0 );
 
             T denom = a*c - b*b;
             // parameters to compute s_c, t_c
@@ -496,11 +496,11 @@ public:
 
         // compute intermediate parameters
         IVector3D<T> w0 = segment.mOrigin - line.GetOrigin();
-        T a = segment.mDirection.dot( segment.mDirection );
-        T b = segment.mDirection.dot( line.GetDirection() );
-        T c = line.GetDirection().dot( line.GetDirection() );
-        T d = segment.mDirection.dot( w0 );
-        T e = line.GetDirection().dot( w0 );
+        T a = segment.mDirection.Dot( segment.mDirection );
+        T b = segment.mDirection.Dot( line.GetDirection() );
+        T c = line.GetDirection().Dot( line.GetDirection() );
+        T d = segment.mDirection.Dot( w0 );
+        T e = line.GetDirection().Dot( w0 );
 
         T denom = a*c - b*b;
 
@@ -551,13 +551,13 @@ public:
     IVector3D<T> ClosestPoint( const IVector3D<T>& point ) const
     {
         IVector3D<T> w = point - mOrigin;
-        T proj = w.dot(mDirection);
+        T proj = w.Dot(mDirection);
         // endpoint 0 is closest point
         if ( proj <= 0.0f )
             return mOrigin;
         else
         {
-            T vsq = mDirection.dot(mDirection);
+            T vsq = mDirection.Dot(mDirection);
             // endpoint 1 is closest point
             if ( proj >= vsq )
                 return mOrigin + mDirection;
@@ -567,6 +567,13 @@ public:
         }
     }
 
+
+
+
+    bool IsPointOnLine(const IVector3D<T> p) // returns true if (p) is on lineSegment [GetEndpoint0(), GetEndpoint1()]
+    {
+        return (p - GetEndpoint0()).Dot(p - GetEndpoint1()) <= 0;
+    }
 
     //----------[ output operator ]----------------------------
      /**
@@ -581,7 +588,7 @@ public:
      /**
      * Gets string representation.
      */
-     std::string toString() const
+     std::string ToString() const
      {
          std::ostringstream oss;
          oss << *this;
@@ -589,22 +596,26 @@ public:
      }
 
 
-
-
 protected:
+
     IVector3D<T> mOrigin;
     IVector3D<T> mDirection;
 
-private:
 };
 
 
-/// Two dimensional LineSegment3 of floats
-typedef class ILineSegment3D<float> LineSegment3f;
-/// Two dimensional LineSegment3 of doubles
-typedef class ILineSegment3D<double> LineSegment3d;
-/// Two dimensional LineSegment3 of ints
-typedef class ILineSegment3D<int> LineSegment3i;
+
+//--------------------------------------
+// Typedef shortcuts for LineSegment3D
+//-------------------------------------
+
+using ILineSegment3r    = ILineSegment3D<Real>;
+using ILineSegment3f    = ILineSegment3D<float>;
+using ILineSegment3d    = ILineSegment3D<double>;
+using ILineSegment3i    = ILineSegment3D<std::int32_t>;
+using ILineSegment3ui   = ILineSegment3D<std::uint32_t>;
+using ILineSegment3b    = ILineSegment3D<std::int8_t>;
+using ILineSegment3ub   = ILineSegment3D<std::uint8_t>;
 
 
 }

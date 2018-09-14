@@ -82,14 +82,14 @@ template<class T> class IOctonion
 						   IComplex<T> z1 = IComplex<T>(),
 						   IComplex<T> z2 = IComplex<T>(),
 						   IComplex<T> z3 = IComplex<T>())
-	 :   a(z0.getReal()),
-		 b(z0.getImag()),
-		 c(z1.getReal()),
-		 d(z1.getImag()),
-		 e(z2.getReal()),
-		 f(z2.getImag()),
-		 g(z3.getReal()),
-		 h(z3.getImag())
+     :   a(z0.GetReal()),
+         b(z0.GetImag()),
+         c(z1.GetReal()),
+         d(z1.GetImag()),
+         e(z2.GetReal()),
+         f(z2.GetImag()),
+         g(z3.GetReal()),
+         h(z3.GetImag())
 	 {
 		 // nothing to do!
 	 }
@@ -97,7 +97,7 @@ template<class T> class IOctonion
 
 	 // constructor for O seen as H^2
    SIMD_INLINE IOctonion( IQuaternion<T> q0,
-		           IQuaternion<T> q1 = IQuaternion<T>())
+                          IQuaternion<T> q1 = IQuaternion<T>())
 	 :   a(q0.getW()),
 	     b(q0.getV().x),
 	     c(q0.getV().y),
@@ -126,8 +126,8 @@ template<class T> class IOctonion
 	 }
 
 
-	 SIMD_INLINE T            getReal()   const { return(a); }
-	 SIMD_INLINE IOctonion<T> getUnreal() const { return( IOctonion<T>(static_cast<T>(0),b,c,d,e,f,g,h)); }
+     SIMD_INLINE T            GetReal()   const { return(a); }
+     SIMD_INLINE IOctonion<T> GetUnreal() const { return( IOctonion<T>(static_cast<T>(0),b,c,d,e,f,g,h)); }
 
 	 // number theory //
 	 SIMD_INLINE T R_component_1() const { return(a); }
@@ -162,9 +162,8 @@ template<class T> class IOctonion
 
 	 SIMD_INLINE IOctonion<T>&  operator += (const T& rhs)
 	 {
-		 T    at = a + rhs;    // exception guard
-		 a = at;
-
+         T    at = a + rhs; // exception guard
+              a = at;
 		 return(*this);
 	 }
 
@@ -177,11 +176,10 @@ template<class T> class IOctonion
 
 	 //--------------------------------------------------//
 
-
 	 SIMD_INLINE IOctonion<T>&   operator += (const IComplex<T>& rhs)
 	 {
-		 T    at = a + rhs.getReal();    // exception guard
-		 T    bt = b + rhs.getImag();    // exception guard
+         T    at = a + rhs.GetReal();    // exception guard
+         T    bt = b + rhs.GetImag();    // exception guard
 
 		 a = at;
 		 b = bt;
@@ -191,8 +189,8 @@ template<class T> class IOctonion
 
 	 SIMD_INLINE IOctonion<T>   operator + (const IComplex<T>& rhs) const
 	 {
-		 T    at = a + rhs.getReal();    // exception guard
-		 T    bt = b + rhs.getImag();    // exception guard
+         T    at = a + rhs.GetReal();    // exception guard
+         T    bt = b + rhs.GetImag();    // exception guard
 
 		 return IOctonion<T>(at,bt,c,d,e,f,g,h);
 	 }
@@ -286,8 +284,8 @@ template<class T> class IOctonion
 
 	 SIMD_INLINE IOctonion<T>&  operator -= (const IComplex<T>& rhs)
 	 {
-		 T    at = a - rhs.getReal();    // exception guard
-		 T    bt = b - rhs.getImag();    // exception guard
+         T    at = a - rhs.GetReal();    // exception guard
+         T    bt = b - rhs.GetImag();    // exception guard
 
 		 a = at;
 		 b = bt;
@@ -297,8 +295,8 @@ template<class T> class IOctonion
 
 	 SIMD_INLINE IOctonion<T>  operator - (const IComplex<T>& rhs) const
 	 {
-		 T    at = a - rhs.getReal();    // exception guard
-		 T    bt = b - rhs.getImag();    // exception guard
+         T    at = a - rhs.GetReal();    // exception guard
+         T    bt = b - rhs.GetImag();    // exception guard
 
 		 return IOctonion<T>( at , bt , c , d ,e ,f ,g ,h);
 	  }
@@ -412,8 +410,8 @@ template<class T> class IOctonion
 
 	 SIMD_INLINE IOctonion<T>&  operator *= (const IComplex<T>& rhs)
 	 {
-		 T    ar = rhs.getReal();
-		 T    br = rhs.getImag();
+         T    ar = rhs.GetReal();
+         T    br = rhs.GetImag();
 
 		 T    at = +a*ar-b*br;
 		 T    bt = +a*br+b*ar;
@@ -438,8 +436,8 @@ template<class T> class IOctonion
 
 	 SIMD_INLINE IOctonion<T>  operator * (const IComplex<T>& rhs) const
 	 {
-		 T    ar = rhs.getReal();
-		 T    br = rhs.getImag();
+         T    ar = rhs.GetReal();
+         T    br = rhs.GetImag();
 
 		 T    at = +a*ar-b*br;
 		 T    bt = +a*br+b*ar;
@@ -606,8 +604,8 @@ template<class T> class IOctonion
 
 	 SIMD_INLINE IOctonion<T>&  operator /= (const IComplex<T>& rhs)
 	 {
-		 T    ar = rhs.getReal();
-		 T    br = rhs.getImag();
+         T    ar = rhs.GetReal();
+         T    br = rhs.GetImag();
 
 		 T    denominator = ar*ar+br*br;
 
@@ -635,8 +633,8 @@ template<class T> class IOctonion
 
 	 SIMD_INLINE IOctonion<T>  operator / (const IComplex<T>& rhs) const
 	 {
-		 T    ar = rhs.getReal();
-		 T    br = rhs.getImag();
+         T    ar = rhs.GetReal();
+         T    br = rhs.GetImag();
 
 		 T    denominator = ar*ar+br*br;
 
@@ -785,20 +783,20 @@ template<class T> class IOctonion
 
 	 //=========================   Methods =====================================//
 
-	 SIMD_INLINE T lengthSquare() const
+     SIMD_INLINE T LengthSquare() const
 	  {
 	      return a*a + b*b + c*c + d*d + e*e + f*f + g*g + h*h;
 	  }
 
-	 SIMD_INLINE T length() const
+     SIMD_INLINE T Length() const
 	  {
-	      return ISqrt(lengthSquare());
+          return ISqrt(LengthSquare());
 	  }
 
 	  /**
 	   * Conjugate IQuaternion
 	   */
-	 SIMD_INLINE IOctonion<T> getConjugate() const
+     SIMD_INLINE IOctonion<T> GetConjugate() const
 	  {
 		  return   IOctonion<T>(  R_component_1(),
 								  -R_component_2(),
@@ -811,22 +809,22 @@ template<class T> class IOctonion
 	  }
 
 	  // Note:    This is the Cayley norm, not the Euclidian norm...
-	  SIMD_INLINE T norm() const
+      SIMD_INLINE T Norm() const
 	  {
-		  return ((*this)*(*this).getConjugate()).getReal();
+          return ((*this)*(*this).GetConjugate()).GetReal();
 	  }
 
-	  SIMD_INLINE T abs() const
+      SIMD_INLINE T Abs() const
 	  {
-		  return(ISqrt( (*this).norm() ));
+          return(ISqrt( (*this).Norm() ));
 	  }
 
 
 
-	 static SIMD_INLINE IOctonion<T> exp(IOctonion<T> const & o)
+     static SIMD_INLINE IOctonion<T> Exp(IOctonion<T> const & o)
 	 {
-		 T    u = IExp(o.getReal());
-		 T    z = (o.getUnreal().abs());
+         T    u = IExp(o.GetReal());
+         T    z = (o.GetUnreal().Abs());
 		 T    w = ISinc_pi(z);
 
 		 return (IOctonion<T>(ICos(z),
@@ -837,13 +835,13 @@ template<class T> class IOctonion
 	 }
 
 
-	 static SIMD_INLINE IOctonion<T> cos(IOctonion<T> const & o)
+     static SIMD_INLINE IOctonion<T> Cos(IOctonion<T> const & o)
 	 {
 
-		 T    z =  (o.getUnreal().abs());
-		 T    w = -ISin(o.getReal())*ISinhc_pi(z);
+         T    z =  (o.GetUnreal().Abs());
+         T    w = -ISin(o.GetReal())*ISinhc_pi(z);
 
-		 return(IOctonion<T>(ICos(o.getReal())*ICosh(z),
+         return(IOctonion<T>(ICos(o.GetReal())*ICosh(z),
 				              w*o.R_component_2(), w*o.R_component_3(),
 				              w*o.R_component_4(), w*o.R_component_5(),
 				              w*o.R_component_6(), w*o.R_component_7(),
@@ -851,12 +849,12 @@ template<class T> class IOctonion
 	 }
 
 
-	 static SIMD_INLINE IOctonion<T> sin(IOctonion<T> const & o)
+     static SIMD_INLINE IOctonion<T> Sin(IOctonion<T> const & o)
 	 {
-	     T    z = (o.getUnreal().abs());
-	     T    w = +ICos(o.getReal())*ISinhc_pi(z);
+         T    z = (o.GetUnreal().Abs());
+         T    w = +ICos(o.GetReal())*ISinhc_pi(z);
 
-	     return(IOctonion<T>(ISin(o.getReal())*ICosh(z),
+         return(IOctonion<T>(ISin(o.GetReal())*ICosh(z),
 	    		              w*o.R_component_2(), w*o.R_component_3(),
 				              w*o.R_component_4(), w*o.R_component_5(),
 				              w*o.R_component_6(), w*o.R_component_7(),
@@ -864,36 +862,36 @@ template<class T> class IOctonion
 	 }
 
 
-	 static SIMD_INLINE IOctonion<T> tan(IOctonion<T> const & o)
+     static SIMD_INLINE IOctonion<T> Tan(IOctonion<T> const & o)
 	 {
-		 return(sin(o)/cos(o));
+         return(Sin(o)/Cos(o));
 	 }
 
 
-	 static SIMD_INLINE IOctonion<T> cosh(IOctonion<T> const & o)
+     static SIMD_INLINE IOctonion<T> Cosh(IOctonion<T> const & o)
 	 {
-		 return  ((exp(o)+exp(-o)) / static_cast<T>(2));
+         return  ((Exp(o)+Exp(-o)) / static_cast<T>(2));
 	 }
 
 
-	 static SIMD_INLINE IOctonion<T> sinh(IOctonion<T> const & o)
+     static SIMD_INLINE IOctonion<T> Sinh(IOctonion<T> const & o)
 	 {
-		 return((exp(o)-exp(-o)) / static_cast<T>(2));
+         return((Exp(o)-Exp(-o)) / static_cast<T>(2));
 	 }
 
 
-	 static SIMD_INLINE IOctonion<T> tanh(IOctonion<T>  const & o)
+     static SIMD_INLINE IOctonion<T> Tanh(IOctonion<T>  const & o)
 	 {
-		 return(sinh(o)/cosh(o));
+         return(Sinh(o)/Cosh(o));
 	 }
 
 
-	 static SIMD_INLINE IOctonion<T> pow(IOctonion<T>  const & o, int n)
+     static SIMD_INLINE IOctonion<T> Pow(IOctonion<T>  const & o, int n)
 	 {
 		 if(n > 1)
 		 {
 			 int    m = n>>1;
-			 IOctonion<T>    result = pow(o, m);
+             IOctonion<T>    result = Pow(o, m);
 			 result *= result;
 			 if    (n != (m<<1))
 			 {
@@ -911,7 +909,7 @@ template<class T> class IOctonion
 		 }
 		 else    /* n < 0 */
 		 {
-			 return(pow(IOctonion<T>(static_cast<T>(1))/o,-n));
+             return(Pow(IOctonion<T>(static_cast<T>(1))/o,-n));
 		 }
 	}
 
@@ -919,7 +917,7 @@ template<class T> class IOctonion
 
 	 // Note:    There is little point, for the octonions, to introduce the equivalents
 	 //            to the complex "arg" and the quaternionic "cylindropolar".
-	 static SIMD_INLINE IOctonion<T>   spherical(T const & rho,
+     static SIMD_INLINE IOctonion<T>   Spherical( T const & rho,
 												  T const & theta,
 												  T const & phi1,
 												  T const & phi2,
@@ -939,39 +937,21 @@ template<class T> class IOctonion
 		 //T    h = sin(phi6);
 
 		 T    courrant = static_cast<T>(1);
+         T    h = ISin(phi6);courrant *= ICos(phi6);
+         T    g = ISin(phi5)*courrant; courrant *= ICos(phi5);
+         T    f = ISin(phi4)*courrant; courrant *= ICos(phi4);
+         T    e = ISin(phi3)*courrant; courrant *= ICos(phi3);
+         T    d = ISin(phi2)*courrant; courrant *= ICos(phi2);
+         T    c = ISin(phi1)*courrant; courrant *= ICos(phi1);
 
-		 T    h = Sin(phi6);
-
-		 courrant *= cos(phi6);
-
-		 T    g = Sin(phi5)*courrant;
-
-		 courrant *= Cos(phi5);
-
-		 T    f = Sin(phi4)*courrant;
-
-		 courrant *= Cos(phi4);
-
-		 T    e = Sin(phi3)*courrant;
-
-		 courrant *= Cos(phi3);
-
-		 T    d = Sin(phi2)*courrant;
-
-		 courrant *= Cos(phi2);
-
-		 T    c = Sin(phi1)*courrant;
-
-		 courrant *= cos(phi1);
-
-		 T    b = Sin(theta)*courrant;
-		 T    a = Cos(theta)*courrant;
+         T    b = ISin(theta)*courrant;
+         T    a = ICos(theta)*courrant;
 
 		 return(rho*IOctonion<T>(a,b,c,d,e,f,g,h));
 	 }
 
 
-	 static SIMD_INLINE  IOctonion<T> multipolar(T const & rho1,
+     static SIMD_INLINE  IOctonion<T> Multipolar( T const & rho1,
 												  T const & theta1,
 												  T const & rho2,
 												  T const & theta2,
@@ -981,20 +961,20 @@ template<class T> class IOctonion
 												  T const & theta4)
 	 {
 
-		 T    a = rho1*cos(theta1);
-		 T    b = rho1*sin(theta1);
-		 T    c = rho2*cos(theta2);
-		 T    d = rho2*sin(theta2);
-		 T    e = rho3*cos(theta3);
-		 T    f = rho3*sin(theta3);
-		 T    g = rho4*cos(theta4);
-		 T    h = rho4*sin(theta4);
+         T    a = rho1*ICos(theta1);
+         T    b = rho1*ISin(theta1);
+         T    c = rho2*ICos(theta2);
+         T    d = rho2*ISin(theta2);
+         T    e = rho3*ICos(theta3);
+         T    f = rho3*ISin(theta3);
+         T    g = rho4*ICos(theta4);
+         T    h = rho4*ISin(theta4);
 
 		 return(IOctonion<T>(a,b,c,d,e,f,g,h));
 	 }
 
 
-	 static SIMD_INLINE IOctonion<T> cylindrical(T const & r,
+     static SIMD_INLINE IOctonion<T> Cylindrical( T const & r,
 												  T const & angle,
 												  T const & h1,
 												  T const & h2,
@@ -1004,8 +984,8 @@ template<class T> class IOctonion
 												  T const & h6)
 	 {
 
-		 T    a = r*Cos(angle);
-		 T    b = r*Sin(angle);
+         T    a = r*ICos(angle);
+         T    b = r*ISin(angle);
 
 		 return(IOctonion<T>(a,b,h1,h2,h3,h4,h5,h6));
 	 }
@@ -1025,7 +1005,7 @@ template<class T> class IOctonion
 	  /**
 	  * Gets string representation.
 	  */
-	  std::string toString() const
+      std::string ToString() const
 	  {
 	      std::ostringstream oss;
 	      oss << *this;
@@ -1047,12 +1027,17 @@ template<class T> class IOctonion
 template<class T> const IOctonion<T> IOctonion<T>::IDENTITY(1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
 template<class T> const IOctonion<T> IOctonion<T>::ZERO(0.0, 0.0, 0.0, 0.0, 0.0, 0.0 , 0.0, 0.0);
 
-/// Quaternion of floats
-typedef IOctonion<float> IOctonionf;
-/// Quaternion of doubles
-typedef IOctonion<double> IOctoniond;
-/// Quaternion of int
-typedef IOctonion<double> IOctonioni;
+//--------------------------------------
+// Typedef shortcuts for Octonion
+//-------------------------------------
+
+using IOctonionr    = IOctonion<Real>;
+using IOctonionf    = IOctonion<float>;
+using IOctoniond    = IOctonion<double>;
+using IOctonioni    = IOctonion<std::int32_t>;
+using IOctonionui   = IOctonion<std::uint32_t>;
+using IOctonionb    = IOctonion<std::int8_t>;
+using IOctonionub   = IOctonion<std::uint8_t>;
 
 
 } /* namespace */

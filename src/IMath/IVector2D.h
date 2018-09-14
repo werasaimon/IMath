@@ -1,4 +1,4 @@
- /********************************************************************************
+/********************************************************************************
  *
  * IMatrix2x2.h
  *
@@ -31,7 +31,8 @@
 #ifndef IVECTOR2_H
 #define IVECTOR2_H
 
-#include "iFunc.h"
+#include "IReal.h"
+#include "IFunc.h"
 
 namespace IMath
 {
@@ -55,6 +56,16 @@ template<class T>
 class IVector2D
 {
 public:
+
+
+    //! Specifies the typename of the scalar components.
+    using ScalarType = T;
+
+    //! Specifies the number of vector components.
+    static const std::size_t components = 2;
+
+    //-------------------- Attributes --------------------//
+
     union
     {
         /**
@@ -87,31 +98,38 @@ public:
 
     //----------------[ constructors ]--------------------------
     /**
-     * Creates and sets to (0,0)
+     * Creates and Sets to (0,0)
      */
     SIMD_INLINE IVector2D()
-            : x(0), y(0)
+        : x(0), y(0)
     {
     }
 
+
+    SIMD_INLINE explicit IVector2D(const T& scalar)
+        : x ( scalar ), y ( scalar )
+    {
+
+    }
+
     /**
-     * Creates and sets to (x,y)
+     * Creates and Sets to (x,y)
      * @param nx initial x-coordinate value
      * @param ny initial y-coordinate value
      */
     SIMD_INLINE IVector2D(T nx, T ny)
-            : x(nx), y(ny)
+        : x(nx), y(ny)
     {
     }
 
-//    /**
-//     * Copy constructor.
-//     * @param src Source of data for new created instance.
-//     */
-//    IVector2D(const IVector2D<T>& src)
-//            : x(src.x), y(src.y)
-//    {
-//    }
+    //    /**
+    //     * Copy constructor.
+    //     * @param src Source of data for new created instance.
+    //     */
+    //    IVector2D(const IVector2D<T>& src)
+    //            : x(src.x), y(src.y)
+    //    {
+    //    }
 
     /**
      * Copy casting constructor.
@@ -119,28 +137,32 @@ public:
      */
     template<class FromT>
     SIMD_INLINE IVector2D(const IVector2D<FromT>& src)
-            : x(static_cast<T>(src.x)), y(static_cast<T>(src.y))
+        : x(static_cast<T>(src.x)),
+          y(static_cast<T>(src.y))
     {
     }
+
+
+
 
 
     //---------------------- Methods ---------------------//
 
-    SIMD_INLINE void setToZero()
+    SIMD_INLINE void SetToZero()
     {
-      x = T(0);
-      y = T(0);
+        x = T(0);
+        y = T(0);
     }
 
 
-    SIMD_INLINE void setAllValues(T newX, T newY )
+    SIMD_INLINE void SetAllValues(T newX, T newY )
     {
-      x = newX;
-      y = newY;
+        x = newX;
+        y = newY;
     }
 
-    SIMD_INLINE T getX() const { return x; }
-    SIMD_INLINE T getY() const { return y; }
+    SIMD_INLINE T GetX() const { return x; }
+    SIMD_INLINE T GetY() const { return y; }
 
     SIMD_INLINE void SetX(T _x) { x = _x; }
     SIMD_INLINE void SetY(T _y) { y = _y; }
@@ -387,7 +409,7 @@ public:
      * Dot product of two vectors.
      * @param rhs Right hand side argument of binary operator.
      */
-    SIMD_INLINE T dot(const IVector2D<T>& rhs) const
+    SIMD_INLINE T Dot(const IVector2D<T>& rhs) const
     {
         return x * rhs.x + y * rhs.y;
     }
@@ -396,7 +418,7 @@ public:
      * Cross product operator
      * @param rhs Right hand side argument of binary operator.
      */
-    SIMD_INLINE T cross(const IVector2D<T>& rhs) const
+    SIMD_INLINE T Cross(const IVector2D<T>& rhs) const
     {
         // just calculate the z-component
         return x * rhs.y - y * rhs.x;
@@ -413,7 +435,7 @@ public:
     SIMD_INLINE bool operator==(const IVector2D<T>& rhs) const
     {
         return (IAbs(x - rhs.x) < MACHINE_EPSILON) &&
-               (IAbs(y - rhs.y) < MACHINE_EPSILON);
+                (IAbs(y - rhs.y) < MACHINE_EPSILON);
     }
 
     /**
@@ -443,9 +465,9 @@ public:
      * @return length ^ 2
      * @note This method is faster then length(). For comparison
      * of length of two vector can be used just this value, instead
-     * of more expensive length() method.
+     * of more expensive length()^ 2 method.
      */
-    SIMD_INLINE T lengthSquare() const
+    SIMD_INLINE T LengthSquare() const
     {
         return x * x + y * y;
     }
@@ -455,17 +477,17 @@ public:
      * Get length of vector.
      * @return lenght of vector
      */
-    SIMD_INLINE T length() const
+    SIMD_INLINE T Length() const
     {
-        return (T) ISqrt(x * x + y * y);
+        return ISqrt(x * x + y * y);
     }
 
     /**
      * Normalize vector
      */
-    SIMD_INLINE void normalize()
+    SIMD_INLINE void Normalize()
     {
-        T s = length();
+        T s = Length();
         x /= s;
         y /= s;
     }
@@ -474,9 +496,9 @@ public:
     /**
      * Normalize unit vector
      */
-    SIMD_INLINE IVector2D<T> getUnit() const
+    SIMD_INLINE IVector2D<T> GetUnit() const
     {
-        T lengthVector = length();
+        T lengthVector = Length();
         if (lengthVector < MACHINE_EPSILON)
         {
             return *this;
@@ -484,15 +506,15 @@ public:
         // Compute and return the unit vector
         T lengthInv = T(1.0) / lengthVector;
         return IVector2D<T>( x * lengthInv,
-                              y * lengthInv);
+                             y * lengthInv);
     }
 
     /**
      * Normalize Unit vector (popular name to methods)
      */
-    SIMD_INLINE IVector2D<T> normalized() const
+    SIMD_INLINE IVector2D<T> Normalized() const
     {
-        T lengthVector = length();
+        T lengthVector = Length();
         if (lengthVector < MACHINE_EPSILON)
         {
             return *this;
@@ -500,14 +522,14 @@ public:
         // Compute and return the unit vector
         T lengthInv = T(1.0) / lengthVector;
         return IVector2D<T>( x * lengthInv,
-                              y * lengthInv);
+                             y * lengthInv);
     }
 
 
     /**
      * Inverse vector
      */
-    SIMD_INLINE IVector2D<T> getInverse() const
+    SIMD_INLINE IVector2D<T> GetInverse() const
     {
         return IVector2D<T>( T(1.0/x) , T(1.0/y) );
     }
@@ -524,21 +546,23 @@ public:
      * @param r Second Vector for interpolation
      * @note However values of fact parameter are reasonable only in interval
      * [0.0 , 1.0], you can pass also values outside of this interval and you
-     * can get result (extrapolation?)
+     * can Get result (extrapolation?)
      */
-    SIMD_INLINE IVector2D<T> lerp(T fact, const IVector2D<T>& r) const
+    SIMD_INLINE IVector2D<T> Lerp(T fact, const IVector2D<T>& r) const
     {
         return (*this) + (r - (*this)) * fact;
     }
 
 
-    SIMD_INLINE T getAngleBetween( const IVector2D<T> &Vector2 ) const
+
+    //! Returns the angle (in radians) between the two (normalized or unnormalized) vectors 'lhs' and 'rhs'.
+    SIMD_INLINE T GetAngleBetween( const IVector2D<T> &rhs ) const
     {
-        IVector2D<T> Vector1(*this);
-        T dotProduct = Vector1.dot(Vector2);
-        T vectorsMagnitude = (Vector1.length()) * (Vector2.length());
-        T angle = IArcCos(dotProduct / vectorsMagnitude);
-        if( __isnan(angle)) return 0;
+        IVector2D<T> lhs(*this);
+        T dotProduct = lhs.Dot(rhs);
+        T vectorsMagnitude = (lhs.Length()) * (rhs.Length());
+        T angle = IACos(dotProduct / vectorsMagnitude);
+        if( is_nan(angle)) return 0;
         return (angle);
     }
 
@@ -550,7 +574,7 @@ public:
      */
     SIMD_INLINE operator T*()
     {
-        return (T*) this;
+        return this;
     }
     /**
      * Conversion to pointer operator
@@ -559,7 +583,7 @@ public:
      */
     SIMD_INLINE operator const T*() const
     {
-        return (const T*) this;
+        return this;
     }
 
     //-------------[ output operator ]------------------------
@@ -578,7 +602,7 @@ public:
     /**
      * Gets string representation.
      */
-    std::string toString() const
+    std::string ToString() const
     {
         std::ostringstream oss;
         oss << *this;
@@ -615,26 +639,28 @@ template<class T> const IVector2D<T> IVector2D<T>::Y(0.0, 1.0);
 
 
 template<class T> const
-static T cross(const IVector2D<T>& a, const IVector2D<T>& b)
+static T Cross(const IVector2D<T>& a, const IVector2D<T>& b)
 {
-    return a.cross(b);
+    return a.Cross(b);
 }
 
 template<class T> const
-static T dot(const IVector2D<T>& a, const IVector2D<T>& b)
+static T Dot(const IVector2D<T>& a, const IVector2D<T>& b)
 {
-    return a.dot(b);
+    return a.Dot(b);
 }
 
 //--------------------------------------
 // Typedef shortcuts for 2D vector
 //-------------------------------------
-/// Two dimensional Vector of floats
-typedef class IVector2D<float> IVector2f;
-/// Two dimensional Vector of doubles
-typedef class IVector2D<double> IVector2d;
-/// Two dimensional Vector of ints
-typedef class IVector2D<int> IVector2i;
+
+using IVector2r    = IVector2D<Real>;
+using IVector2f    = IVector2D<float>;
+using IVector2d    = IVector2D<double>;
+using IVector2i    = IVector2D<std::int32_t>;
+using IVector2ui   = IVector2D<std::uint32_t>;
+using IVector2b    = IVector2D<std::int8_t>;
+using IVector2ub   = IVector2D<std::uint8_t>;
 
 } /* namespace */
 

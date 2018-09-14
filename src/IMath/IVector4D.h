@@ -1,4 +1,4 @@
- /********************************************************************************
+/********************************************************************************
  *
  * IVector4D.h
  *
@@ -31,6 +31,7 @@
 #ifndef RPVECTOR4D_H
 #define RPVECTOR4D_H
 
+#include "IReal.h"
 #include "IVector3D.h"
 
 
@@ -53,7 +54,14 @@ class IVector4D
 
 public:
 
-   //-------------------- Attributes --------------------//
+
+    //! Specifies the typename of the scalar components.
+    using ScalarType = T;
+
+    //! Specifies the number of vector components.
+    static const std::size_t components = 4;
+
+    //-------------------- Attributes --------------------//
 
     union
     {
@@ -102,8 +110,8 @@ public:
     {
         /**
          * First element of vector, alias for W-coordinate.
-         * @note For vectors (such as normals) should be set to 0.0
-         * For vertices should be set to 1.0
+         * @note For vectors (such as normals) should be Set to 0.0
+         * For vertices should be Set to 1.0
          */
         T w;
         /**
@@ -117,35 +125,42 @@ public:
 
     //----------------[ constructors ]--------------------------
     /**
-     * Creates and sets to (0,0,0,0)
+     * Creates and Sets to (0,0,0,0)
      */
     SIMD_INLINE IVector4D()
-       : x(0), y(0), z(0), w(0)
+        : x(0), y(0), z(0), w(0)
     {
     }
 
+
+    SIMD_INLINE explicit IVector4D(const T& scalar)
+        : x ( scalar ) , y ( scalar ) , z ( scalar ) , w( scalar )
+    {
+
+    }
+
     /**
-     * Creates and sets to (x,y,z,w)
+     * Creates and Sets to (x,y,z,w)
      * @param nx initial x-coordinate value (R)
      * @param ny initial y-coordinate value (G)
      * @param nz initial z-coordinate value (B)
      * @param nw initial w-coordinate value (Alpha)
      */
     SIMD_INLINE IVector4D(T nx, T ny, T nz, T nw)
-       : x(nx), y(ny), z(nz), w(nw)
+        : x(nx), y(ny), z(nz), w(nw)
     {
     }
 
 
     /**
-     * Creates and sets to (n,w)
+     * Creates and Sets to (n,w)
      * @param nx initial n.x-coordinate value (R)
      * @param ny initial n.y-coordinate value (G)
      * @param nz initial n.z-coordinate value (B)
      * @param nw initial w-coordinate value (Alpha)
      */
     SIMD_INLINE IVector4D(const IVector3D<T>& n , T nw)
-    : x(n.x), y(n.y), z(n.z), w(nw)
+        : x(n.x), y(n.y), z(n.z), w(nw)
     {
     }
 
@@ -154,7 +169,7 @@ public:
      * @param src Source of data for new created IVector4D instance.
      */
     SIMD_INLINE IVector4D(const IVector4D<T>& src)
-       : x(src.x), y(src.y), z(src.z), w(src.w)
+        : x(src.x), y(src.y), z(src.z), w(src.w)
     {
     }
 
@@ -164,51 +179,62 @@ public:
      */
     template<class FromT>
     SIMD_INLINE IVector4D(const IVector4D<FromT>& src)
-      : x(static_cast<T>(src.x)), y(static_cast<T>(src.y)), z(static_cast<T>(src.z)), w(static_cast<T>(src.w))
+        : x(static_cast<T>(src.x)),
+          y(static_cast<T>(src.y)),
+          z(static_cast<T>(src.z)),
+          w(static_cast<T>(src.w))
     {
     }
 
 
     //---------------------- Methods ---------------------//
 
-    SIMD_INLINE void setToZero()
+    SIMD_INLINE void SetToZero()
     {
-      x = T(0);
-      y = T(0);
-      z = T(0);
-      w = T(0);
+        x = T(0);
+        y = T(0);
+        z = T(0);
+        w = T(0);
     }
 
 
-    SIMD_INLINE void setAllValues(T newX, T newY, T newZ, T newW)
+    SIMD_INLINE void SetAllValues(T newX, T newY, T newZ, T newW)
     {
-      x = newX;
-      y = newY;
-      z = newZ;
-      w = newW;
+        x = newX;
+        y = newY;
+        z = newZ;
+        w = newW;
     }
 
 
-    SIMD_INLINE T getX() const { return x; }
-    SIMD_INLINE T getY() const { return y; }
-    SIMD_INLINE T getZ() const { return z; }
-    SIMD_INLINE T getW() const { return w; }
-    SIMD_INLINE IVector3D<T> getV() const
-    {
-        return IVector3D<T>(x,y,z);
-    }
+    SIMD_INLINE T GetX() const { return x; }
+    SIMD_INLINE T GetY() const { return y; }
+    SIMD_INLINE T GetZ() const { return z; }
+    SIMD_INLINE T GetW() const { return w; }
+
+    SIMD_INLINE IVector2D<T> GetXY()  const { return IVector2D<T>(x,y); }
+    SIMD_INLINE IVector3D<T> GetXYZ() const { return IVector3D<T>(x,y,z); }
 
 
     SIMD_INLINE void SetX(T _x) { x = _x; }
     SIMD_INLINE void SetY(T _y) { y = _y; }
     SIMD_INLINE void SetZ(T _z) { z = _z; }
     SIMD_INLINE void SetW(T _w) { w = _w; }
-    SIMD_INLINE void SetV(const IVector3D<T> _v)
+
+
+    SIMD_INLINE void SetXY(const IVector2D<T> _v)
+    {
+        x=_v.x;
+        y=_v.y;
+    }
+
+    SIMD_INLINE void SetXYZ(const IVector3D<T> _v)
     {
         x=_v.x;
         y=_v.y;
         z=_v.z;
     }
+
 
     //----------------[ access operators ]-------------------
     /**
@@ -261,9 +287,9 @@ public:
      */
     SIMD_INLINE const T & operator[](int n) const
     {
-    	static_assert(sizeof(*this) == sizeof(T[4]), "");
-    	assert(n >= 0 && n < 4);
-    	return (&x)[n];
+        static_assert(sizeof(*this) == sizeof(T[4]), "");
+        assert(n >= 0 && n < 4);
+        return (&x)[n];
     }
 
     //---------------[ vector aritmetic operator ]--------------
@@ -366,9 +392,9 @@ public:
     SIMD_INLINE bool operator==(const IVector4D<T>& rhs) const
     {
         return IAbs(x - rhs.x) < MACHINE_EPSILON &&
-               IAbs(y - rhs.y) < MACHINE_EPSILON &&
-               IAbs(z - rhs.z) < MACHINE_EPSILON &&
-               IAbs(w - rhs.w) < MACHINE_EPSILON;
+                IAbs(y - rhs.y) < MACHINE_EPSILON &&
+                IAbs(z - rhs.z) < MACHINE_EPSILON &&
+                IAbs(w - rhs.w) < MACHINE_EPSILON;
     }
 
     /**
@@ -431,27 +457,27 @@ public:
 
     //------------------------------ Friends ----------------------------------------//
 
-     /**
+    /**
       * Multiplication operator
       * @param rhs Right hand side argument of binary operator.
       */
-     friend SIMD_INLINE IVector4D<T> operator*(T number, const IVector4D<T>& vector)
-     {
-         return IVector4D<T>(number * vector.x, number * vector.y, number * vector.z , number * vector.w);
-     }
+    friend SIMD_INLINE IVector4D<T> operator*(T number, const IVector4D<T>& vector)
+    {
+        return IVector4D<T>(number * vector.x, number * vector.y, number * vector.z , number * vector.w);
+    }
 
 
-     /**
+    /**
       * Division operator
       * @param rhs Right hand side argument of binary operator.
       */
-     friend SIMD_INLINE  IVector4D<T> operator/( T number , const IVector4D<T>& vector )
-     {
-         return IVector4D<T>(vector.x / number, vector.y / number, vector.z / number , vector.w / number);
-     }
+    friend SIMD_INLINE  IVector4D<T> operator/( T number , const IVector4D<T>& vector )
+    {
+        return IVector4D<T>(vector.x / number, vector.y / number, vector.z / number , vector.w / number);
+    }
 
 
-     //------------------------------ Dynamics ----------------------------------------//
+    //------------------------------ Dynamics ----------------------------------------//
 
     /**
      * Addition operator
@@ -511,7 +537,7 @@ public:
      * Dot product of two vectors.
      * @param rhs Right hand side argument of binary operator.
      */
-    SIMD_INLINE T dot(const IVector4D<T>& rhs) const
+    SIMD_INLINE T Dot(const IVector4D<T>& rhs) const
     {
         return x * rhs.x + y * rhs.y + z * rhs.z + w * rhs.w;
     }
@@ -520,24 +546,24 @@ public:
      * Cross tri product operator
      * @param rhs Right hand side argument of binary operator.
      */
-    SIMD_INLINE IVector4D<T> cross(const IVector4D<T>& b , const IVector4D<T>& c) const
+    SIMD_INLINE IVector4D<T> Cross(const IVector4D<T>& b , const IVector4D<T>& c) const
     {
 
         //Precompute some 2x2 matrix determinants for speed
-         T Pxy = b.x*c.y - c.x*b.y;
-         T Pxz = b.x*c.z - c.x*b.z;
-         T Pxw = b.x*c.w - c.x*b.w;
-         T Pyz = b.y*c.z - c.y*b.z;
-         T Pyw = b.y*c.w - c.y*b.w;
-         T Pzw = b.z*c.w - c.z*b.w;
+        T Pxy = b.x*c.y - c.x*b.y;
+        T Pxz = b.x*c.z - c.x*b.z;
+        T Pxw = b.x*c.w - c.x*b.w;
+        T Pyz = b.y*c.z - c.y*b.z;
+        T Pyw = b.y*c.w - c.y*b.w;
+        T Pzw = b.z*c.w - c.z*b.w;
 
-          return IVector4D<T>
-          (
-             y*Pzw - z*Pyw + w*Pyz,    //Note the lack of 'x' in this line
-             z*Pxw - x*Pzw - w*Pxz,    //y, Etc.
-             x*Pyw - y*Pxw + w*Pxy,
-             y*Pxz - x*Pyz - z*Pxy
-          );
+        return IVector4D<T>
+                (
+                    y*Pzw - z*Pyw + w*Pyz,    //Note the lack of 'x' in this line
+                    z*Pxw - x*Pzw - w*Pxz,    //y, Etc.
+                    x*Pyw - y*Pxw + w*Pxy,
+                    y*Pxz - x*Pyz - z*Pxy
+                    );
     }
 
 
@@ -551,7 +577,7 @@ public:
      * of length of two vector can be used just this value, instead
      * of more expensive length() method.
      */
-    SIMD_INLINE T lengthSquare() const
+    SIMD_INLINE T LengthSquare() const
     {
         return x * x + y * y + z * z + w * w;
     }
@@ -561,17 +587,17 @@ public:
      * Get length of vector.
      * @return lenght of vector
      */
-    SIMD_INLINE T length() const
+    SIMD_INLINE T Length() const
     {
-        return (T) ISqrt(x * x + y * y + z * z + w * w);
+        return ISqrt(x * x + y * y + z * z + w * w);
     }
 
     /**
      * Normalize vector
      */
-    SIMD_INLINE void normalize()
+    SIMD_INLINE void Normalize()
     {
-        T s = length();
+        T s = Length();
         x /= s;
         y /= s;
         z /= s;
@@ -581,9 +607,9 @@ public:
     /**
      * Normalize Unit vector
      */
-    SIMD_INLINE IVector4D<T> getUnit() const
+    SIMD_INLINE IVector4D<T> GetUnit() const
     {
-        T lengthVector = length();
+        T lengthVector = Length();
         if (lengthVector < MACHINE_EPSILON)
         {
             return *this;
@@ -591,17 +617,17 @@ public:
         // Compute and return the unit vector
         T lengthInv = T(1.0) / lengthVector;
         return IVector4D<T>( x * lengthInv,
-                              y * lengthInv,
-                              z * lengthInv,
-                              w * lengthInv);
+                             y * lengthInv,
+                             z * lengthInv,
+                             w * lengthInv);
     }
 
     /**
      * Normalize Unit vector (popular name to methods)
      */
-    SIMD_INLINE IVector4D<T>  normalized() const
+    SIMD_INLINE IVector4D<T>  Normalized() const
     {
-        T lengthVector = length();
+        T lengthVector = Length();
         if (lengthVector < MACHINE_EPSILON)
         {
             return *this;
@@ -617,7 +643,7 @@ public:
     /**
     * Inverse vector
     */
-    SIMD_INLINE IVector4D<T> getInverse() const
+    SIMD_INLINE IVector4D<T> GetInverse() const
     {
         return IVector4D<T>( T(1.0/x) , T(1.0/y) , T(1.0/z) , T(1.0/w));
     }
@@ -625,22 +651,60 @@ public:
 
 
 
-    /**
-    * Build make plane
-    */
-    IVector4D<T> BuildPlan(const IVector3D<T> & p_point1, const IVector3D<T> &p_normal)
-    {
-       IVector3D<T> normal;
-       normal = (p_normal.normalized());
-       w  = normal.dot(p_point1);
-       x  = normal.x;
-       y  = normal.y;
-       z  = normal.z;
-       return *this;
-    }
+
+    //    //--------------[ Logic-Plane ]-----------------------
+
+
+    //    /**
+    //    * Build make plane
+    //    */
+    //    SIMD_INLINE IVector4D<T> BuildPlan(const IVector3D<T> & p_point1, const IVector3D<T> &p_normal)
+    //    {
+    //       IVector3D<T> normal;
+    //       normal = (p_normal.normalized());
+    //       w  = normal.dot(p_point1);
+    //       x  = normal.x;
+    //       y  = normal.y;
+    //       z  = normal.z;
+    //       return *this;
+    //    }
+
+
+    //    /**
+    //    * Intersection plane to direction
+    //    */
+    //    SIMD_INLINE bool RayInter( IVector3D<T> &interPoint, const IVector3D<T> &position, const IVector3D<T> &direction)
+    //    {
+    //        float den = IVector3D<T>(x,y,z).dot(direction);
+
+    //        IVector3D<T> P = position;
+
+    ///*        if( IAbs(den) < 0.00001 )
+    //        {
+    //            P = IVector3D<T>(x,y,z);
+    //        }
+    //        else*/ if( IAbs(den) < T(0.000001) )
+    //        {
+    //           return false;
+    //        }
+
+
+    //        IVector3D<T> tmp = (IVector3D<T>(x,y,z) * w) - P;
+    //        interPoint = P + (IVector3D<T>(x,y,z).dot(tmp) / den) * direction;
+
+    //        return true;
+    //    }
+
+
+    //    SIMD_INLINE IVector3D<T> ClosestPoint( const IVector3D<T>& point ) const
+    //    {
+    //        IVector3D<T> Normal(x,y,z);
+    //        return point - (Normal.dot(point) - w)*Normal;
+    //    }
 
 
     //--------------[ misc. operations ]-----------------------
+
     /**
      * Linear interpolation of two vectors
      * @param fact Factor of interpolation. For translation from position
@@ -648,11 +712,26 @@ public:
      * @param r Second Vector for interpolation
      * @note However values of fact parameter are reasonable only in interval
      * [0.0 , 1.0], you can pass also values outside of this interval and you
-     * can get result (extrapolation?)
+     * can Get result (extrapolation?)
      */
-    SIMD_INLINE IVector4D<T> lerp(T fact, const IVector4D<T>& r) const
+    SIMD_INLINE IVector4D<T> Lerp(T fact, const IVector4D<T>& r) const
     {
         return (*this) + (r - (*this)) * fact;
+    }
+
+
+
+
+
+    //! Returns the angle (in radians) between the two (normalized or unnormalized) vectors 'lhs' and 'rhs'.
+    SIMD_INLINE T GetAngleBetween( const IVector4D<T> &rhs ) const
+    {
+        IVector4D<T> lhs(*this);
+        T dotProduct = lhs.Dot(rhs);
+        T vectorsMagnitude = (lhs.Length()) * (rhs.Length());
+        T angle = IACos(dotProduct / vectorsMagnitude);
+        if( is_nan(angle)) return 0;
+        return (angle);
     }
 
     //-------------[ conversion ]-----------------------------
@@ -664,7 +743,7 @@ public:
      */
     SIMD_INLINE operator T*()
     {
-        return (T*) this;
+        return this;
     }
 
     /**
@@ -674,7 +753,7 @@ public:
      */
     SIMD_INLINE operator const T*() const
     {
-        return (const T*) this;
+        return this;
     }
 
     //-------------[ output operator ]------------------------
@@ -693,7 +772,7 @@ public:
     /**
     * Gets string representation.
     */
-    std::string toString() const
+    std::string ToString() const
     {
         std::ostringstream oss;
         oss << *this;
@@ -742,13 +821,13 @@ template<class T> const IVector4D<T> IVector4D<T>::W(0.0, 0.0, 0.0, 1.0);
 
 
 template<class T> const
-static IVector4D<T> cross(const IVector4D<T>& a, const IVector4D<T>& b , const IVector4D<T>& c)
+static IVector4D<T> Cross(const IVector4D<T>& a, const IVector4D<T>& b , const IVector4D<T>& c)
 {
-    return a.cross(b,c);
+    return a.Cross(b,c);
 }
 
 template<class T> const
-static T dot(const IVector4D<T>& a, const IVector4D<T>& b)
+static T Dot(const IVector4D<T>& a, const IVector4D<T>& b)
 {
     return a.dot(b);
 }
@@ -759,12 +838,14 @@ static T dot(const IVector4D<T>& a, const IVector4D<T>& b)
 //--------------------------------------
 // Typedef shortcuts for 4D vector
 //-------------------------------------
-/// Three dimensional Vector of floats
-typedef IVector4D<float> IVector4f;
-/// Three dimensional Vector of doubles
-typedef IVector4D<double> IVector4d;
-/// Three dimensional Vector of ints
-typedef IVector4D<int> IVector4i;
+
+using IVector4r    = IVector4D<Real>;
+using IVector4f    = IVector4D<float>;
+using IVector4d    = IVector4D<double>;
+using IVector4i    = IVector4D<std::int32_t>;
+using IVector4ui   = IVector4D<std::uint32_t>;
+using IVector4b    = IVector4D<std::int8_t>;
+using IVector4ub   = IVector4D<std::uint8_t>;
 
 
 } /* namespace */

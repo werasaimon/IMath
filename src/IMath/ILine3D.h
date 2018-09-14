@@ -32,7 +32,7 @@
 #define ILINE3D_H
 
 
-#include "iFunc.h"
+#include "IFunc.h"
 #include "IVector3D.h"
 #include "IQuaternion.h"
 #include "IMatrix3x3.h"
@@ -58,7 +58,7 @@ public:
       : mOrigin( origin ),
         mDirection( direction )
       {
-          mDirection.normalize();
+          mDirection.Normalize();
       }
 
       // copy operations
@@ -132,7 +132,7 @@ public:
       ILine3D Transform(T scale, const IQuaternion<T>& quad, const IVector3D<T>& translate) const
       {
           ILine3D<T>     line;
-          IMatrix3x3<T>  rotate = quad.getMatrix();
+          IMatrix3x3<T>  rotate = quad.GetRotMatrix();
 
           line.mDirection = rotate * mDirection;
           line.mDirection *= scale;
@@ -168,18 +168,18 @@ public:
       static T DistanceSquared( const ILine3D& line0, const ILine3D& line1,  T& s_c, T& t_c )
       {
            IVector3D<T> w0 = line0.mOrigin - line1.mOrigin;
-           T a = line0.mDirection.dot( line0.mDirection );
-           T b = line0.mDirection.dot( line1.mDirection );
-           T c = line1.mDirection.dot( line1.mDirection );
-           T d = line0.mDirection.dot( w0 );
-           T e = line1.mDirection.dot( w0 );
+           T a = line0.mDirection.Dot( line0.mDirection );
+           T b = line0.mDirection.Dot( line1.mDirection );
+           T c = line1.mDirection.Dot( line1.mDirection );
+           T d = line0.mDirection.Dot( w0 );
+           T e = line1.mDirection.Dot( w0 );
            T denom = a*c - b*b;
            if ( IsZero(denom) )
            {
                s_c = 0.0f;
                t_c = e/c;
                IVector3D<T> wc = w0 - t_c*line1.mDirection;
-               return wc.dot(wc);
+               return wc.Dot(wc);
            }
            else
            {
@@ -187,7 +187,7 @@ public:
                t_c = ((a*e - b*d)/denom);
                IVector3D<T> wc = w0 + s_c*line0.mDirection
                                      - t_c*line1.mDirection;
-               return wc.dot(wc);
+               return wc.Dot(wc);
        }
       }
 
@@ -202,11 +202,11 @@ public:
       static T DistanceSquared( const ILine3D& line, const IVector3D<T>& point,   T &t_c )
       {
           IVector3D<T> w = point - line.mOrigin;
-          T vsq = line.mDirection.dot(line.mDirection);
-          T proj = w.dot(line.mDirection);
+          T vsq = line.mDirection.Dot(line.mDirection);
+          T proj = w.Dot(line.mDirection);
           t_c = proj/vsq;
 
-          return w.dot(w) - t_c*proj;
+          return w.Dot(w) - t_c*proj;
       }
 
       static T Distance( const ILine3D& line, const IVector3D<T>& point,  T &t_c )
@@ -224,11 +224,11 @@ public:
       {
           // compute intermediate parameters
              IVector3D<T> w0 = line0.mOrigin - line1.mOrigin;
-             T a = line0.mDirection.dot( line0.mDirection );
-             T b = line0.mDirection.dot( line1.mDirection );
-             T c = line1.mDirection.dot( line1.mDirection );
-             T d = line0.mDirection.dot( w0 );
-             T e = line1.mDirection.dot( w0 );
+             T a = line0.mDirection.Dot( line0.mDirection );
+             T b = line0.mDirection.Dot( line1.mDirection );
+             T c = line1.mDirection.Dot( line1.mDirection );
+             T d = line0.mDirection.Dot( w0 );
+             T e = line1.mDirection.Dot( w0 );
 
              T denom = a*c - b*b;
 
@@ -250,8 +250,8 @@ public:
       IVector3D<T> ClosestPoint( const IVector3D<T>& point ) const
       {
           IVector3D<T> w = point - mOrigin;
-          T vsq  = mDirection.dot(mDirection);
-          T proj = w.dot(mDirection);
+          T vsq  = mDirection.Dot(mDirection);
+          T proj = w.Dot(mDirection);
 
           return mOrigin + (proj/vsq)*mDirection;
       }
@@ -270,7 +270,7 @@ public:
       /**
       * Gets string representation.
       */
-      std::string toString() const
+      std::string ToString() const
       {
           std::ostringstream oss;
           oss << *this;
@@ -287,12 +287,17 @@ public:
 };
 
 
-/// Two dimensional Line3 of floats
-typedef class ILine3D<float> Line3f;
-/// Two dimensional Line3 of doubles
-typedef class ILine3D<double> Line3d;
-/// Two dimensional Line3 of ints
-typedef class ILine3D<int> Line3i;
+//--------------------------------------
+// Typedef shortcuts for ILine3D
+//-------------------------------------
+
+using ILine3Dr    = ILine3D<Real>;
+using ILine3Df    = ILine3D<float>;
+using ILine3Dd    = ILine3D<double>;
+using ILine3Di    = ILine3D<std::int32_t>;
+using ILine3Dui   = ILine3D<std::uint32_t>;
+using ILine3Db    = ILine3D<std::int8_t>;
+using ILine3Dub   = ILine3D<std::uint8_t>;
 
 }
 #endif // ILINE3D_H

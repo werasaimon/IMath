@@ -1,4 +1,4 @@
- /********************************************************************************
+/********************************************************************************
  *
  * IVector3D.h
  *
@@ -33,7 +33,9 @@
 #define IVECTOR3D_H_
 
 
-#include "iFunc.h"
+#include "IReal.h"
+#include "IFunc.h"
+#include "IVector2D.h"
 
 namespace IMath
 {
@@ -57,6 +59,12 @@ class IVector3D
 {
 
 public:
+
+    //! Specifies the typename of the scalar components.
+    using ScalarType = T;
+
+    //! Specifies the number of vector components.
+    static const std::size_t components = 3;
 
     //-------------------- Attributes --------------------//
 
@@ -122,21 +130,27 @@ public:
 
     //----------------[ constructors ]--------------------------
     /**
-     * Creates and sets to (0,0,0)
+     * Creates and Sets to (0,0,0)
      */
     SIMD_INLINE IVector3D()
-            : x(0), y(0), z(0)
+        : x(0), y(0), z(0)
     {
     }
 
+    SIMD_INLINE explicit IVector3D(const T& scalar)
+        : x ( scalar ) , y ( scalar ) , z ( scalar )
+    {
+
+    }
+
     /**
-     * Creates and sets to (x,y,z)
+     * Creates and Sets to (x,y,z)
      * @param nx initial x-coordinate value
      * @param ny initial y-coordinate value
      * @param nz initial z-coordinate value
      */
     SIMD_INLINE IVector3D(T nx, T ny, T nz)
-            : x(nx), y(ny), z(nz)
+        : x(nx), y(ny), z(nz)
     {
     }
 
@@ -145,7 +159,7 @@ public:
      * @param src Source of data for new created IVector3D instance.
      */
     SIMD_INLINE IVector3D(const IVector3D<T>& src)
-            : x(src.x), y(src.y), z(src.z)
+        : x(src.x), y(src.y), z(src.z)
     {
     }
 
@@ -155,27 +169,29 @@ public:
      */
     template<class FromT>
     SIMD_INLINE IVector3D(const IVector3D<FromT>& src)
-            : x(static_cast<T>(src.x)), y(static_cast<T>(src.y)), z(static_cast<T>(src.z))
+        : x(static_cast<T>(src.x)),
+          y(static_cast<T>(src.y)),
+          z(static_cast<T>(src.z))
     {
     }
 
 
     //---------------------- Methods ---------------------//
 
-    SIMD_INLINE void setToZero()
+    SIMD_INLINE void SetToZero()
     {
         x = T(0);
         y = T(0);
         z = T(0);
     }
 
-    SIMD_INLINE bool isZero() const
+    SIMD_INLINE bool IsZero() const
     {
-        return IApproxEqual<T>( lengthSquare(), T(0.0) );
+        return IApproxEqual<T>( LengthSquare(), T(0.0) );
     }
 
 
-    SIMD_INLINE void setAllValues(T newX, T newY, T newZ)
+    SIMD_INLINE void SetAllValues(T newX, T newY, T newZ)
     {
         x = newX;
         y = newY;
@@ -183,14 +199,17 @@ public:
     }
 
 
-    SIMD_INLINE T getX() const { return x; }
-    SIMD_INLINE T getY() const { return y; }
-    SIMD_INLINE T getZ() const { return z; }
+    SIMD_INLINE T GetX() const { return x; }
+    SIMD_INLINE T GetY() const { return y; }
+    SIMD_INLINE T GetZ() const { return z; }
 
 
     SIMD_INLINE void SetX(T _x) { x = _x; }
     SIMD_INLINE void SetY(T _y) { y = _y; }
     SIMD_INLINE void SetZ(T _z) { z = _z; }
+
+
+    SIMD_INLINE IVector2D<T> GetXY() const { return IVector2D<T>(x,y); }
 
 
     //----------------[ access operators ]-------------------
@@ -228,9 +247,9 @@ public:
      */
     SIMD_INLINE T & operator[](int n)
     {
-    	static_assert(sizeof(*this) == sizeof(T[3]), "");
-    	assert(n >= 0 && n < 3);
-    	return (&x)[n];
+        static_assert(sizeof(*this) == sizeof(T[3]), "");
+        assert(n >= 0 && n < 3);
+        return (&x)[n];
     }
 
     /**
@@ -242,9 +261,9 @@ public:
      */
     SIMD_INLINE const T & operator[](int n) const
     {
-    	static_assert(sizeof(*this) == sizeof(T[3]), "");
-    	assert(n >= 0 && n < 3);
-    	return (&x)[n];
+        static_assert(sizeof(*this) == sizeof(T[3]), "");
+        assert(n >= 0 && n < 3);
+        return (&x)[n];
     }
 
     //---------------[ vector arithmetic operator ]--------------
@@ -339,7 +358,7 @@ public:
      * Dot product of two vectors.
      * @param rhs Right hand side argument of binary operator.
      */
-    SIMD_INLINE T dot(const IVector3D<T>& rhs) const
+    SIMD_INLINE T Dot(const IVector3D<T>& rhs) const
     {
         return x * rhs.x + y * rhs.y + z * rhs.z;
     }
@@ -348,11 +367,11 @@ public:
      * Cross product operator
      * @param rhs Right hand side argument of binary operator.
      */
-    SIMD_INLINE IVector3D<T> cross(const IVector3D<T>& rhs) const
+    SIMD_INLINE IVector3D<T> Cross(const IVector3D<T>& rhs) const
     {
         return IVector3D<T>(y * rhs.z - rhs.y * z,
-                             z * rhs.x - rhs.z * x,
-                             x * rhs.y - rhs.x * y);
+                            z * rhs.x - rhs.z * x,
+                            x * rhs.y - rhs.x * y);
     }
 
     //--------------[ scalar vector operator ]--------------------
@@ -476,8 +495,8 @@ public:
     SIMD_INLINE bool operator==(const IVector3D<T>& rhs) const
     {
         return IAbs(x - rhs.x) < MACHINE_EPSILON &&
-               IAbs(y - rhs.y) < MACHINE_EPSILON &&
-               IAbs(z - rhs.z) < MACHINE_EPSILON;
+                IAbs(y - rhs.y) < MACHINE_EPSILON &&
+                IAbs(z - rhs.z) < MACHINE_EPSILON;
     }
 
     /**
@@ -505,9 +524,9 @@ public:
      * Get length of vector.
      * @return lenght of vector
      */
-    SIMD_INLINE T length() const
+    SIMD_INLINE T Length() const
     {
-        return (T) ISqrt(x * x + y * y + z * z);
+        return ISqrt(x * x + y * y + z * z);
     }
 
     /**
@@ -517,30 +536,30 @@ public:
      * of length of two vector can be used just this value, instead
      * of more expensive length() method.
      */
-    SIMD_INLINE T lengthSquare() const
+    SIMD_INLINE T LengthSquare() const
     {
         return x * x + y * y + z * z;
     }
 
 
-    SIMD_INLINE int getMinAxis() const
+    SIMD_INLINE int GetMinAxis() const
     {
         return (x < y ? (x < z ? 0 : 2) : (y < z ? 1 : 2));
     }
 
-    SIMD_INLINE int getMaxAxis() const
+    SIMD_INLINE int GetMaxAxis() const
     {
         return (x < y ? (y < z ? 2 : 1) : (x < z ? 2 : 0));
     }
 
-    SIMD_INLINE T getMinValue() const
+    SIMD_INLINE T GetMinValue() const
     {
-      return IMin(IMin(x, y), z);
+        return IMin(IMin(x, y), z);
     }
 
-    SIMD_INLINE T getMaxValue() const
+    SIMD_INLINE T GetMaxValue() const
     {
-      return IMax(IMax(x, y), z);
+        return IMax(IMax(x, y), z);
     }
 
     //*********************************************//
@@ -548,9 +567,9 @@ public:
     /**
      * Normalize vector
      */
-    SIMD_INLINE void normalize()
+    SIMD_INLINE void Normalize()
     {
-        T s = length();
+        T s = Length();
         x /= s;
         y /= s;
         z /= s;
@@ -560,9 +579,9 @@ public:
     /**
      * Normalize unit vector
      */
-    SIMD_INLINE IVector3D<T> getUnit() const
+    SIMD_INLINE IVector3D<T> GetUnit() const
     {
-        T lengthVector = length();
+        T lengthVector = Length();
         if (lengthVector < MACHINE_EPSILON)
         {
             return *this;
@@ -570,8 +589,8 @@ public:
         // Compute and return the unit vector
         T lengthInv = T(1.0) / lengthVector;
         return IVector3D<T>( x * lengthInv,
-                              y * lengthInv,
-                              z * lengthInv);
+                             y * lengthInv,
+                             z * lengthInv);
     }
 
 
@@ -579,9 +598,9 @@ public:
     /**
      * Normalize Unit vector (popular name to methods)
      */
-    SIMD_INLINE IVector3D<T> normalized() const
+    SIMD_INLINE IVector3D<T> Normalized() const
     {
-        T lengthVector = length();
+        T lengthVector = Length();
         if (lengthVector < MACHINE_EPSILON)
         {
             return *this;
@@ -589,14 +608,14 @@ public:
         // Compute and return the unit vector
         T lengthInv = T(1.0) / lengthVector;
         return IVector3D<T>( x * lengthInv,
-                              y * lengthInv,
-                              z * lengthInv);
+                             y * lengthInv,
+                             z * lengthInv);
     }
 
     /**
     * Inverse vector
     */
-    SIMD_INLINE IVector3D<T> getInverse() const
+    SIMD_INLINE IVector3D<T> GetInverse() const
     {
         return IVector3D<T>( T(1.0/x) , T(1.0/y) , T(1.0/z) );
     }
@@ -604,26 +623,26 @@ public:
     /**
     * Orthogonal unit vector
     */
-    SIMD_INLINE IVector3D<T> getOneUnitOrthogonalVector() const
+    SIMD_INLINE IVector3D<T> GetOneUnitOrthogonalVector() const
     {
-          assert(length() > MACHINE_EPSILON);
+        assert(Length() > MACHINE_EPSILON);
 
-          // Get the minimum element of the vector
-          IVector3D<T> vectorAbs(IAbs(x), IAbs(y), IAbs(z));
-          int minElement = vectorAbs.getMinAxis();
+        // Get the minimum element of the vector
+        IVector3D<T> vectorAbs(IAbs(x), IAbs(y), IAbs(z));
+        int minElement = vectorAbs.GetMinAxis();
 
-          if (minElement == 0)
-          {
-             return IVector3D<T>(0.0, -z, y) / ISqrt(y*y + z*z);
-          }
-          else if (minElement == 1)
-          {
-             return IVector3D<T>(-z, 0.0, x) / ISqrt(x*x + z*z);
-          }
-          else
-          {
-             return IVector3D<T>(-y, x, 0.0) / ISqrt(x*x + y*y);
-          }
+        if (minElement == 0)
+        {
+            return IVector3D<T>(0.0, -z, y) / ISqrt(y*y + z*z);
+        }
+        else if (minElement == 1)
+        {
+            return IVector3D<T>(-z, 0.0, x) / ISqrt(x*x + z*z);
+        }
+        else
+        {
+            return IVector3D<T>(-y, x, 0.0) / ISqrt(x*x + y*y);
+        }
     }
 
 
@@ -634,14 +653,14 @@ public:
      * @param ay Angle (in degrees) to be rotated around Y-axis.
      * @param az Angle (in degrees) to be rotated around Z-axis.
      */
-    SIMD_INLINE void rotate(T ax, T ay, T az)
+    SIMD_INLINE void Rotate(T ax, T ay, T az)
     {
-        T a = ICos(IDegreesToRadians(ax));
-        T b = ISin(IDegreesToRadians(ax));
-        T c = ICos(IDegreesToRadians(ay));
-        T d = ISin(IDegreesToRadians(ay));
-        T e = ICos(IDegreesToRadians(az));
-        T f = ISin(IDegreesToRadians(az));
+        T a = ICos(/*IDegreesToRadians*/(ax));
+        T b = ISin(/*IDegreesToRadians*/(ax));
+        T c = ICos(/*IDegreesToRadians*/(ay));
+        T d = ISin(/*IDegreesToRadians*/(ay));
+        T e = ICos(/*IDegreesToRadians*/(az));
+        T f = ISin(/*IDegreesToRadians*/(az));
         T nx = c * e * x - c * f * y + d * z;
         T ny = (a * f + b * d * e) * x + (a * e - b * d * f) * y - b * c * z;
         T nz = (b * f - a * d * e) * x + (a * d * f + b * e) * y + a * c * z;
@@ -651,6 +670,44 @@ public:
 
     }
 
+
+
+    /**
+    \brief Rotates the specified vector 'vec' around the vector 'axis'.
+    \param[in] vec Specifies the vector which is to be rotated.
+    \param[in] axis Specifies the axis vector to rotate around.
+    \param[in] angle Specifies the rotation angle (in radians).
+    \return The new rotated vector.
+    */
+    SIMD_INLINE IVector3D<T> RotateVectorAroundAxis(IVector3D<T> axis, T angle)
+    {
+        const IVector3D<T>& vec(*this);
+
+        axis.Normalize();
+
+        auto s       = std::sin(angle);
+        auto c       = std::cos(angle);
+        auto cInv    = T(1) - c;
+
+        IVector3D<T> row0, row1, row2;
+
+        row0.x = axis.x*axis.x + c*(T(1) - axis.x*axis.x);
+        row0.y = axis.x*axis.y*cInv - s*axis.z;
+        row0.z = axis.x*axis.z*cInv + s*axis.y;
+
+        row1.x = axis.x*axis.y*cInv + s*axis.z;
+        row1.y = axis.y*axis.y + c*(T(1) - axis.y*axis.y);
+        row1.z = axis.y*axis.z*cInv - s*axis.x;
+
+        row2.x = axis.x*axis.z*cInv - s*axis.y;
+        row2.y = axis.y*axis.z*cInv + s*axis.x;
+        row2.z = axis.z*axis.z + c*(T(1) - axis.z*axis.z);
+
+        return IVector3D<T>( vec.Dot(row0),
+                             vec.Dot(row1),
+                             vec.Dot(row2) );
+    }
+
     /**
      * Linear interpolation of two vectors
      * @param fact Factor of interpolation. For translation from positon
@@ -658,25 +715,28 @@ public:
      * @param r Second Vector for interpolation
      * @note However values of fact parameter are reasonable only in interval
      * [0.0 , 1.0], you can pass also values outside of this interval and you
-     * can get result (extrapolation?)
+     * can Get result (extrapolation?)
      */
-    SIMD_INLINE IVector3D<T> lerp(T fact, const IVector3D<T>& r) const
+    SIMD_INLINE IVector3D<T> Lerp(T fact, const IVector3D<T>& r) const
     {
         return (*this) + (r - (*this)) * fact;
     }
 
 
 
-
-    SIMD_INLINE T getAngleBetween( const IVector3D<T> &Vector2 ) const
+    //! Returns the angle (in radians) between the two (Normalized or unNormalized) vectors 'lhs' and 'rhs'.
+    SIMD_INLINE T GetAngleBetween( const IVector3D<T> &rhs ) const
     {
-        IVector3D<T> Vector1(*this);
-        T dotProduct = Vector1.dot(Vector2);
-        T vectorsMagnitude = (Vector1.length()) * (Vector2.length());
-        T angle = IArcCos(dotProduct / vectorsMagnitude);
+        IVector3D<T> lhs(*this);
+        T dotProduct = lhs.Dot(rhs);
+        T vectorsMagnitude = (lhs.Length()) * (rhs.Length());
+        T angle = IACos(dotProduct / vectorsMagnitude);
         if( is_nan(angle)) return 0;
         return (angle);
     }
+
+
+
 
     //-------------[ conversion ]-----------------------------
 
@@ -687,7 +747,7 @@ public:
      */
     SIMD_INLINE operator T*()
     {
-        return (T*) this;
+        return this;
     }
 
     /**
@@ -697,7 +757,7 @@ public:
      */
     SIMD_INLINE operator const T*() const
     {
-        return (const T*) this;
+        return this;
     }
 
     //-------------[ output operator ]------------------------
@@ -716,7 +776,7 @@ public:
     /**
          * Gets string representation.
          */
-    std::string toString() const
+    std::string ToString() const
     {
         std::ostringstream oss;
         oss << *this;
@@ -734,15 +794,15 @@ public:
      */
     static SIMD_INLINE T Determinant(const IVector3D<T>& a, const IVector3D<T>& b, const IVector3D<T>& c)
     {
-        return a.dot(b.cross(c));
+        return a.Dot(b.Cross(c));
     }
 
 
-    static SIMD_INLINE IVector3D<T> clamp(const IVector3D<T>& vector, T maxLength)
+    static SIMD_INLINE IVector3D<T> Clamp(const IVector3D<T>& vector, T maxLength)
     {
-        if (vector.lengthSquare() > maxLength * maxLength)
+        if (vector.LengthSquare() > maxLength * maxLength)
         {
-            return vector.getUnit() * maxLength;
+            return vector.GetUnit() * maxLength;
         }
 
         return vector;
@@ -751,7 +811,7 @@ public:
 
     static T SIMD_INLINE AngleSigned(IVector3D<T> v1, IVector3D<T> v2, IVector3D<T> normal)
     {
-        return IAtan2( normal.dot(v1.cross(v2)), v1.dot(v2));
+        return IAtan2( normal.Dot(v1.Cross(v2)), v1.Dot(v2));
     }
 
 
@@ -763,16 +823,16 @@ public:
      * @return Face_Normal
      */
     static  SIMD_INLINE  IVector3D<T> triNormal( const IVector3D<T>& V0,
-                                                  const IVector3D<T>& V1,
-                                                  const IVector3D<T>& V2)
+                                                 const IVector3D<T>& V1,
+                                                 const IVector3D<T>& V2)
     {
         IVector3D<T> Norm;
         IVector3D<T> E = V1;
         IVector3D<T> F = V2;
         E -= V0;
         F -= V1;
-        Norm = E.cross(F);
-        Norm.normalize();
+        Norm = E.Cross(F);
+        Norm.Normalize();
         return Norm;
     }
 
@@ -786,13 +846,13 @@ public:
      */
     static SIMD_INLINE void BiUnitGrammSchmidt(const IVector3D<T>& n_axis , IVector3D<T>& p, IVector3D<T>& q )
     {
-        p = n_axis.getOneUnitOrthogonalVector();
-        q = n_axis.cross(p);
+        p = n_axis.GetOneUnitOrthogonalVector();
+        q = n_axis.Cross(p);
     }
 
 
-    #define btRecipSqrt(x)  (1.0/ISqrt(x))
-    #define SIMDSQRT12      (0.7071067811865475244008443621048490)
+#define btRecipSqrt(x)  (1.0/ISqrt(x))
+#define SIMDSQRT12      (0.7071067811865475244008443621048490)
     /// Bullet physics version (Gramm schmidt process)
     static SIMD_INLINE void BiUnitOrthogonalVector(const IVector3D<T>& n, IVector3D<T>& p, IVector3D<T>& q)
     {
@@ -804,7 +864,7 @@ public:
             p[0] = T(0);
             p[1] = -n[2]*k;
             p[2] = n[1]*k;
-            // set q = n x p
+            // Set q = n x p
             q[0] = a*k;
             q[1] = -n[0]*p[2];
             q[2] = n[0]*p[1];
@@ -817,7 +877,7 @@ public:
             p[0] = -n[1]*k;
             p[1] = n[0]*k;
             p[2] = T(0);
-            // set q = n x p
+            // Set q = n x p
             q[0] = -n[2]*p[1];
             q[1] = n[2]*p[0];
             q[2] = a*k;
@@ -865,21 +925,22 @@ static IVector3D<T> cross(const IVector3D<T>& a, const IVector3D<T>& b)
 }
 
 template<class T> const
-static T dot(const IVector3D<T>& a, const IVector3D<T>& b)
+static T Dot(const IVector3D<T>& a, const IVector3D<T>& b)
 {
-    return a.dot(b);
+    return a.Dot(b);
 }
 
 //--------------------------------------
 // Typedef shortcuts for 3D vector
 //-------------------------------------
-/// Three dimensional Vector of floats
-typedef IVector3D<float> IVector3f;
-/// Three dimensional Vector of doubles
-typedef IVector3D<double> IVector3d;
-/// Three dimensional Vector of ints
-typedef IVector3D<int> IVector3i;
 
+using IVector3r    = IVector3D<Real>;
+using IVector3f    = IVector3D<float>;
+using IVector3d    = IVector3D<double>;
+using IVector3i    = IVector3D<std::int32_t>;
+using IVector3ui   = IVector3D<std::uint32_t>;
+using IVector3b    = IVector3D<std::int8_t>;
+using IVector3ub   = IVector3D<std::uint8_t>;
 
 } /* namespace */
 
