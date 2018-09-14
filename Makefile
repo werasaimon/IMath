@@ -1,9 +1,9 @@
 CXXFLAGS =	-O2 -g -Wall -fmessage-length=0 -std=c++11
 CC=g++
 
-OBJS =		cmath_make.o
+OBJS =		IMath_make.o
 
-TARGET =	cmath_bin
+TARGET =	IMath_bin
 
 #----------------------- core main -------------------------#
 LDFLAGS =
