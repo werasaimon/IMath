@@ -378,22 +378,83 @@ namespace IMath
 
 
 
-        /// Quaternion using camera look direction
-        SIMD_INLINE IQuaternion<T> LookRotation(IVector3D<T>& lookAt, IVector3D<T>& upDirection)
-        {
-            IVector3D<T> forward = lookAt.GetUnit();
-            IVector3D<T> right   = upDirection.GetUnit().Cross(forward);
-            IVector3D<T> up      = forward.Cross(right);
+//        /// Quaternion using camera look direction
+//        SIMD_INLINE IQuaternion<T> LookRotation(IVector3D<T>& lookAt, IVector3D<T>& upDirection)
+//        {
+//            IVector3D<T> forward = lookAt.GetUnit();
+//            IVector3D<T> right   = upDirection.GetUnit().Cross(forward);
+//            IVector3D<T> up      = forward.Cross(right);
 
-            IQuaternion<T> ret;
-            ret.w = ISqrt(1.0f + right.x + up.y + forward.z) * 0.5f;
-            T w4_recip = 1.0f / (4.0f * ret.w);
-            ret.v.x = (forward.y - up.z) * w4_recip;
-            ret.v.y = (right.z - forward.x) * w4_recip;
-            ret.v.z = (up.x - right.y) * w4_recip;
+//            IQuaternion<T> ret;
+//            ret.w = ISqrt(1.0f + right.x + up.y + forward.z) * 0.5f;
+//            T w4_recip = 1.0f / (4.0f * ret.w);
+//            ret.v.x = (forward.y - up.z) * w4_recip;
+//            ret.v.y = (right.z - forward.x) * w4_recip;
+//            ret.v.z = (up.x - right.y) * w4_recip;
 
-            return ret;
-        }
+//            return ret;
+//        }
+
+       /// Quaternion using camera look direction
+       SIMD_INLINE IQuaternion<T> LookRotation(IVector3D<T>& forward, IVector3D<T>& up)
+         {
+               forward.Normalize();
+
+               IVector3D<T> vector = (forward.Normalized());
+               IVector3D<T> vector2 =(up.Cross(vector)).Normalized();
+               IVector3D<T> vector3 =(vector.Cross(vector2));
+
+               T m00 = vector2.x;
+               T m01 = vector2.y;
+               T m02 = vector2.z;
+               T m10 = vector3.x;
+               T m11 = vector3.y;
+               T m12 = vector3.z;
+               T m20 = vector.x;
+               T m21 = vector.y;
+               T m22 = vector.z;
+
+               T num8 = (m00 + m11) + m22;
+               IQuaternion<T> quaternion;
+               if (num8 > T(0.f))
+               {
+                   T num = ISqrt(num8 + T(1.f));
+                   quaternion.w = num * T(0.5f);
+                   num = T(0.5f) / num;
+                   quaternion.v.x = (m12 - m21) * num;
+                   quaternion.v.y = (m20 - m02) * num;
+                   quaternion.v.z = (m01 - m10) * num;
+                   return quaternion;
+               }
+               if ((m00 >= m11) && (m00 >= m22))
+               {
+                   T num7 = ISqrt(((T(1.f) + m00) - m11) - m22);
+                   T num4 = T(0.5f) / num7;
+                   quaternion.v.x = T(0.5f) * num7;
+                   quaternion.v.y = (m01 + m10) * num4;
+                   quaternion.v.z = (m02 + m20) * num4;
+                   quaternion.w = (m12 - m21) * num4;
+                   return quaternion;
+               }
+               if (m11 > m22)
+               {
+                   T num6 = ISqrt(((T(1.f) + m11) - m00) - m22);
+                   T num3 = T(0.5f) / num6;
+                   quaternion.v.x = (m10+ m01) * num3;
+                   quaternion.v.y = T(0.5f) * num6;
+                   quaternion.v.z = (m21 + m12) * num3;
+                   quaternion.w = (m20 - m02) * num3;
+                   return quaternion;
+               }
+
+               T num5 = ISqrt(((T(1.f) + m22) - m00) - m11);
+               T num2 = T(0.5f) / num5;
+               quaternion.v.x = (m20 + m02) * num2;
+               quaternion.v.y = (m21 + m12) * num2;
+               quaternion.v.z = T(0.5f) * num5;
+               quaternion.w = (m01 - m10) * num2;
+               return quaternion;
+         }
 
 
         //--------------------- operators -------------------------//
