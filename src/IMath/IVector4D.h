@@ -222,13 +222,13 @@ public:
     SIMD_INLINE void SetW(T _w) { w = _w; }
 
 
-    SIMD_INLINE void SetXY(const IVector2D<T> _v)
+    SIMD_INLINE void SetXY(const IVector2D<T>& _v)
     {
         x=_v.x;
         y=_v.y;
     }
 
-    SIMD_INLINE void SetXYZ(const IVector3D<T> _v)
+    SIMD_INLINE void SetXYZ(const IVector3D<T>& _v)
     {
         x=_v.x;
         y=_v.y;
@@ -743,7 +743,7 @@ public:
      */
     SIMD_INLINE operator T*()
     {
-        return this;
+        return &x;
     }
 
     /**
@@ -753,7 +753,7 @@ public:
      */
     SIMD_INLINE operator const T*() const
     {
-        return this;
+        return &x;
     }
 
     //-------------[ output operator ]------------------------

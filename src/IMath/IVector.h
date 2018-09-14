@@ -21,6 +21,12 @@ template <typename T, std::size_t N>
 class IVector
 {
 
+
+private:
+
+    T v_[N];
+
+
 public:
 
     //! Specifies the typename of the scalar components.
@@ -148,6 +154,26 @@ public:
     }
 
 
+    //-------------[ conversion ]-----------------------------
+    /**
+     * Conversion to pointer operator
+     * @return Pointer to internally stored (in management of class IVector2D<T>)
+     * used for passing IVector<T,N> values to gl*n[fd] functions.
+     */
+    SIMD_INLINE operator T*()
+    {
+        return &v_[0];
+    }
+    /**
+     * Conversion to pointer operator
+     * @return Constant Pointer to internally stored (in management of class IVector2D<T>)
+     * used for passing IVector<T,N> values to gl*n[fd] functions.
+     */
+    SIMD_INLINE operator const T*() const
+    {
+        return &v_[0];
+    }
+
     //-------------[ output operator ]------------------------
     /**
            * Output to stream operator
@@ -179,9 +205,6 @@ public:
         return oss.str();
     }
 
-private:
-
-    T v_[N];
 
 };
 

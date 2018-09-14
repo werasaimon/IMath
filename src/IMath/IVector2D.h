@@ -574,7 +574,7 @@ public:
      */
     SIMD_INLINE operator T*()
     {
-        return this;
+        return &x;
     }
     /**
      * Conversion to pointer operator
@@ -583,7 +583,7 @@ public:
      */
     SIMD_INLINE operator const T*() const
     {
-        return this;
+        return &x;
     }
 
     //-------------[ output operator ]------------------------

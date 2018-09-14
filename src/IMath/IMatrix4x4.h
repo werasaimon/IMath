@@ -946,14 +946,14 @@ public:
     }
 
 
-    /// Convert in OpenGL Matrix Model
-    SIMD_INLINE IMatrix4x4<T> ConvertInOpenGLFormat() const
-    {
-        IMatrix4x4<T> m(*this);
-        m.SetPosition(GetCoords());
-        m.SetRotation(GetRotMatrix().GetTranspose());
-        return m;
-    }
+//    /// Convert in OpenGL Matrix Model
+//    SIMD_INLINE IMatrix4x4<T> ConvertInOpenGLFormat() const
+//    {
+//        IMatrix4x4<T> m(*this);
+//        m.SetPosition(GetCoords());
+//        m.SetRotation(GetRotMatrix().GetTranspose());
+//        return m;
+//    }
 
 
     ///---------------------------[ DecomposeMatrix-RecomposeMatrix __ Only Orthogonal Matrix ] -----------------------------------///

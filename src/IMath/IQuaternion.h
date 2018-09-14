@@ -84,46 +84,46 @@ namespace IMath
 
         //--------------------------[ constructors ]------------------------------- //
 
-        /**
-    * IQuaternion constructor, Sets IQuaternion to (0 + 0i + 0j + 0k).
-    */
-        SIMD_INLINE IQuaternion()
-            : w(0), v(0, 0, 0)
-        {
-        }
+       /**
+       * IQuaternion constructor, Sets IQuaternion to (0 + 0i + 0j + 0k).
+       */
+       SIMD_INLINE IQuaternion()
+           : w(0), v(0, 0, 0)
+       {
+       }
+
+       /**
+        * Copy constructor.
+        */
+       SIMD_INLINE IQuaternion(const IQuaternion<T>& q)
+           : w(q.w), v(q.v)
+       {
+       }
+
+       /**
+        * Copy casting constructor.
+        */
+       template<class FromT>
+       SIMD_INLINE IQuaternion(const IQuaternion<FromT>& q)
+           : w(static_cast<T>(q.w)), v(q.v)
+       {
+       }
 
         /**
-    * Copy constructor.
-    */
-        SIMD_INLINE IQuaternion(const IQuaternion<T>& q)
-            : w(q.w), v(q.v)
-        {
-        }
-
-        /**
-     * Copy casting constructor.
-     */
-        template<class FromT>
-        SIMD_INLINE IQuaternion(const IQuaternion<FromT>& q)
-            : w(static_cast<T>(q.w)), v(q.v)
-        {
-        }
-
-        /**
-    * Creates IQuaternion object from real part w_ and complex part v_.
-    * @param w_ Real part of IQuaternion.
-    * @param v_ Complex part of IQuaternion (xi + yj + zk).
-    */
+        * Creates IQuaternion object from real part w_ and complex part v_.
+        * @param w_ Real part of IQuaternion.
+        * @param v_ Complex part of IQuaternion (xi + yj + zk).
+        */
         SIMD_INLINE IQuaternion(T w_, const IVector3D<T>& v_)
             : w(w_), v(v_)
         {
         }
 
         /**
-    * Creates IQuaternion object from real part w_ and complex part v_.
-    * @param w_ Real part of IQuaternion.
-    * @param v_ Complex part of IQuaternion (xi + yj + zk).
-    */
+        * Creates IQuaternion object from real part w_ and complex part v_.
+        * @param w_ Real part of IQuaternion.
+        * @param v_ Complex part of IQuaternion (xi + yj + zk).
+        */
         SIMD_INLINE IQuaternion(const IVector3D<T>& v_, T w_)
             : w(w_), v(v_)
         {
@@ -152,6 +152,16 @@ namespace IMath
         SIMD_INLINE IQuaternion(const IVector3D<T>& eulerAngles)
         {
             initWithEulerAngles(eulerAngles.x, eulerAngles.y, eulerAngles.z);
+        }
+
+
+        /// Constructor which convert Vector4D (in radians) to a quaternion
+        SIMD_INLINE IQuaternion(const IVector4D<T>& _v)
+        {
+            v.x = _v.x;
+            v.y = _v.y;
+            v.z = _v.z;
+            w   = _v.w;
         }
 
         /// Create a unit quaternion from a rotation matrix

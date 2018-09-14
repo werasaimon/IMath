@@ -208,6 +208,12 @@ public:
     SIMD_INLINE void SetY(T _y) { y = _y; }
     SIMD_INLINE void SetZ(T _z) { z = _z; }
 
+    SIMD_INLINE void SetXY( const IVector2D<T>& v)
+    {
+        x = v.x;
+        y = v.y;
+    }
+
 
     SIMD_INLINE IVector2D<T> GetXY() const { return IVector2D<T>(x,y); }
 
@@ -747,7 +753,7 @@ public:
      */
     SIMD_INLINE operator T*()
     {
-        return this;
+        return &x;
     }
 
     /**
@@ -757,7 +763,7 @@ public:
      */
     SIMD_INLINE operator const T*() const
     {
-        return this;
+        return &x;
     }
 
     //-------------[ output operator ]------------------------
@@ -919,9 +925,9 @@ template<class T> const IVector3D<T> IVector3D<T>::Z(0.0, 0.0, 1.0);
 
 
 template<class T> const
-static IVector3D<T> cross(const IVector3D<T>& a, const IVector3D<T>& b)
+static IVector3D<T> Cross(const IVector3D<T>& a, const IVector3D<T>& b)
 {
-    return a.cross(b);
+    return a.Cross(b);
 }
 
 template<class T> const
