@@ -98,7 +98,7 @@ public:
      */
     SIMD_INLINE IMatrix4x4(const T * dt)
     {
-        std::memcpy(mData, dt, sizeof(T) * 16);
+        std::memcpy(mData, dt, sizeof(T) * components);
     }
 
     /**
@@ -107,7 +107,7 @@ public:
      */
     SIMD_INLINE IMatrix4x4(const IMatrix4x4<T>& src)
     {
-        std::memcpy(mData, src.mData, sizeof(T) * 16);
+        std::memcpy(mData, src.mData, sizeof(T) * components);
     }
 
     /**
@@ -178,7 +178,7 @@ public:
     template<class FromT>
     SIMD_INLINE IMatrix4x4(const IMatrix4x4<FromT>& src)
     {
-        for (int i = 0; i < 16; i++)
+        for (int i = 0; i < components; i++)
         {
             mData[i] = static_cast<T>(src.mData[i]);
         }
@@ -254,7 +254,7 @@ public:
      */
     SIMD_INLINE bool operator==(const IMatrix4x4<T>& rhs) const
     {
-        for (int i = 0; i < 16; i++)
+        for (int i = 0; i < components; i++)
         {
             if (IAbs(mData[i] - rhs.mData[i]) >= MACHINE_EPSILON )
                 return false;
@@ -355,7 +355,7 @@ public:
      */
     SIMD_INLINE IMatrix4x4<T>& operator=(const IMatrix4x4<T>& rhs)
     {
-        std::memcpy(mData, rhs.mData, sizeof(T) * 16);
+        std::memcpy(mData, rhs.mData, sizeof(T) * components);
         return *this;
     }
 
@@ -366,7 +366,7 @@ public:
     template<class FromT>
     SIMD_INLINE IMatrix4x4<T>& operator=(const IMatrix4x4<FromT>& rhs)
     {
-        for (int i = 0; i < 16; i++)
+        for (int i = 0; i < components; i++)
         {
             mData[i] = static_cast<T>(rhs.mData[i]);
         }
@@ -379,7 +379,7 @@ public:
      */
     SIMD_INLINE IMatrix4x4<T>& operator=(const T* rhs)
     {
-        std::memcpy(mData, rhs, sizeof(T) * 16);
+        std::memcpy(mData, rhs, sizeof(T) * components);
         return *this;
     }
 

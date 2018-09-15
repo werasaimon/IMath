@@ -200,7 +200,7 @@ public:
      */
     SIMD_INLINE T& operator[](int n)
     {
-        static_assert(sizeof(*this) == sizeof(T[2]), "");
+        static_assert(sizeof(*this) == sizeof(T[components]), "");
         assert(n >= 0 && n < 2);
         return (&x)[n];
     }
@@ -213,7 +213,7 @@ public:
      */
     SIMD_INLINE const T& operator[](int n) const
     {
-        static_assert(sizeof(*this) == sizeof(T[2]), "");
+        static_assert(sizeof(*this) == sizeof(T[components]), "");
         assert(n >= 0 && n < 2);
         return (&x)[n];
     }

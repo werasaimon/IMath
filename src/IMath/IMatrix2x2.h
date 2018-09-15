@@ -92,9 +92,9 @@ template<class T> class IMatrix2x2
          *
          * @param arr Array of floating point values in row-major order.
          */
-        SIMD_INLINE IMatrix2x2(const T arr[4])
+        SIMD_INLINE IMatrix2x2(const T arr[components])
         {
-            std::memcpy(mData, arr, 4 * sizeof(T));
+            std::memcpy(mData, arr, components * sizeof(T));
         }
 
 
@@ -133,7 +133,7 @@ template<class T> class IMatrix2x2
         template<class FromT>
         SIMD_INLINE IMatrix2x2(const IMatrix2x2<FromT>& src)
         {
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < components; i++)
             {
                 mData[i] = static_cast<T>(src.mData[i]);
             }
@@ -190,7 +190,7 @@ template<class T> class IMatrix2x2
          */
         SIMD_INLINE T operator[](std::size_t index) const
         {
-            assert(index < 4);
+            assert(index < components);
             return mData[index];
         }
 
@@ -204,7 +204,7 @@ template<class T> class IMatrix2x2
         friend SIMD_INLINE bool operator==(const IMatrix2x2<T>& A, const IMatrix2x2<T>& B)
         {
             const T epsilon = MACHINE_EPSILON;
-            for (int i = 0; i < 4; ++i)
+            for (int i = 0; i < components; ++i)
             {
                 if (IAbs(A[i] - B[i]) > epsilon) return false;
             }
@@ -235,7 +235,7 @@ template<class T> class IMatrix2x2
         */
         SIMD_INLINE IMatrix2x2<T>& operator=(const IMatrix2x2<T>& rhs)
         {
-            std::memcpy(mData, rhs.mData, sizeof(T) * 4);
+            std::memcpy(mData, rhs.mData, sizeof(T) * components);
             return *this;
         }
 
@@ -246,7 +246,7 @@ template<class T> class IMatrix2x2
         template<class FromT>
         SIMD_INLINE IMatrix2x2<T>& operator=(const IMatrix2x2<FromT>& rhs)
         {
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < components; i++)
             {
                 mData[i] = static_cast<T>(rhs.mData[i]);
             }
@@ -259,7 +259,7 @@ template<class T> class IMatrix2x2
         */
         SIMD_INLINE IMatrix2x2<T>& operator=(const T* rhs)
         {
-            std::memcpy(mData, rhs, sizeof(T) * 4);
+            std::memcpy(mData, rhs, sizeof(T) * components);
             return *this;
         }
 

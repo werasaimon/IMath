@@ -135,7 +135,7 @@ template<class T> class IMatrix3x3
       */
       SIMD_INLINE IMatrix3x3(const T * dt)
       {
-          std::memcpy(mData, dt, sizeof(T) * 9);
+          std::memcpy(mData, dt, sizeof(T) * components);
       }
 
 
@@ -146,7 +146,7 @@ template<class T> class IMatrix3x3
       template<class FromT>
       SIMD_INLINE IMatrix3x3(const IMatrix3x3<FromT>& src)
       {
-          for (int i = 0; i < 9; i++)
+          for (int i = 0; i < components; i++)
           {
               mData[i] = static_cast<T>(src.mData[i]);
           }
@@ -205,7 +205,7 @@ template<class T> class IMatrix3x3
       */
       SIMD_INLINE IMatrix3x3<T>& operator=(const IMatrix3x3<T>& rhs)
       {
-          std::memcpy(mData, rhs.mData, sizeof(T) * 9);
+          std::memcpy(mData, rhs.mData, sizeof(T) * components);
           return *this;
       }
 
@@ -216,7 +216,7 @@ template<class T> class IMatrix3x3
       template<class FromT>
       SIMD_INLINE IMatrix3x3<T>& operator=(const IMatrix3x3<FromT>& rhs)
       {
-          for (int i = 0; i < 9; i++)
+          for (int i = 0; i < components; i++)
           {
               mData[i] = static_cast<T>(rhs.mData[i]);
           }
@@ -229,7 +229,7 @@ template<class T> class IMatrix3x3
       */
       SIMD_INLINE IMatrix3x3<T>& operator=(const T* rhs)
       {
-          std::memcpy(mData, rhs, sizeof(T) * 9);
+          std::memcpy(mData, rhs, sizeof(T) * components);
           return *this;
       }
 
