@@ -58,7 +58,7 @@ public:
     //! Specifies the number of vector components.
     static const std::size_t components = 4*4;
 
-//private:
+private:
 
     //-------------------- Attributes --------------------//
 
@@ -66,15 +66,6 @@ public:
     {
         T            mData[16];
         IVector4D<T> mRows[4];
-
-        struct
-        {
-            IVector4D<T> right;
-            IVector4D<T> up;
-            IVector4D<T> dir;
-            IVector4D<T> position;
-
-        } V4;
     };
 
  public:
@@ -240,6 +231,10 @@ public:
        mRows[1].Normalize();
        mRows[2].Normalize();
     }
+
+
+
+    //---------------------[ Get operators ]------------------------------
 
 
     //---------------------[ Equality operators ]------------------------------
@@ -850,16 +845,6 @@ public:
     }
 
 
-    /**
-    * Return the coords of the matrix
-    */
-    SIMD_INLINE IVector3D<T> GetCoords() const
-    {
-        // Compute and return the coords
-        return IVector3D<T>(mRows[3][0] , mRows[3][1] , mRows[3][2]);
-    }
-
-
 
     /**
     * Return the coords of the matrix
@@ -870,7 +855,10 @@ public:
     }
 
 
-    inline void NoTranslation()
+    /**
+    * Off translation of the matrix
+    */
+    SIMD_INLINE void NoTranslation()
     {
         mData[12]=0;
         mData[13]=0;
@@ -950,7 +938,7 @@ public:
 //    SIMD_INLINE IMatrix4x4<T> ConvertInOpenGLFormat() const
 //    {
 //        IMatrix4x4<T> m(*this);
-//        m.SetPosition(GetCoords());
+//        m.SetPosition(GetTranslation());
 //        m.SetRotation(GetRotMatrix().GetTranspose());
 //        return m;
 //    }
@@ -973,9 +961,9 @@ public:
     {
        IMatrix4x4<T> mat = *(IMatrix4x4<T>*)matrix;
 
-       scale[0] = mat.V4.right.length();
-       scale[1] = mat.V4.up.length();
-       scale[2] = mat.V4.dir.length();
+       scale[0] = mat.mRows[0].length();
+       scale[1] = mat.mRows[1].length();
+       scale[2] = mat.mRows[2].length();
 
        IMatrix3x3<T> mat3 = mat.GetRotMatrix();
        mat3.OrthoNormalize();
@@ -1010,14 +998,19 @@ public:
        for (int i = 0; i < 3; i++)
        {
           if (IAbs(scale[i]) < FLT_EPSILON)
+          {
              validScale[i] = 0.001f;
+          }
           else
+          {
              validScale[i] = scale[i];
+          }
        }
-       mat.V4.right *= validScale[0];
-       mat.V4.up    *= validScale[1];
-       mat.V4.dir   *= validScale[2];
-       mat.V4.position.SetAllValues(translation[0], translation[1], translation[2], 1.f);
+
+       mat.mRows[0] *= validScale[0];
+       mat.mRows[1] *= validScale[1];
+       mat.mRows[2] *= validScale[2];
+       mat.SetPosition( IVector3D<T>(translation[0], translation[1], translation[2]) );
 
     }
 
@@ -1757,9 +1750,9 @@ template<class T> const IMatrix4x4<T> IMatrix4x4<T>::ZERO = IMatrix4x4<T>(0.0, 0
 template<class T>  SIMD_INLINE IMatrix4x4<T> operator ^ (const IVector4D<T> lhs , const IVector4D<T> rhs )
 {
     return IMatrix4x4<T>( lhs.x * rhs.x , lhs.x * rhs.y, lhs.x * rhs.z, lhs.x * rhs.w ,
-			               lhs.y * rhs.x , lhs.y * rhs.y, lhs.y * rhs.z, lhs.y * rhs.w ,
-						   lhs.z * rhs.x , lhs.z * rhs.y, lhs.z * rhs.z, lhs.z * rhs.w ,
-						   lhs.w * rhs.x , lhs.w * rhs.y, lhs.w * rhs.z, lhs.w * rhs.w);
+                          lhs.y * rhs.x , lhs.y * rhs.y, lhs.y * rhs.z, lhs.y * rhs.w ,
+                          lhs.z * rhs.x , lhs.z * rhs.y, lhs.z * rhs.z, lhs.z * rhs.w ,
+                          lhs.w * rhs.x , lhs.w * rhs.y, lhs.w * rhs.z, lhs.w * rhs.w);
 }
 
 template<class T>  SIMD_INLINE IMatrix4x4<T> operator ^ (const ILorentzVector<T> lhs , const ILorentzVector<T> rhs )
