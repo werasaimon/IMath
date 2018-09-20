@@ -228,13 +228,13 @@ template<class T> class  ILorentzVector
        **/
 
     	/// method Gerglocema
-        *this = createBoost( *this , IVector3D<T>(bx,by,bz) );
+        *this = CreateGerglocemaBoost( *this , IVector3D<T>(bx,by,bz) );
     }
 
     SIMD_INLINE void Boost( const IVector3D<T> &b)
     {
     	/// method Gerglocema
-    	*this = createBoost( *this , b );
+    	*this = CreateGerglocemaBoost( *this , b );
     }
 
 
@@ -630,7 +630,7 @@ template<class T> class  ILorentzVector
     /**
      *  Method Gerglocema
      */
-    static SIMD_INLINE ILorentzVector<T> CreateBoost( const ILorentzVector<T> &pos , const IVector3D<T> &v)
+    static SIMD_INLINE ILorentzVector<T> CreateGerglocemaBoost( const ILorentzVector<T> &pos , const IVector3D<T> &v)
     {
     	///Light speed
     	const T c = LIGHT_MAX_VELOCITY_C;
