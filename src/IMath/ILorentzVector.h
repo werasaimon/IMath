@@ -640,11 +640,11 @@ template<class T> class  ILorentzVector
 
     	/// method Gerglocema
         ILorentzVector<T> res;
-        IVector3D<T> ortogonalPredikat = (pos.vect().Cross(v)).Cross(v);
+        IVector3D<T> ortogonalPredikat = (pos.GetXYZ().Cross(v)).Cross(v);
     	res.x = ((pos.x + v.x * pos.t ) / gamma) + (T(1)/(c*c))*(T(1)/(gamma*(1+gamma))) * ortogonalPredikat.x;
     	res.y = ((pos.y + v.y * pos.t ) / gamma) + (T(1)/(c*c))*(T(1)/(gamma*(1+gamma))) * ortogonalPredikat.y;
     	res.z = ((pos.z + v.z * pos.t ) / gamma) + (T(1)/(c*c))*(T(1)/(gamma*(1+gamma))) * ortogonalPredikat.z;
-        res.t =  (pos.t + (v.Dot(pos.vect())/(c*c))) / gamma ;
+        res.t =  (pos.t + (v.Dot(pos.GetXYZ())/(c*c))) / gamma ;
     	return res;
     }
 
