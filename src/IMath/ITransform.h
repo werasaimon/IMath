@@ -87,9 +87,10 @@ public:
     // Constructor
     SIMD_INLINE ITransform(const IVector3D<T>& position , const IQuaternion<T>& _quaternion = IQuaternion<T>::IDENTITY ,T  _time = 1.0)
         : mPosition(position) ,
-          mTime(_time)
+	mTime(_time),
+	mBasis(_quaternion.GetRotMatrix())
     {
-        mBasis = IMatrix3x3<T>::CreateRotation(_quaternion);
+
     }
 
 
@@ -255,6 +256,80 @@ public:
         openglMatrix[15] = 1.0;
 
     }
+
+
+	/**/
+
+  ///========================== Plugin ==============================///
+
+  static ITransform<T> IntegrateTransform( const ITransform<T>& curTrans , const IVector3D<T>& linvel, const IVector3D<T>& angvel, T timeStep)
+  {
+      //Exponential map
+      //google for "Practical Parameterization of Rotations Using the Exponential Map", F. Sebastian Grassia
+      IVector3D<T> axis;
+      T fAngle = angvel.Length();
+
+      if (fAngle < T(0.001))
+      {
+          // use Taylor's expansions of sync function
+          axis = angvel * (T(0.5) * timeStep -
+                  (timeStep * timeStep * timeStep) *
+                  (T(0.020833333333)) * fAngle * fAngle);
+      }
+      else
+      {
+		  axis = angvel * (ISin(T(0.5) * fAngle * timeStep) / fAngle);
+      }
+
+
+
+      IQuaternion<T> dorn(axis, ICos(fAngle * timeStep * T(0.5)));
+      IQuaternion<T> predictedOrn = dorn * IQuaternion<T>(curTrans.GetBasis());
+      predictedOrn.Normalize();
+
+
+          return ITransform<T>( curTrans.GetPosition() + linvel * timeStep ,  predictedOrn.GetRotMatrix(), curTrans.GetTime() );
+
+  }
+
+
+  static IQuaternion<T> IntegrateAngular( const IQuaternion<T>& curQuaternion , const IVector3D<T>& angvel, T timeStep )
+  {
+      //Exponential map
+      //google for "Practical Parameterization of Rotations Using the Exponential Map", F. Sebastian Grassia
+      IVector3D<T> axis;
+      T fAngle = angvel.Length();
+
+
+      if (fAngle < (0.001))
+      {
+          // use Taylor's expansions of sync function
+          axis = angvel * ((0.5) * timeStep -
+                          (timeStep * timeStep * timeStep) *
+                          ((0.020833333333)) * fAngle * fAngle);
+      }
+      else
+      {
+          axis = angvel * (ISin( (0.5) * fAngle * timeStep) / fAngle);
+      }
+
+
+
+      IQuaternion<T> dorn(axis, ICos(fAngle * timeStep * (0.5)));
+      IQuaternion<T> predictedOrn = dorn * curQuaternion;
+      predictedOrn.Normalize();
+
+      return predictedOrn;
+
+  }
+
+
+  static IVector3D<T> IntegrateLinear( const IVector3D<T>& curPosition , const IVector3D<T>& linvel, T timeStep )
+  {
+      return curPosition + linvel * timeStep;
+  }
+
+  /**/
 
 };
 
