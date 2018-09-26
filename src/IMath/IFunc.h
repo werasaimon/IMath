@@ -33,6 +33,11 @@
 #define FUNC_H
 
 
+#ifdef _DEBUG
+#include <crtdbg.h>
+#define _CRTDBG_MAP_ALLOC
+#endif
+
 //Liberies
 //#include <cmath>
 
@@ -57,7 +62,7 @@ namespace IMath
 
 
 /// Light Velocity c = 300000.kilometers / 1.second
-#define LIGHT_MAX_VELOCITY_C 300.0
+#define DEFAUL_LIGHT_MAX_VELOCITY_C 1.0
 
 //-------------------------------------------------------------------------------
 //-- Typedefs, Structs ----------------------------------------------------------
@@ -107,7 +112,7 @@ template<typename T> bool is_valid(const T &value)
 }
 
 
-//-----------------------------------------------------//
+    //-----------------------------------------------------//
 
     /**
     \brief Computes a linear interpolation between the point 'a' and the point 'b'.
@@ -137,7 +142,7 @@ template<typename T> bool is_valid(const T &value)
         return x;
     }
 
-//-----------------------------------------------------//
+    //-----------------------------------------------------//
 
 
 

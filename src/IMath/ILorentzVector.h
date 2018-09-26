@@ -186,16 +186,16 @@ template<class T> class  ILorentzVector
 
     /// Return the square of the length of the vector
     /// Metrices Minkowski Space
-    SIMD_INLINE T LengthSquare() const
+    SIMD_INLINE T LengthSquare(const T _SpeedLight = DEFAUL_LIGHT_MAX_VELOCITY_C) const
     {
-    	const T c = LIGHT_MAX_VELOCITY_C;
+        const T c = _SpeedLight;
          return (c*c) * (t*t) - (x*x + y*y + z*z);
     }
 
     /// Return the length of the vector
-    SIMD_INLINE T Length() const
+    SIMD_INLINE T Length(const T _SpeedLight = DEFAUL_LIGHT_MAX_VELOCITY_C) const
     {
-        T mm = LengthSquare();
+        T mm = LengthSquare(_SpeedLight);
         return mm < 0.0 ? -ISqrt(-mm) : ISqrt(mm);
     }
 
@@ -212,7 +212,7 @@ template<class T> class  ILorentzVector
     }
 
 
-    SIMD_INLINE void Boost(T bx, T by, T bz)
+    SIMD_INLINE void Boost(T bx, T by, T bz , const T _SpeedLight = DEFAUL_LIGHT_MAX_VELOCITY_C)
     {
        /**
        //Boost this Lorentz vector
@@ -228,13 +228,13 @@ template<class T> class  ILorentzVector
        **/
 
     	/// method Gerglocema
-        *this = CreateGerglocemaBoost( *this , IVector3D<T>(bx,by,bz) );
+        *this = CreateGerglocemaBoost( *this , IVector3D<T>(bx,by,bz) , _SpeedLight);
     }
 
-    SIMD_INLINE void Boost( const IVector3D<T> &b)
+    SIMD_INLINE void Boost( const IVector3D<T> &b , const T _SpeedLight = DEFAUL_LIGHT_MAX_VELOCITY_C)
     {
     	/// method Gerglocema
-    	*this = CreateGerglocemaBoost( *this , b );
+        *this = CreateGerglocemaBoost( *this , b , _SpeedLight );
     }
 
 
@@ -630,21 +630,21 @@ template<class T> class  ILorentzVector
     /**
      *  Method Gerglocema
      */
-    static SIMD_INLINE ILorentzVector<T> CreateGerglocemaBoost( const ILorentzVector<T> &pos , const IVector3D<T> &v)
+    static SIMD_INLINE ILorentzVector<T> CreateGerglocemaBoost( const ILorentzVector<T> &pos , const IVector3D<T> &v , const T _SpeedLight = DEFAUL_LIGHT_MAX_VELOCITY_C)
     {
     	///Light speed
-    	const T c = LIGHT_MAX_VELOCITY_C;
+        const T c = _SpeedLight;
 
     	/// gamma factor
         float gamma = ISqrt( 1.0 - v.Dot(v) / (c*c));
 
     	/// method Gerglocema
         ILorentzVector<T> res;
-        IVector3D<T> ortogonalPredikat = (pos.GetXYZ().Cross(v)).Cross(v);
+        IVector3D<T> ortogonalPredikat = (pos.vect().Cross(v)).Cross(v);
     	res.x = ((pos.x + v.x * pos.t ) / gamma) + (T(1)/(c*c))*(T(1)/(gamma*(1+gamma))) * ortogonalPredikat.x;
     	res.y = ((pos.y + v.y * pos.t ) / gamma) + (T(1)/(c*c))*(T(1)/(gamma*(1+gamma))) * ortogonalPredikat.y;
     	res.z = ((pos.z + v.z * pos.t ) / gamma) + (T(1)/(c*c))*(T(1)/(gamma*(1+gamma))) * ortogonalPredikat.z;
-        res.t =  (pos.t + (v.Dot(pos.GetXYZ())/(c*c))) / gamma ;
+        res.t =  (pos.t + (v.Dot(pos.vect())/(c*c))) / gamma ;
     	return res;
     }
 

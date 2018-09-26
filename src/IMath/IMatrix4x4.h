@@ -1196,24 +1196,20 @@ private:
 
      //-------------------------------------------------------------------//
 
-     static SIMD_INLINE IMatrix4x4<T> CreateLorentzBoost( const IVector3D<T> &vel )
+     static SIMD_INLINE IMatrix4x4<T> CreateLorentzBoost( const IVector3D<T> &vel , const T &_LightSpeed = DEFAUL_LIGHT_MAX_VELOCITY_C )
      {
 
-
         static IMatrix4x4<T> M;
-
-
         const IVector3D<T> n = vel.GetUnit();
         const T             v = vel.length();
 
-        const T c = LIGHT_MAX_VELOCITY_C;
+        const T c = _LightSpeed;
 
-         //boost this Lorentz vector
-
-          T gamma = 1.0 * ISqrt( 1.0 - (v*v) / (c*c) );
+        //boost this Lorentz gamma
+        T gamma = 1.0 * ISqrt( 1.0 - (v*v) / (c*c) );
 
         // T bgamma = gamma * gamma / (1.0 + gamma);
-          T bgamma = (gamma - 1.0);
+        T bgamma = (gamma - 1.0);
 
 
         M[0][0] = 1.0+((bgamma)*((n.x * n.x)));
@@ -1243,7 +1239,7 @@ private:
 
      //-------------------------------------------------------------------//
 
-     static SIMD_INLINE IMatrix4x4<T> CreateLorentzBoost( const IVector3D<T> vel , T gamma )
+     static SIMD_INLINE IMatrix4x4<T> CreateLorentzBoost( const IVector3D<T> vel , T gamma , const T &_LightSpeed = DEFAUL_LIGHT_MAX_VELOCITY_C )
      {
 
          static IMatrix4x4<T> M;
@@ -1254,7 +1250,7 @@ private:
     	 // T bgamma = gamma * gamma / (1.0 + gamma);
     	 T bgamma = (gamma - 1.0);
 
-    	 const T c = LIGHT_MAX_VELOCITY_C;
+         const T c = _LightSpeed;
 
     	 M[0][0] = 1.0+((bgamma)*((n.x * n.x)));
     	 M[1][0] =     ((bgamma)*((n.y * n.x)));

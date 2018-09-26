@@ -531,6 +531,12 @@ namespace IMath
           */
         SIMD_INLINE IQuaternion<T> operator*(const IQuaternion<T>& rhs) const
         {
+            //      const IQuaternion<T>& lhs = *this;
+                   //      return IQuaternion<T>(lhs.w * rhs.v.x + lhs.v.x * rhs.w   + lhs.v.y * rhs.v.z - lhs.v.z * rhs.v.y,
+                   //                             lhs.w * rhs.v.y - lhs.v.x * rhs.v.z + lhs.v.y * rhs.w   + lhs.v.z * rhs.v.x,
+                   //                             lhs.w * rhs.v.z + lhs.v.x * rhs.v.y - lhs.v.y * rhs.v.x + lhs.v.z * rhs.w  ,
+                   //                             lhs.w * rhs.w   - lhs.v.x * rhs.v.x - lhs.v.y * rhs.v.y - lhs.v.z * rhs.v.z);
+
             return IQuaternion<T> (w * rhs.w - v.Dot(rhs.v), w * rhs.v + rhs.w * v + v.Cross(rhs.v));
         }
 

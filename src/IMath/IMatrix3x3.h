@@ -840,7 +840,7 @@ template<class T> class IMatrix3x3
         * Returns a scaling around axis matrix that scales
         * @return axis to scaling matrix.
         */
-       static SIMD_INLINE IMatrix3x3<T>  createScaleAroundAxis( const IVector3D<T> _axis , T _scale )
+       static SIMD_INLINE IMatrix3x3<T>  CreateScaleAroundAxis( const IVector3D<T> _axis , const T &_scale )
        {
            static IMatrix3x3<T> M;
            T bgamma = (_scale - 1.0);
@@ -864,14 +864,14 @@ template<class T> class IMatrix3x3
        *  Help info to web site:  https://arxiv.org/pdf/1103.0156.pdf
        *****************************************************/
        /// Return lorentz demission distance world
-      static SIMD_INLINE IMatrix3x3<T> createLorentzRotationBoost(  const IVector3D<T>& vel )
+      static SIMD_INLINE IMatrix3x3<T> CreateLorentzRotationBoost(  const IVector3D<T>& vel , const T &_LightSpeed = DEFAUL_LIGHT_MAX_VELOCITY_C )
       {
           const IVector3D<T> n = vel.GetUnit();
           const T            v = vel.Length();
 
           static IMatrix3x3<T> M;
 
-          const T c = LIGHT_MAX_VELOCITY_C;
+          const T c = _LightSpeed;
 
           //boost this Lorentz vector
           T gamma = 1.0 * ISqrt( 1.0 - (v*v) / (c*c) );
@@ -898,7 +898,7 @@ template<class T> class IMatrix3x3
       }
 
 
-      static SIMD_INLINE IMatrix3x3<T> CreateLorentzRotationBoost(  const IVector3D<T> n ,  T gamma )
+      static SIMD_INLINE IMatrix3x3<T> CreateLorentzRotationBoost(  const IVector3D<T> n ,  const T &gamma )
       {
 
               static IMatrix3x3<T> M;
