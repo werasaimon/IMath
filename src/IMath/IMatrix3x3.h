@@ -761,14 +761,6 @@ template<class T> class IMatrix3x3
       }
 
 
-      /// Return a symmetric matrix using a given vector that can be used
-      /// to compute Dot product with another vector using matrix multiplication
-       static SIMD_INLINE IMatrix3x3<T> ComputeSymmetricMatrix(const IVector3D<T>& vector)
-       {
-           return IMatrix3x3<T>(0, vector.z, vector.y,
-                                vector.z, 0, vector.x,
-                                vector.y, vector.x, 0);
-       }
 
 
        /**
@@ -898,7 +890,7 @@ template<class T> class IMatrix3x3
       }
 
 
-      static SIMD_INLINE IMatrix3x3<T> CreateLorentzRotationBoost(  const IVector3D<T> n ,  const T &gamma )
+      static SIMD_INLINE IMatrix3x3<T> CreateLorentzRotationBoost(  const T &gamma , const IVector3D<T> n  )
       {
 
               static IMatrix3x3<T> M;

@@ -637,13 +637,6 @@ template<class T> class IMatrix2x2
         }
 
 
-        /// Return a symmetric matrix using a given vector that can be used
-        /// to compute dot product with another vector using matrix multiplication
-         static SIMD_INLINE IMatrix2x2<T> ComputeSymmetricMatrix(const IVector2D<T>& vector)
-         {
-             return IMatrix2x2<T>(0 , vector.x, vector.y , 0 );
-         }
-
 
 
          /**

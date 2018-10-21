@@ -633,19 +633,22 @@ private:
     }
 
 
+
+
+
     /**
     * Multiplication operator
     * @param rhs Right hand side argument of binary operator.
     */
-    SIMD_INLINE ILorentzVector<T> operator*(const ILorentzVector<T>& rhs) const
+    SIMD_INLINE ILorentzVector<T> operator*(const ILorentzVector<T>& rhs ) const
     {
-       ILorentzVector<T> u = ILorentzVector<T>(mRows[0][0]*rhs.x + mRows[0][1]*rhs.y + mRows[0][2]*rhs.z + rhs.t*mRows[0][3],
-                                               mRows[1][0]*rhs.x + mRows[1][1]*rhs.y + mRows[1][2]*rhs.z + rhs.t*mRows[1][3],
-                                               mRows[2][0]*rhs.x + mRows[2][1]*rhs.y + mRows[2][2]*rhs.z + rhs.t*mRows[2][3],
-                                               mRows[3][0]*rhs.x + mRows[3][1]*rhs.y + mRows[3][2]*rhs.z + rhs.t*mRows[3][3]);
-
+        ILorentzVector<T> u = ILorentzVector<T>(mRows[0][0]*rhs.x + mRows[1][0]*rhs.y + mRows[2][0]*rhs.z + rhs.t*mRows[3][0],
+                                                mRows[0][1]*rhs.x + mRows[1][1]*rhs.y + mRows[2][1]*rhs.z + rhs.t*mRows[3][1],
+                                                mRows[0][2]*rhs.x + mRows[1][2]*rhs.y + mRows[2][2]*rhs.z + rhs.t*mRows[3][2],
+                                                mRows[0][3]*rhs.x + mRows[1][3]*rhs.y + mRows[2][3]*rhs.z + rhs.t*mRows[3][3]);
         return u;
     }
+
 
 
 
@@ -1032,18 +1035,6 @@ private:
 
 
 
-    /// Return a symmetric matrix using a given vector that can be used
-    /// to compute Dot product with another vector using matrix multiplication
-     static SIMD_INLINE IMatrix4x4<T> ComputeSymmetricMatrix(const IVector4D<T>& vector)
-     {
-         return IMatrix4x4<T>(0       ,  vector.z,  vector.y,  vector.t,
-                              vector.z , 0        ,  vector.x,  vector.y,
-                              vector.y , vector.x , 0        ,  vector.x,
-                              vector.t , vector.y , vector.x , 0);
-     }
-
-
-
 
 
 
@@ -1196,81 +1187,38 @@ private:
 
      //-------------------------------------------------------------------//
 
-     static SIMD_INLINE IMatrix4x4<T> CreateLorentzBoost( const IVector3D<T> &vel , const T &_LightSpeed = DEFAUL_LIGHT_MAX_VELOCITY_C )
+     static SIMD_INLINE IMatrix4x4<T> CreateLorentzBoost( T gamma , const IVector3D<T> vel ,  const T &_LightSpeed = DEFAUL_LIGHT_MAX_VELOCITY_C )
      {
 
-        static IMatrix4x4<T> M;
-        const IVector3D<T> n = vel.GetUnit();
-        const T             v = vel.length();
-
-        const T c = _LightSpeed;
-
-        //boost this Lorentz gamma
-        T gamma = 1.0 * ISqrt( 1.0 - (v*v) / (c*c) );
-
-        // T bgamma = gamma * gamma / (1.0 + gamma);
-        T bgamma = (gamma - 1.0);
-
-
-        M[0][0] = 1.0+((bgamma)*((n.x * n.x)));
-        M[1][0] =     ((bgamma)*((n.y * n.x)));
-        M[2][0] =     ((bgamma)*((n.z * n.x)));
-        M[3][0] = (v*n.x*gamma);
-
-        M[0][1] =     ((bgamma)*((n.x * n.y)));
-        M[1][1] = 1.0+((bgamma)*((n.y * n.y)));
-        M[2][1] =     ((bgamma)*((n.z * n.y)));
-        M[3][1] = (v*n.y*gamma);
-
-        M[0][2] =      ((bgamma)*((n.x * n.z)));
-        M[1][2] =      ((bgamma)*((n.y * n.z)));
-        M[2][2] =  1.0+((bgamma)*((n.z * n.z)));
-        M[3][2] = (v*n.z*gamma);
-
-        M[0][3] =  v*n.x*gamma/(c*c);
-        M[1][3] =  v*n.y*gamma/(c*c);
-        M[2][3] =  v*n.z*gamma/(c*c);
-        M[3][3] =  gamma;
-
-
-         return M;
-    }
-
-
-     //-------------------------------------------------------------------//
-
-     static SIMD_INLINE IMatrix4x4<T> CreateLorentzBoost( const IVector3D<T> vel , T gamma , const T &_LightSpeed = DEFAUL_LIGHT_MAX_VELOCITY_C )
-     {
-
-         static IMatrix4x4<T> M;
+         static IMatrix4x4<T> M = IMatrix4x4<T>::IDENTITY;
 
          const IVector3D<T> n = vel.GetUnit();
-    	 const T             v = vel.length();
+         const T             v = vel.Length();
 
-    	 // T bgamma = gamma * gamma / (1.0 + gamma);
-    	 T bgamma = (gamma - 1.0);
+          //T bgamma = gamma * gamma / (1.0 + gamma);
+          T bgamma = (gamma - 1.0);
 
          const T c = _LightSpeed;
 
-    	 M[0][0] = 1.0+((bgamma)*((n.x * n.x)));
+         M[0][0] = 1.0+((bgamma)*((n.x * n.x)));
     	 M[1][0] =     ((bgamma)*((n.y * n.x)));
     	 M[2][0] =     ((bgamma)*((n.z * n.x)));
-    	 M[3][0] = (v*n.x*gamma);
+         M[3][0] = (v*n.x*gamma);
 
     	 M[0][1] =     ((bgamma)*((n.x * n.y)));
     	 M[1][1] = 1.0+((bgamma)*((n.y * n.y)));
     	 M[2][1] =     ((bgamma)*((n.z * n.y)));
-    	 M[3][1] = (v*n.y*gamma);
+         M[3][1] = (v*n.y*gamma);
 
     	 M[0][2] =      ((bgamma)*((n.x * n.z)));
     	 M[1][2] =      ((bgamma)*((n.y * n.z)));
     	 M[2][2] =  1.0+((bgamma)*((n.z * n.z)));
-    	 M[3][2] = (v*n.z*gamma);
+         M[3][2] = (v*n.z*gamma);
 
-    	 M[0][3] =  v*n.x*gamma/(c*c);
-    	 M[1][3] =  v*n.y*gamma/(c*c);
-    	 M[2][3] =  v*n.z*gamma/(c*c);
-    	 M[3][3] =  gamma;  
+         M[0][3] =  v*n.x*gamma/(c*c);
+         M[1][3] =  v*n.y*gamma/(c*c);
+         M[2][3] =  v*n.z*gamma/(c*c);
+         M[3][3] =  gamma;
 
     	 return M;
      }
