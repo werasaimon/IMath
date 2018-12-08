@@ -136,7 +136,7 @@ namespace IMath
         * @param z Complex coefficient for k complex constant.
         * @param w_ Real part of IQuaternion.
         */
-        SIMD_INLINE IQuaternion(T _x, T _y, T _z, T _w)
+        SIMD_INLINE IQuaternion(T _w,T _x, T _y, T _z)
             : w(_w), v(_x, _y, _z)
         {
         }
@@ -456,6 +456,34 @@ namespace IMath
          }
 
 
+
+       /// <summary>
+       /// Creates a left-handed, look-at quaternion.
+       /// </summary>
+       /// <param name="eye">The position of the viewer's eye.</param>
+       /// <param name="target">The camera look-at target.</param>
+       /// <param name="up">The camera's up vector.</param>
+       /// <param name="result">When the method completes, contains the created look-at quaternion.</param>
+       static const IQuaternion<T> LookAtLH(const IVector3D<T>& eye, const IVector3D<T>& target, const IVector3D<T>& up)
+       {
+           return IQuaternion<T>(IMatrix3x3<T>::LookAtLH(eye, target, up));
+       }
+
+
+       /// <summary>
+       /// Creates a right-handed, look-at quaternion.
+       /// </summary>
+       /// <param name="eye">The position of the viewer's eye.</param>
+       /// <param name="target">The camera look-at target.</param>
+       /// <param name="up">The camera's up vector.</param>
+       /// <param name="result">When the method completes, contains the created look-at quaternion.</param>
+       static const IQuaternion<T> LookAtRH(const IVector3D<T>& eye, const IVector3D<T>& target, const IVector3D<T>& up)
+       {
+           return IQuaternion<T>(IMatrix3x3<T>::LookAtRH(eye, target, up));
+       }
+
+
+
         //--------------------- operators -------------------------//
 
         /**
@@ -476,7 +504,7 @@ namespace IMath
         template<class FromT>
         SIMD_INLINE IQuaternion<T>& operator=(const IQuaternion<FromT>& rhs)
         {
-            v = rhs.v;
+            v = static_cast<IVector3D<T>>(rhs.v);
             w = static_cast<T>(rhs.w);
             return *this;
         }
@@ -531,13 +559,13 @@ namespace IMath
           */
         SIMD_INLINE IQuaternion<T> operator*(const IQuaternion<T>& rhs) const
         {
-            //      const IQuaternion<T>& lhs = *this;
-                   //      return IQuaternion<T>(lhs.w * rhs.v.x + lhs.v.x * rhs.w   + lhs.v.y * rhs.v.z - lhs.v.z * rhs.v.y,
-                   //                             lhs.w * rhs.v.y - lhs.v.x * rhs.v.z + lhs.v.y * rhs.w   + lhs.v.z * rhs.v.x,
-                   //                             lhs.w * rhs.v.z + lhs.v.x * rhs.v.y - lhs.v.y * rhs.v.x + lhs.v.z * rhs.w  ,
-                   //                             lhs.w * rhs.w   - lhs.v.x * rhs.v.x - lhs.v.y * rhs.v.y - lhs.v.z * rhs.v.z);
+            const IQuaternion<T>& lhs = *this;
+            return IQuaternion<T>(lhs.w * rhs.v.x + lhs.v.x * rhs.w   + lhs.v.y * rhs.v.z - lhs.v.z * rhs.v.y,
+                                  lhs.w * rhs.v.y - lhs.v.x * rhs.v.z + lhs.v.y * rhs.w   + lhs.v.z * rhs.v.x,
+                                  lhs.w * rhs.v.z + lhs.v.x * rhs.v.y - lhs.v.y * rhs.v.x + lhs.v.z * rhs.w  ,
+                                  lhs.w * rhs.w   - lhs.v.x * rhs.v.x - lhs.v.y * rhs.v.y - lhs.v.z * rhs.v.z);
 
-            return IQuaternion<T> (w * rhs.w - v.Dot(rhs.v), w * rhs.v + rhs.w * v + v.Cross(rhs.v));
+            //return IQuaternion<T> (w * rhs.w - v.Dot(rhs.v), w * rhs.v + rhs.w * v + v.Cross(rhs.v));
         }
 
 
@@ -737,6 +765,7 @@ namespace IMath
                                   -v.y / lengthSquareQuaternion,
                                   -v.z / lengthSquareQuaternion,
                                    w   / lengthSquareQuaternion);
+
         }
 
 

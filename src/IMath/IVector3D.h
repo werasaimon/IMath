@@ -794,6 +794,25 @@ public:
     //========================== plugins =========================//
 
 
+
+
+    /// <summary>
+    /// Returns a <see cref="Vector3"/> containing the 3D Cartesian coordinates of a point specified in Barycentric coordinates relative to a 3D triangle.
+    /// </summary>
+    /// <param name="value1">A <see cref="Vector3"/> containing the 3D Cartesian coordinates of vertex 1 of the triangle.</param>
+    /// <param name="value2">A <see cref="Vector3"/> containing the 3D Cartesian coordinates of vertex 2 of the triangle.</param>
+    /// <param name="value3">A <see cref="Vector3"/> containing the 3D Cartesian coordinates of vertex 3 of the triangle.</param>
+    /// <param name="amount1">Barycentric coordinate b2, which expresses the weighting factor toward vertex 2 (specified in <paramref name="value2"/>).</param>
+    /// <param name="amount2">Barycentric coordinate b3, which expresses the weighting factor toward vertex 3 (specified in <paramref name="value3"/>).</param>
+    /// <param name="result">When the method completes, contains the 3D Cartesian coordinates of the specified point.</param>
+   static IVector3D<T> Barycentric(const IVector3D<T> &value1, const IVector3D<T> &value2, const IVector3D<T>& value3, T amount1, T amount2)
+    {
+        return IVector3D<T>((value1.x + (amount1 * (value2.x - value1.x))) + (amount2 * (value3.x - value1.x)),
+                            (value1.y + (amount1 * (value2.y - value1.y))) + (amount2 * (value3.y - value1.y)),
+                            (value1.z + (amount1 * (value2.z - value1.z))) + (amount2 * (value3.z - value1.z)));
+    }
+
+
     /**
      * Compute the determinant of a matrix whose columns are three given vectors.
      * Useful property: det(a, b, c) = det(c, a, b) = det(b, c, a).

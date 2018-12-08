@@ -1395,7 +1395,7 @@ private:
        static SIMD_INLINE IMatrix4x4<T> CreateLookAt(const IVector3D<T>& eyePos, const IVector3D<T>& centerPos, const IVector3D<T>& upDir)
        {
 
-            IVector3D<T> forward = centerPos - eyePos;
+           IVector3D<T> forward = centerPos - eyePos;
            if (IAbs(forward.x) < MACHINE_EPSILON &&
                IAbs(forward.y) < MACHINE_EPSILON &&
                IAbs(forward.z) < MACHINE_EPSILON)

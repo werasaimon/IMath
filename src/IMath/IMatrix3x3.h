@@ -982,7 +982,7 @@ template<class T> class IMatrix3x3
 
 
 
-      static  SIMD_INLINE IMatrix3x3<T>& CreateRotation(const IQuaternion<T>& Quat)
+      static SIMD_INLINE IMatrix3x3<T> CreateRotation(const IQuaternion<T>& Quat)
       {
           static IMatrix3x3<T> M;
 
@@ -1014,6 +1014,159 @@ template<class T> class IMatrix3x3
           M.mRows[2][2] = 1.0f - D1 - D2;
 
           return M;
+      }
+
+
+
+      /// <summary>
+      /// Creates a left-handed spherical billboard that rotates around a specified object position.
+      /// </summary>
+      /// <param name="objectPosition">The position of the object around which the billboard will rotate.</param>
+      /// <param name="cameraPosition">The position of the camera.</param>
+      /// <param name="cameraUpVector">The up vector of the camera.</param>
+      /// <param name="cameraForwardVector">The forward vector of the camera.</param>
+      /// <param name="result">When the method completes, contains the created billboard Matrix3x3.</param>
+      static IVector3D<T> BillboardLH(const IVector3D<T> &objectPosition, const IVector3D<T> &cameraPosition, const IVector3D<T> &cameraUpVector, const IVector3D<T> &cameraForwardVector)
+      {
+          IVector3D<T> crossed;
+          IVector3D<T> final;
+          IVector3D<T> difference = cameraPosition - objectPosition;
+
+          T lengthSq = difference.LengthSquare();
+          if (IsZero(lengthSq))
+          {
+              difference = -cameraForwardVector;
+          }
+          else
+          {
+              difference *= (T)(1.0 / ISqrt(lengthSq));
+          }
+
+          crossed = Cross(cameraUpVector, difference );
+          crossed.Normalize();
+          final   = Cross(difference, crossed);
+
+          IMatrix3x3 result;
+          result[0][0] = crossed.x;
+          result[0][1] = crossed.y;
+          result[0][2] = crossed.z;
+          result[1][0] = final.x;
+          result[1][1] = final.y;
+          result[1][2] = final.z;
+          result[2][0] = difference.x;
+          result[2][1] = difference.y;
+          result[2][2] = difference.z;
+
+          return result;
+      }
+
+
+
+      /// <summary>
+      /// Creates a right-handed spherical billboard that rotates around a specified object position.
+      /// </summary>
+      /// <param name="objectPosition">The position of the object around which the billboard will rotate.</param>
+      /// <param name="cameraPosition">The position of the camera.</param>
+      /// <param name="cameraUpVector">The up vector of the camera.</param>
+      /// <param name="cameraForwardVector">The forward vector of the camera.</param>
+      /// <param name="result">When the method completes, contains the created billboard Matrix3x3.</param>
+      static IVector3D<T> BillboardRH(const IVector3D<T> &objectPosition, const IVector3D<T> &cameraPosition, const IVector3D<T> &cameraUpVector, const IVector3D<T> &cameraForwardVector)
+      {
+          IVector3D<T> crossed;
+          IVector3D<T> final;
+          IVector3D<T> difference = objectPosition - cameraPosition;
+
+          T lengthSq = difference.LengthSquare();
+          if (IsZero(lengthSq))
+          {
+              difference = -cameraForwardVector;
+          }
+          else
+          {
+              difference *= (T)(1.0 / ISqrt(lengthSq));
+          }
+
+          crossed = Cross(cameraUpVector, difference);
+          crossed.Normalize();
+          final   = Cross(difference, crossed);
+
+          IMatrix3x3 result;
+          result[0][0] = crossed.x;
+          result[0][1] = crossed.y;
+          result[0][2] = crossed.z;
+          result[1][0] = final.x;
+          result[1][1] = final.y;
+          result[1][2] = final.z;
+          result[2][0] = difference.x;
+          result[2][1] = difference.y;
+          result[2][2] = difference.z;
+
+          return result;
+      }
+
+
+
+      /// <summary>
+      /// Creates a left-handed, look-at Matrix3x3.
+      /// </summary>
+      /// <param name="eye">The position of the viewer's eye.</param>
+      /// <param name="target">The camera look-at target.</param>
+      /// <param name="up">The camera's up vector.</param>
+      /// <param name="result">When the method completes, contains the created look-at Matrix3x3.</param>
+      static SIMD_INLINE IMatrix3x3<T> LookAtLH(const IVector3D<T> &eye, const IVector3D<T> &target, const IVector3D<T> &up)
+      {
+          IVector3D<T>  xaxis, yaxis, zaxis;
+          zaxis = target - eye;
+          if (IAbs(zaxis.x) < MACHINE_EPSILON &&
+              IAbs(zaxis.y) < MACHINE_EPSILON &&
+              IAbs(zaxis.z) < MACHINE_EPSILON)
+          {
+              return IMatrix3x3<T>::IDENTITY;
+          }
+          zaxis.Normalize();
+
+          xaxis = Cross(up,zaxis);
+          xaxis.Normalize();
+
+          yaxis = Cross(zaxis, xaxis);
+
+          return IMatrix3x3<T> (xaxis.x, yaxis.x, zaxis.x,
+                                xaxis.y, yaxis.y, zaxis.y,
+                                xaxis.z, yaxis.z, zaxis.z);
+
+
+
+      }
+
+
+      /// <summary>
+      /// Creates a right-handed, look-at Matrix3x3.
+      /// </summary>
+      /// <param name="eye">The position of the viewer's eye.</param>
+      /// <param name="target">The camera look-at target.</param>
+      /// <param name="up">The camera's up vector.</param>
+      /// <param name="result">When the method completes, contains the created look-at Matrix3x3.</param>
+      static SIMD_INLINE IMatrix3x3<T> LookAtRH(const IVector3D<T> & eye, const IVector3D<T> & target, const IVector3D<T> & up )
+      {
+          IVector3D<T>  xaxis, yaxis, zaxis;
+
+          zaxis = (eye - target);
+          if (IAbs(zaxis.x) < MACHINE_EPSILON &&
+              IAbs(zaxis.y) < MACHINE_EPSILON &&
+              IAbs(zaxis.z) < MACHINE_EPSILON)
+          {
+              return IMatrix3x3<T>::IDENTITY;
+          }
+          zaxis.Normalize();
+
+          xaxis = Cross(up,zaxis);
+          xaxis.Normalize();
+
+          yaxis = Cross(zaxis, xaxis);
+
+          return IMatrix3x3<T> (xaxis.x, yaxis.x, zaxis.x,
+                                xaxis.y, yaxis.y, zaxis.y,
+                                xaxis.z, yaxis.z, zaxis.z);
       }
 
 
