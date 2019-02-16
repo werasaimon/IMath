@@ -194,6 +194,18 @@ template<class T> class IMatrix3x3
          mRows[0].Normalize();
          mRows[1].Normalize();
          mRows[2].Normalize();
+
+//         IVector3D<T> col[3];
+//         col[0] = GetColumn(0);
+//         col[1] = GetColumn(1);
+//         col[2] = GetColumn(2);
+//         col[0].Normalize();
+//         col[1].Normalize();
+//         col[2].Normalize();
+
+//         *this = IMatrix3x3<T>( col[0].x , col[1].x , col[2].x,
+//                                col[0].y , col[1].y , col[2].y,
+//                                col[0].z , col[1].z , col[2].z);
       }
 
 
@@ -584,6 +596,80 @@ template<class T> class IMatrix3x3
 
 
 
+      /**
+      * Return the Euler angle of the matrix
+      */
+      SIMD_INLINE IVector3D<T> GetExtractEulerAngleXYZ() const
+      {
+          T rotXangle;
+          T rotYangle;
+          T rotZangle;
+          rotXangle = IAtan2(-GetRow(1).z, GetRow(2).z);
+
+          T cosYangle = ISqrt(pow(GetRow(0).x, 2) +
+                              pow(GetRow(0).y, 2));
+
+          rotYangle = IAtan2(GetRow(0).z, cosYangle);
+
+          T sinXangle = ISin(rotXangle);
+          T cosXangle = ICos(rotXangle);
+          rotZangle = IAtan2(cosXangle * GetRow(1).x +
+                             sinXangle * GetRow(2).x,
+
+          cosXangle * GetRow(1).y + sinXangle * GetRow(2).y);
+
+          return IVector3D<T>(rotXangle,rotYangle,rotZangle);
+      }
+
+
+//      SIMD_INLINE bool closeEnough(const T& a, const T& b, const T& epsilon = std::numeric_limits<T>::epsilon()) const
+//      {
+//          return (epsilon > std::abs(a - b));
+//      }
+
+//      SIMD_INLINE IVector3D<T> GetEulerAngles() const
+//      {
+//          const IMatrix3x3<T> R(*this);
+//          //check for gimbal lock
+//          if (closeEnough(R[0][2], T(-1.0f)))
+//          {
+//              T x = 0; //gimbal lock, value of x doesn't matter
+//              T y = M_PI / 2;
+//              T z = x + atan2(R[1][0], R[2][0]);
+//              return { x, y, z };
+//          }
+//          else if (closeEnough(R[0][2], 1.0f))
+//          {
+//              T x = 0;
+//              T y = -M_PI / 2;
+//              T z = -x + atan2(-R[1][0], -R[2][0]);
+//              return { x, y, z };
+//          }
+//          else
+//          {
+//              //two solutions exist
+//              T x1 = -asin(R[0][2]);
+//              T x2 = M_PI - x1;
+
+//              T y1 = atan2(R[1][2] / cos(x1), R[2][2] / cos(x1));
+//              T y2 = atan2(R[1][2] / cos(x2), R[2][2] / cos(x2));
+
+//              T z1 = atan2(R[0][1] / cos(x1), R[0][0] / cos(x1));
+//              T z2 = atan2(R[0][1] / cos(x2), R[0][0] / cos(x2));
+
+//              //choose one solution to return
+//              //for example the "shortest" rotation
+//              if ((std::abs(x1) + std::abs(y1) + std::abs(z1)) <=
+//                  (std::abs(x2) + std::abs(y2) + std::abs(z2)))
+//              {
+//                  return { x1, y1, z1 };
+//              }
+//              else
+//              {
+//                  return { x2, y2, z2 };
+//              }
+//          }
+//      }
 
 
       /**
@@ -796,9 +882,15 @@ template<class T> class IMatrix3x3
        {
            static IMatrix3x3 res;
 
-           res.mRows[0] = IVector3D<T>(_x , 0.f, 0.f);
+//           res.mRows[0] = IVector3D<T>(_x , 0.f, 0.f);
+//           res.mRows[1] = IVector3D<T>(0.f, _y , 0.f);
+//           res.mRows[2] = IVector3D<T>(0.f, 0.f, _z );
+
+           res.mRows[0] = IVector3D<T>(0.f, 0.f,  _z);
            res.mRows[1] = IVector3D<T>(0.f, _y , 0.f);
-           res.mRows[2] = IVector3D<T>(0.f, 0.f, _z );
+           res.mRows[2] = IVector3D<T>(_x , 0.f, 0.f);
+
+
 
            return res;
        }

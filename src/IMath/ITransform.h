@@ -86,6 +86,13 @@ public:
     {
 
     }
+    // Constructor
+    SIMD_INLINE ITransform(const IMatrix4x4<T>& transform , T _time = 1.0)
+    : mTime(_time)
+    {
+        this->setFromOpenGL(transform);
+    }
+
 
 
     // Copy-constructor
@@ -184,7 +191,7 @@ public:
 
     SIMD_INLINE ITransform<T> operator*(const ITransform<T>& t) const
     {
-        return ITransform<T>( (*this)(t.mPosition) , mBasis * t.mBasis , mTime * t.mTime);
+        return ITransform<T>( (*this)(t.mPosition) , t.mBasis * mBasis , mTime * t.mTime);
     }
 
 
@@ -205,22 +212,38 @@ public:
 
 
     /// Set the transform from an OpenGL transform matrix
-    SIMD_INLINE void setFromOpenGL(T* openglMatrix)
+    SIMD_INLINE void setFromOpenGL(const T* openglMatrix)
     {
         IMatrix3x3<T> matrix(openglMatrix[0], openglMatrix[4], openglMatrix[8],
-                             openglMatrix[1], openglMatrix[5], openglMatrix[9],
-                             openglMatrix[2], openglMatrix[6], openglMatrix[10]);
+        openglMatrix[1], openglMatrix[5], openglMatrix[9],
+        openglMatrix[2], openglMatrix[6], openglMatrix[10]);
 
-        mBasis = (matrix.GetTranspose());
+        mBasis = (matrix/*.GetTranspose()*/);
 
         IVector3D<T> pos( openglMatrix[12],
-                          openglMatrix[13],
-                          openglMatrix[14]);
+        openglMatrix[13],
+        openglMatrix[14]);
 
         mPosition = pos;
-
-
     }
+
+
+//    /// Set the transform from an OpenGL transform matrix
+//    SIMD_INLINE void setFromOpenGL2(const T* openglMatrix)
+//    {
+//        IMatrix3x3<T> matrix(openglMatrix[0], openglMatrix[4], openglMatrix[8],
+//                             openglMatrix[1], openglMatrix[5], openglMatrix[9],
+//                             openglMatrix[2], openglMatrix[6], openglMatrix[10]);
+
+//        mBasis = (matrix.GetTranspose());
+
+//        IVector3D<T> pos( openglMatrix[12],
+//                          openglMatrix[13],
+//                          openglMatrix[14]);
+
+//        mPosition = pos;
+//    }
+
 
 
     /// Get the OpenGL matrix of the transform
@@ -249,6 +272,34 @@ public:
         openglMatrix[15] = 1.0;
 
     }
+
+
+//    /// Get the OpenGL matrix of the transform
+//    SIMD_INLINE void GetOpenGLMatrix2(T* openglMatrix) const
+//    {
+//        const IMatrix3x3<T>& matrix = GetBasis();
+
+//        openglMatrix[0]  = matrix[0][0];
+//        openglMatrix[1]  = matrix[0][1];
+//        openglMatrix[2]  = matrix[0][2];
+//        openglMatrix[3]  = 0.0;
+
+//        openglMatrix[4]  = matrix[1][0];
+//        openglMatrix[5]  = matrix[1][1];
+//        openglMatrix[6]  = matrix[1][2];
+//        openglMatrix[7]  = 0.0;
+
+//        openglMatrix[8]  = matrix[2][0];
+//        openglMatrix[9]  = matrix[2][1];
+//        openglMatrix[10] = matrix[2][2];
+//        openglMatrix[11] = 0.0;
+
+//        openglMatrix[12] = mPosition.x;
+//        openglMatrix[13] = mPosition.y;
+//        openglMatrix[14] = mPosition.z;
+//        openglMatrix[15] = 1.0;
+
+//    }
 
 };
 

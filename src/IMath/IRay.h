@@ -43,10 +43,10 @@ public:
     // -------------------- Attributes -------------------- //
 
     /// First point of the ray (origin)
-    IVector3D<T> point1;
+    IVector3D<T> Origin;
 
     /// Second point of the ray
-    IVector3D<T> point2;
+    IVector3D<T> Direction;
 
     /// Maximum fraction value
     T maxFraction;
@@ -59,14 +59,18 @@ public:
     SIMD_INLINE IRay(){}
 
     /// Constructor with arguments
-    SIMD_INLINE IRay(const IVector3D<T>& p1, const IVector3D<T>& p2, T maxFrac = T(1.0))
-        : point1(p1), point2(p2), maxFraction(maxFrac)
+    SIMD_INLINE IRay(const IVector3D<T>& _origin, const IVector3D<T>& _direction, T maxFrac = T(1.0))
+        : Origin(_origin),
+          Direction(_direction),
+          maxFraction(maxFrac)
     {
     }
 
     /// Copy-constructor
     SIMD_INLINE IRay(const IRay<T>& ray)
-        : point1(ray.point1), point2(ray.point2), maxFraction(ray.maxFraction)
+        : Origin(ray.Origin),
+          Direction(ray.Direction),
+          maxFraction(ray.maxFraction)
     {
 
     }
@@ -77,8 +81,8 @@ public:
     {
         if (&ray != this)
         {
-            point1 = ray.point1;
-            point2 = ray.point2;
+            Origin = ray.Origin;
+            Direction = ray.Direction;
             maxFraction = ray.maxFraction;
         }
         return *this;
@@ -95,7 +99,7 @@ public:
         */
     friend std::ostream& operator<<(std::ostream& lhs, const IRay<T>& rhs)
     {
-        lhs << "point1:" << rhs.point1 << " , " <<  "point2:" << rhs.point2 << " , " << "maxFriction:" << rhs.maxFraction;
+        lhs << "Origin :" << rhs.Origin << " , " <<  "Direction :" << rhs.Direction << " , " << "maxFriction:" << rhs.maxFraction;
         return lhs;
     }
 

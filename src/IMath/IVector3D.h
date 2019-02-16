@@ -143,6 +143,12 @@ public:
 
     }
 
+
+    SIMD_INLINE IVector3D(T* data)
+    {
+         &x = data;
+    }
+
     /**
      * Creates and Sets to (x,y,z)
      * @param nx initial x-coordinate value
@@ -766,6 +772,19 @@ public:
         return &x;
     }
 
+
+    SIMD_INLINE int GetHashCode() const
+    {
+        // Overflow is fine, just wrap
+        int hash = (int) 2166136261;
+        // Suitable nullity checks etc, of course :)
+        hash = (hash * 16777619) ^ std::hash<T>{}(x);
+        hash = (hash * 16777619) ^ std::hash<T>{}(y);
+        hash = (hash * 16777619) ^ std::hash<T>{}(z);
+        return hash;
+
+    }
+
     //-------------[ output operator ]------------------------
     /**
          * Output to stream operator
@@ -845,7 +864,7 @@ public:
      * @param V0
      * @param V1
      * @param V2
-     * @return Face_Normal
+     * @return Triangle_FaceNormal
      */
     static  SIMD_INLINE  IVector3D<T> triNormal( const IVector3D<T>& V0,
                                                  const IVector3D<T>& V1,
@@ -859,6 +878,21 @@ public:
         Norm = E.Cross(F);
         Norm.Normalize();
         return Norm;
+    }
+
+
+    /**
+     * @brief triArea
+     * @param V0
+     * @param V1
+     * @param V2
+     * @return Triangle_Area
+     */
+    static  SIMD_INLINE  T Area(const IVector3D<T>& V0,
+                                const IVector3D<T>& V1,
+                                const IVector3D<T>& V2)
+    {
+            return T(0.5) * (V1 - V0).Cross(V2 - V0).Length();
     }
 
     /**

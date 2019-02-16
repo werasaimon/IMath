@@ -103,7 +103,7 @@ private:
 
     /**
      * Copy constructor.
-     * @param src Data source for new created instance of IMatrix4x4.
+     * @param src Data source for new created instance of IMatrix3x3.
      */
     SIMD_INLINE IMatrix4x4(const IMatrix3x3<T>& src)
     {
@@ -127,6 +127,63 @@ private:
         mRows[2][3]  = 0.0;
         mRows[3][3]  = 1.0;
 
+    }
+
+
+    /**
+     * Copy constructor.
+     * @param src Data source for new created instance of IVector3.
+     */
+    SIMD_INLINE IMatrix4x4(const IVector3D<T>& src, T w=1)
+    {
+        mRows[0][0]  = 1.0;
+        mRows[1][0]  = 0.0;
+        mRows[2][0]  = 0.0;
+        mRows[3][0]  = src.x;
+
+        mRows[0][1]  = 0.0;
+        mRows[1][1]  = 1.0;
+        mRows[2][1]  = 0.0;
+        mRows[3][1]  = src.y;
+
+        mRows[0][2]  = 0.0;
+        mRows[1][2]  = 0.0;
+        mRows[2][2]  = 1.0;
+        mRows[3][2]  = src.z;
+
+        mRows[0][3]  = 0.0;
+        mRows[1][3]  = 0.0;
+        mRows[2][3]  = 0.0;
+        mRows[3][3]  = w;
+
+    }
+
+
+    /**
+     * Copy constructor.
+     * @param src Data source for new created instance of IVector4.
+     */
+    SIMD_INLINE IMatrix4x4(const IVector4D<T>& src)
+    {
+        mRows[0][0]  = 1.0;
+        mRows[1][0]  = 0.0;
+        mRows[2][0]  = 0.0;
+        mRows[3][0]  = src.x;
+
+        mRows[0][1]  = 0.0;
+        mRows[1][1]  = 1.0;
+        mRows[2][1]  = 0.0;
+        mRows[3][1]  = src.y;
+
+        mRows[0][2]  = 0.0;
+        mRows[1][2]  = 0.0;
+        mRows[2][2]  = 1.0;
+        mRows[3][2]  = src.z;
+
+        mRows[0][3]  = 0.0;
+        mRows[1][3]  = 0.0;
+        mRows[2][3]  = 0.0;
+        mRows[3][3]  = src.w;
     }
 
     // Constructor
@@ -227,14 +284,13 @@ private:
      */
     void OrthoNormalize()
     {
-       mRows[0].Normalize();
-       mRows[1].Normalize();
-       mRows[2].Normalize();
+       IMatrix3x3<T> R = this->GetRotMatrix();
+       R.OrthoNormalize();
+       this->SetRotation(R);
     }
 
-
-
     //---------------------[ Get operators ]------------------------------
+
 
 
     //---------------------[ Equality operators ]------------------------------
@@ -467,9 +523,9 @@ private:
     friend SIMD_INLINE IMatrix4x4<T>  operator*(T nb, const IMatrix4x4<T>& matrix)
     {
         return IMatrix4x4<T>(matrix.mRows[0][0] * nb, matrix.mRows[0][1] * nb, matrix.mRows[0][2] * nb, matrix.mRows[0][3] * nb,
-                              matrix.mRows[1][0] * nb, matrix.mRows[1][1] * nb, matrix.mRows[1][2] * nb, matrix.mRows[1][3] * nb,
-                              matrix.mRows[2][0] * nb, matrix.mRows[2][1] * nb, matrix.mRows[2][2] * nb, matrix.mRows[2][3] * nb,
-                              matrix.mRows[3][0] * nb, matrix.mRows[3][1] * nb, matrix.mRows[3][2] * nb, matrix.mRows[3][3] * nb);
+                             matrix.mRows[1][0] * nb, matrix.mRows[1][1] * nb, matrix.mRows[1][2] * nb, matrix.mRows[1][3] * nb,
+                             matrix.mRows[2][0] * nb, matrix.mRows[2][1] * nb, matrix.mRows[2][2] * nb, matrix.mRows[2][3] * nb,
+                             matrix.mRows[3][0] * nb, matrix.mRows[3][1] * nb, matrix.mRows[3][2] * nb, matrix.mRows[3][3] * nb);
     }
 
     /// Overloaded operator for multiplication with a matrix
@@ -483,9 +539,9 @@ private:
     friend SIMD_INLINE IMatrix4x4<T>  operator/(T nb, const IMatrix4x4<T>& matrix)
     {
         return IMatrix4x4<T>(matrix.mRows[0][0] / nb, matrix.mRows[0][1] / nb, matrix.mRows[0][2] / nb, matrix.mRows[0][3] / nb,
-                              matrix.mRows[1][0] / nb, matrix.mRows[1][1] / nb, matrix.mRows[1][2] / nb, matrix.mRows[1][3] / nb,
-                              matrix.mRows[2][0] / nb, matrix.mRows[2][1] / nb, matrix.mRows[2][2] / nb, matrix.mRows[2][3] / nb,
-                              matrix.mRows[3][0] / nb, matrix.mRows[3][1] / nb, matrix.mRows[3][2] / nb, matrix.mRows[3][3] / nb);
+                             matrix.mRows[1][0] / nb, matrix.mRows[1][1] / nb, matrix.mRows[1][2] / nb, matrix.mRows[1][3] / nb,
+                             matrix.mRows[2][0] / nb, matrix.mRows[2][1] / nb, matrix.mRows[2][2] / nb, matrix.mRows[2][3] / nb,
+                             matrix.mRows[3][0] / nb, matrix.mRows[3][1] / nb, matrix.mRows[3][2] / nb, matrix.mRows[3][3] / nb);
     }
 
     /// Overloaded operator for invert multiplication with a matrix
@@ -747,6 +803,7 @@ private:
 
         // Compute the determinant of the matrix
         T determinant = GetDeterminant();
+          //determinant = (determinant > 0 && determinant < 0.001 ) ? 0.001 : determinant;
 
         // Check if the determinant is equal to zero
         assert(IAbs(determinant) > MACHINE_EPSILON);
@@ -812,6 +869,102 @@ private:
     }
 
 
+//    // Return the inversed matrix
+//    SIMD_INLINE IMatrix4x4<T> GetInverse() const
+//    {
+//        int indxc[4], indxr[4];
+//        int ipiv[4] = { 0, 0, 0, 0 };
+//        T minv[4][4];
+//        T temp;
+
+//        for (int s=0; s<4; s++)
+//        {
+//            for (int t=0; t<4; t++)
+//            {
+//                minv[s][t] = mRows[s][t];
+//            }
+//        }
+
+//        for (int i = 0; i < 4; i++)
+//        {
+//            int irow = -1, icol = -1;
+//            T big = 0.001;
+//            // Choose pivot
+//            for (int j = 0; j < 4; j++)
+//            {
+//                if (ipiv[j] != 1) {
+//                    for (int k = 0; k < 4; k++)
+//                    {
+//                        if (ipiv[k] == 0)
+//                        {
+//                            if (fabs(minv[j][k]) >= big)
+//                            {
+//                                big = T(fabs(minv[j][k]));
+//                                irow = j;
+//                                icol = k;
+//                            }
+//                        }
+//                        else if (ipiv[k] > 1)
+//                        {
+//                            std::cout << "ERROR: Singular matrix in MatrixInvert\n";
+//                        }
+//                    }
+//                }
+//            }
+//            ++ipiv[icol];
+//            // Swap rows _irow_ and _icol_ for pivot
+//            if (irow != icol)
+//            {
+//                for (int k = 0; k < 4; ++k)
+//                {
+//                    temp = minv[irow][k];
+//                    minv[irow][k] = minv[icol][k];
+//                    minv[icol][k] = temp;
+//                }
+//            }
+//            indxr[i] = irow;
+//            indxc[i] = icol;
+//            if (minv[icol][icol] == 0.)
+//            {
+//                std::cout << "Singular matrix in MatrixInvert\n";
+//            }
+//            // Set $m[icol][icol]$ to one by scaling row _icol_ appropriately
+//            T pivinv = 1.f / minv[icol][icol];
+//            minv[icol][icol] = 1.f;
+//            for (int j = 0; j < 4; j++)
+//            {
+//                minv[icol][j] *= pivinv;
+//            }
+
+//            // Subtract this row from others to zero out their columns
+//            for (int j = 0; j < 4; j++)
+//            {
+//                if (j != icol)
+//                {
+//                    T save = minv[j][icol];
+//                    minv[j][icol] = 0;
+//                    for (int k = 0; k < 4; k++)
+//                    {
+//                        minv[j][k] -= minv[icol][k]*save;
+//                    }
+//                }
+//            }
+//        }
+//        // Swap columns to reflect permutation
+//        for (int j = 3; j >= 0; j--)
+//        {
+//            if (indxr[j] != indxc[j])
+//            {
+//                for (int k = 0; k < 4; k++)
+//                {
+//                    temp = minv[k][indxr[j]];
+//                    minv[k][indxr[j]] = minv[k][indxc[j]];
+//                    minv[k][indxc[j]] = temp;
+//                }
+//            }
+//        }
+//        return IMatrix4x4<T>(minv);
+//    }
 
     /**
     * Transpose matrix.
@@ -949,12 +1102,12 @@ private:
 
     ///---------------------------[ DecomposeMatrix-RecomposeMatrix __ Only Orthogonal Matrix ] -----------------------------------///
 
-    SIMD_INLINE void SetMatrixFromComponents( const T *translation, const T *rotation, const T *scale )
+    SIMD_INLINE void SetRecomposeMatrixFromComponents( const T *translation, const T *rotation, const T *scale )
     {
         RecomposeMatrixFromComponents( translation , rotation , scale , *this );
     }
 
-    SIMD_INLINE void GetMatrixFromComponents( T *translation, T *rotation,  T *scale )
+    SIMD_INLINE void GetDecomposeMatrixToComponents( T *translation, T *rotation,  T *scale )
     {
         DecomposeMatrixToComponents( *this , translation , rotation , scale );
     }
@@ -964,16 +1117,21 @@ private:
     {
        IMatrix4x4<T> mat = *(IMatrix4x4<T>*)matrix;
 
-       scale[0] = mat.mRows[0].length();
-       scale[1] = mat.mRows[1].length();
-       scale[2] = mat.mRows[2].length();
+       scale[0] = mat.mRows[0].Length();
+       scale[1] = mat.mRows[1].Length();
+       scale[2] = mat.mRows[2].Length();
 
        IMatrix3x3<T> mat3 = mat.GetRotMatrix();
        mat3.OrthoNormalize();
+       rotation[0] = /*IRadiansToDegrees*/( IAtan2( mat3[1][2], mat3[2][2]) );
+       rotation[1] = /*IRadiansToDegrees*/( IAtan2(-mat3[0][2], ISqrt(mat3[1][2] * mat3[1][2] + mat3[2][2]* mat3[2][2])) );
+       rotation[2] = /*IRadiansToDegrees*/( IAtan2( mat3[0][1], mat3[0][0]) );
 
-       rotation[0] = IRadiansToDegrees( IAtan2( mat3[1][2], mat3[2][2]) );
-       rotation[1] = IRadiansToDegrees( IAtan2(-mat3[0][2], ISqrt(mat3[1][2] * mat3[1][2] + mat3[2][2]* mat3[2][2])) );
-       rotation[2] = IRadiansToDegrees( IAtan2( mat3[0][1], mat3[0][0]) );
+//       IQuaternion<T> Q(mat);
+//       IVector3D<T> AngleEuler = mat.GetRotMatrix().GetEulerAngles();
+//       rotation[0] = /*IRadiansToDegrees*/( AngleEuler[0] );
+//       rotation[1] = /*IRadiansToDegrees*/( AngleEuler[1] );
+//       rotation[2] = /*IRadiansToDegrees*/( AngleEuler[2] );
 
        IVector3D<T> P = mat.GetTranslation();
 
@@ -993,7 +1151,7 @@ private:
        IMatrix4x4<T> rot[3];
        for (std::size_t i = 0; i < 3;i++)
        {
-          rot[i] = IMatrix4x4<T>::CreateRotationAxis( directionUnary[i], IDegreesToRadians(rotation[i]) );
+          rot[i] = IMatrix4x4<T>::CreateRotationAxis( directionUnary[i], /*IDegreesToRadians*/(rotation[i]) );
        }
 
        mat = rot[0] * rot[1] * rot[2];
@@ -1031,10 +1189,6 @@ private:
                             -vector.y , vector.x , 0        , -vector.x,
                             -vector.t ,-vector.y , vector.x , 0);
     }
-
-
-
-
 
 
 
@@ -1336,6 +1490,8 @@ private:
            rotationMatrix.mRows[1][3] = 0.f;
            rotationMatrix.mRows[2][3] = 0.f;
            rotationMatrix.mRows[3][3] = 1.f;
+
+          // rotationMatrix.OrthoNormalize();
 
            return rotationMatrix;
        }

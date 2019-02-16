@@ -44,6 +44,7 @@
 #include "IComplex.h"
 #include "IRay.h"
 #include "ITransform.h"
+#include "IAxisAlignedBox3D.h"
 
 #include "ISpherical.h"
 
