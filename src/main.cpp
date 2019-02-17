@@ -767,5 +767,35 @@ int main()
                     cout<< " closset point B to point in segmentA " << line_a.ClosestPoint(B) << endl;
                 }
 
+
+                {
+                    cout<< "*********************************" << endl;
+                    cout<< "---- Unit test Euler Angle in Matrix3x3 -----" <<endl<<endl;
+
+                    Vector3 eulerAngle( 0.5 , 0.7 , 0.1);
+
+                    cout<< " ---------- push angle -------- " << endl;
+                    cout<< "Set Angle X: " << eulerAngle.x << endl;
+                    cout<< "Set Angle Y: " << eulerAngle.y << endl;
+                    cout<< "Set Angle Z: " << eulerAngle.z << endl;
+                    cout<< endl;
+                    cout<< " ---------- extract angle -------- " << endl;
+
+
+                    Matrix3 M;
+                    M = M.CreateRotationEulerAngle( eulerAngle.x ,
+                                                    eulerAngle.y ,
+                                                    eulerAngle.z );
+
+
+                    // eulerAngle =  Q.GetEulerAngleGimbalLock(Quaternion::RotSeq::xyz);
+                    eulerAngle = Quaternion(M).GetRotMatrix().GetEulerAngles();
+
+                    cout<< "Get Angle X: " << eulerAngle.x << endl;
+                    cout<< "Get Angle Y: " << eulerAngle.y << endl;
+                    cout<< "Get Angle Z: " << eulerAngle.z << endl;
+                }
+
+
     return 0;
 }
