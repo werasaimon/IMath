@@ -599,26 +599,27 @@ template<class T> class IMatrix3x3
       /**
       * Return the Euler angle of the matrix
       */
-      SIMD_INLINE IVector3D<T> GetExtractEulerAngleXYZ() const
+      SIMD_INLINE IVector3D<T> GetEulerAngles() const
       {
-          T rotXangle;
-          T rotYangle;
-          T rotZangle;
-          rotXangle = IAtan2(-GetRow(1).z, GetRow(2).z);
+          T rotXangle = IAtan2(-GetRow(1).z,
+                                GetRow(2).z);
 
           T cosYangle = ISqrt(pow(GetRow(0).x, 2) +
                               pow(GetRow(0).y, 2));
 
-          rotYangle = IAtan2(GetRow(0).z, cosYangle);
+          T rotYangle = IAtan2(GetRow(0).z, cosYangle);
 
           T sinXangle = ISin(rotXangle);
           T cosXangle = ICos(rotXangle);
-          rotZangle = IAtan2(cosXangle * GetRow(1).x +
-                             sinXangle * GetRow(2).x,
+          T rotZangle = IAtan2(cosXangle * GetRow(1).x +
+                               sinXangle * GetRow(2).x,
 
-          cosXangle * GetRow(1).y + sinXangle * GetRow(2).y);
+          cosXangle * GetRow(1).y +
+          sinXangle * GetRow(2).y);
 
-          return IVector3D<T>(rotXangle,rotYangle,rotZangle);
+          return IVector3D<T>(rotXangle,
+                              rotYangle,
+                              rotZangle);
       }
 
 
@@ -627,6 +628,10 @@ template<class T> class IMatrix3x3
 //          return (epsilon > std::abs(a - b));
 //      }
 
+
+//      /**
+//      * Return the Euler angle of the matrix
+//      */
 //      SIMD_INLINE IVector3D<T> GetEulerAngles() const
 //      {
 //          const IMatrix3x3<T> R(*this);
@@ -1045,11 +1050,38 @@ template<class T> class IMatrix3x3
       }
 
 
+      static SIMD_INLINE IMatrix3x3<T> CreateRotationEulerAngle(const T& Roll , const T& Pitch , const T& Yaw )
+      {
+          IMatrix3x3<T> M;
+
+          const T SR = ISin(Roll  /** M_PI / 180.f*/);
+          const T SP = ISin(Pitch /** M_PI / 180.f*/);
+          const T SY = ISin(Yaw   /** M_PI / 180.f*/);
+          const T CR = ICos(Roll  /** M_PI / 180.f*/);
+          const T CP = ICos(Pitch /** M_PI / 180.f*/);
+          const T CY = ICos(Yaw   /** M_PI / 180.f*/);
+
+          M[0][0]	= CP * CY;
+          M[0][1]	= CP * SY;
+          M[0][2]	= SP;
+
+          M[1][0]	= SR * SP * CY - CR * SY;
+          M[1][1]	= SR * SP * SY + CR * CY;
+          M[1][2]	= - SR * CP;
+
+          M[2][0]	= -( CR * SP * CY + SR * SY );
+          M[2][1]	= CY * SR - CR * SP * SY;
+          M[2][2]	= CR * CP;
+
+          return M;
+      }
+
+
       // Return a 4x4 rotation of axis to matrix
       static SIMD_INLINE IMatrix3x3<T> CreateRotationAxis(const IVector3D<T>& axis, T angle)
       {
 
-          //angle = angle / 180.0f * (float)M_PI;
+          //angle = angle / 180.0f * (T)M_PI;
 
           T cosA = ICos(angle);
           T sinA = ISin(angle);
