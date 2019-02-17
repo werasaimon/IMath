@@ -801,7 +801,10 @@ namespace IMath
         SIMD_INLINE IQuaternion<T> operator+(const IQuaternion<T>& rhs) const
         {
             const IQuaternion<T>& lhs = *this;
-            return IQuaternion<T>(lhs.w + rhs.w, lhs.x + rhs.x, lhs.y + rhs.y, lhs.z + rhs.z );
+            return IQuaternion<T>(lhs.w + rhs.w,
+                                  lhs.x + rhs.x,
+                                  lhs.y + rhs.y,
+                                  lhs.z + rhs.z );
         }
 
 
@@ -812,7 +815,10 @@ namespace IMath
         SIMD_INLINE IQuaternion<T> operator-(const IQuaternion<T>& rhs) const
         {
             const IQuaternion<T>& lhs = *this;
-            return IQuaternion<T>(lhs.w - rhs.w, lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z);
+            return IQuaternion<T>(lhs.w - rhs.w,
+                                  lhs.x - rhs.x,
+                                  lhs.y - rhs.y,
+                                  lhs.z - rhs.z);
         }
 
 
@@ -822,7 +828,10 @@ namespace IMath
          */
         SIMD_INLINE IQuaternion<T> operator*(T rhs) const
         {
-            return IQuaternion<T>(w * rhs, x * rhs, y * rhs, z * rhs);
+            return IQuaternion<T>(w * rhs,
+                                  x * rhs,
+                                  y * rhs,
+                                  z * rhs);
         }
 
 
@@ -841,22 +850,19 @@ namespace IMath
 
 
         /**
-          * Multiplication operator
+          * Quaternion multiplication operator
           * @param rhs Right hand side argument of binary operator.
           */
         //        SIMD_INLINE IQuaternion<T> operator*(const IQuaternion<T>& rhs) const
         //        {
-        //            //return IQuaternion<T> (w * rhs.w - v.Dot(rhs.v), w * rhs.v + rhs.w * v + v.Cross(rhs.v));
-
-        //            IQuaternion<T> q;
-        //            q.w = w*rhs.w - x*rhs.x - y*rhs.y - z*rhs.z,
-        //            q.x = w*rhs.x + x*rhs.w + y*rhs.z - z*rhs.y,
-        //            q.y = w*rhs.y - x*rhs.z + y*rhs.w + z*rhs.x,
-        //            q.z = w*rhs.z + x*rhs.y - y*rhs.x + z*rhs.w;
-        //            return q;
+        //            return IQuaternion<T> (w * rhs.w - v.Dot(rhs.v), w * rhs.v + rhs.w * v + v.Cross(rhs.v));
         //        }
 
-        /// Quaternion multiplication.
+
+        /**
+        * Quaternion multiplication operator
+        * @param rhs Right hand side argument of binary operator.
+        */
         SIMD_INLINE IQuaternion<T> operator*(const IQuaternion<T>& Q) const
         {
             return IQuaternion(w*Q.w - x*Q.x - y*Q.y - z*Q.z,
@@ -865,6 +871,7 @@ namespace IMath
                                w*Q.z + x*Q.y - y*Q.x + z*Q.w);
         }
 
+        /// multiplication operator dot vector
         SIMD_INLINE IVector3D<T> nVidia_dot(const IVector3D<T>& _v) const
         {
             // nVidia SDK implementation
@@ -1076,10 +1083,10 @@ namespace IMath
          assert (lengthSquareQuaternion > MACHINE_EPSILON);
 
          // Compute and return the inverse quaternion
-         return IQuaternion<T>(-x / lengthSquareQuaternion,
+         return IQuaternion<T>( w / lengthSquareQuaternion,
+                               -x / lengthSquareQuaternion,
                                -y / lengthSquareQuaternion,
-                               -z / lengthSquareQuaternion,
-                                w / lengthSquareQuaternion);
+                               -z / lengthSquareQuaternion);
 
      }
 
@@ -1095,10 +1102,10 @@ namespace IMath
          assert (lengthQuaternion > MACHINE_EPSILON);
 
          // Compute and return the unit quaternion
-         return IQuaternion<T>(x / lengthQuaternion,
+         return IQuaternion<T>(w / lengthQuaternion,
+                               x / lengthQuaternion,
                                y / lengthQuaternion,
-                               z / lengthQuaternion,
-                               w / lengthQuaternion);
+                               z / lengthQuaternion);
      }
 
 
@@ -1267,15 +1274,10 @@ namespace IMath
             rotationAxis.Normalize();
 
 
-
             T s = ISqrt( (1+cosTheta)*2 );
             T invs = 1.0 / s;
 
-            return IQuaternion<T> (  rotationAxis.x * invs,
-                                     rotationAxis.y * invs,
-                                     rotationAxis.z * invs,
-                                     s * 0.5f
-                                  );
+            return IQuaternion<T> ( s * 0.5f , rotationAxis * invs);
 
         }
 
@@ -1421,7 +1423,7 @@ namespace IMath
 };
 
 
-template<class T> const IQuaternion<T> IQuaternion<T>::IDENTITY(0.0, 0.0, 0.0, 1.0);
+template<class T> const IQuaternion<T> IQuaternion<T>::IDENTITY(1.0, 0.0, 0.0, 0.0);
 template<class T> const IQuaternion<T> IQuaternion<T>::ZERO(0.0, 0.0, 0.0, 0.0);
 
 
