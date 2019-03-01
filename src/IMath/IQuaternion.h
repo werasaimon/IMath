@@ -94,18 +94,17 @@ namespace IMath
 
         void twoaxisrot(T r11, T r12, T r21, T r31, T r32, T res[])
         {
-          res[0] = IAtan2( r11, r12 );
+          res[2] = IAtan2( r11, r12 );
           res[1] = IACos( r21 );
-          res[2] = IAtan2( r31, r32 );
+          res[0] = IAtan2( r31, r32 );
         }
 
         void threeaxisrot(T r11, T r12, T r21, T r31, T r32, T res[])
         {
-          res[0] = IAtan2( r31, r32 );
+          res[2] = IAtan2( r31, r32 );
           res[1] = IASin( r21 );
-          res[2] = IAtan2( r11, r12 );
+          res[0] = IAtan2( r11, r12 );
         }
-
 
 
 
