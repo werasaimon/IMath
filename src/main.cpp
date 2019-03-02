@@ -9,8 +9,6 @@ using namespace std;
 using namespace CMath;
 
 
-
-
 int main(void)
 {
 	/**/
