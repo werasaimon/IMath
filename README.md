@@ -65,6 +65,28 @@ You can pass vector or matrix class directly as argument appropriate OpenGL func
 
 ```
 
+### CMake
+
+You can also install the library from source using CMake.
+
+```bash
+# clone gcem from GitHub
+git clone https://github.com/werasaimon/IMath ./imath
+
+# make a build directory
+cd ./imath
+mkdir build
+cd build
+
+# generate Makefiles and install
+cmake .. -DCMAKE_INSTALL_PREFIX=/imath/install/location
+make install
+```
+For example, `/imath/install/location` could be `/usr/local/`.
+
+
+# CODE
+
 GCE-IMath is a header-only library and does not require any additional libraries (beyond a C++11 compatible compiler). Simply add the header files to your project using:
 ```cpp
 #include "IMath/IMaths.h"
