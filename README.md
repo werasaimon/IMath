@@ -10,7 +10,7 @@ You can also install the library from source using CMake.
 git clone https://github.com/werasaimon/IMath ./imath
 
 # make a build directory
-cd ./imath
+cd ./imath/src
 mkdir build
 cd build
 
