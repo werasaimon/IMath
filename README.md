@@ -21,6 +21,8 @@ make install
 For example, `/imath/install/location` could be `/usr/local/`.
 
 
+### IMath
+
 IMath is set of C++ classes for Vector and Matrix algebra used in computer graphics and relativity physics . The library consits of these classes:
 
 
