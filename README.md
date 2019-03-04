@@ -16,7 +16,8 @@ cd build
 
 # generate Makefiles and install
 cmake .. -DCMAKE_INSTALL_PREFIX=/imath/install/location
-make install
+make
+./IMath
 ```
 For example, `/imath/install/location` could be `/usr/local/`.
 
