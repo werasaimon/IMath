@@ -6,7 +6,7 @@
 You can also install the library from source using CMake.
 
 ```bash
-# clone gcem from GitHub
+# clone imath from GitHub
 git clone https://github.com/werasaimon/IMath ./imath
 
 # make a build directory
