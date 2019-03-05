@@ -1,6 +1,8 @@
 # IMath
 
-CODECOV_TOKEN="798e4eee-bfad-42d9-8aa1-1477f2720217"
+
+
+[![Build Status](https://travis-ci.org/werasaimon/IMath.svg?branch=master_imath)](https://travis-ci.org/werasaimon/IMath)
 
 ### CMake
 
