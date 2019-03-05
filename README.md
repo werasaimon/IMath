@@ -18,6 +18,8 @@ cd build
 cmake .. -DCMAKE_INSTALL_PREFIX=/imath/install/location
 make
 ./IMath
+
+MSVS_2010-2014 Open-File ( IMath.sln )
 ```
 For example, `/imath/install/location` could be `/usr/local/`.
 
