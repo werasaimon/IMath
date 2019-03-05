@@ -627,7 +627,8 @@ private:
         IVector3D<T>  u =IVector3D<T> (lhs.mRows[0][0]*rhs.x + lhs.mRows[1][0]*rhs.y + lhs.mRows[2][0]*rhs.z + lhs.mRows[3][0],
                                        lhs.mRows[0][1]*rhs.x + lhs.mRows[1][1]*rhs.y + lhs.mRows[2][1]*rhs.z + lhs.mRows[3][1],
                                        lhs.mRows[0][2]*rhs.x + lhs.mRows[1][2]*rhs.y + lhs.mRows[2][2]*rhs.z + lhs.mRows[3][2]);
-        T w = lhs.mRows[0][3]*rhs.x +
+        
+		T w = lhs.mRows[0][3]*rhs.x +
               lhs.mRows[1][3]*rhs.y +
               lhs.mRows[2][3]*rhs.z +
               lhs.mRows[3][3];
@@ -645,7 +646,8 @@ private:
         IVector3D<T>  u =IVector3D<T> (mRows[0][0]*rhs.x + mRows[0][1]*rhs.y + mRows[0][2]*rhs.z + mRows[0][3],
                                        mRows[1][0]*rhs.x + mRows[1][1]*rhs.y + mRows[1][2]*rhs.z + mRows[1][3],
                                        mRows[2][0]*rhs.x + mRows[2][1]*rhs.y + mRows[2][2]*rhs.z + mRows[2][3]);
-        T w = mRows[3][0]*rhs.x +
+        
+		T w = mRows[3][0]*rhs.x +
               mRows[3][1]*rhs.y +
               mRows[3][2]*rhs.z +
               mRows[3][3];
