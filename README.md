@@ -1,5 +1,6 @@
 # IMath
 
+CODECOV_TOKEN="798e4eee-bfad-42d9-8aa1-1477f2720217"
 
 ### CMake
 
