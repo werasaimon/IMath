@@ -90,7 +90,7 @@ public:
     SIMD_INLINE ITransform(const IMatrix4x4<T>& transform , T _time = 1.0)
     : mTime(_time)
     {
-        this->setFromOpenGL(transform);
+        this->SetTransformMatrix(transform);
     }
 
 
@@ -211,21 +211,21 @@ public:
     //--------------------------------- function OpenGL -----------------------------------//
 
 
-    /// Set the transform from an OpenGL transform matrix
-    SIMD_INLINE void setFromOpenGL(const T* openglMatrix)
-    {
-        IMatrix3x3<T> matrix(openglMatrix[0], openglMatrix[4], openglMatrix[8],
-        openglMatrix[1], openglMatrix[5], openglMatrix[9],
-        openglMatrix[2], openglMatrix[6], openglMatrix[10]);
+//    /// Set the transform from an OpenGL transform matrix
+//    SIMD_INLINE void setFromOpenGL(const T* openglMatrix)
+//    {
+//        IMatrix3x3<T> matrix(openglMatrix[0], openglMatrix[4], openglMatrix[8],
+//        openglMatrix[1], openglMatrix[5], openglMatrix[9],
+//        openglMatrix[2], openglMatrix[6], openglMatrix[10]);
 
-        mBasis = (matrix/*.GetTranspose()*/);
+//        mBasis = (matrix/*.GetTranspose()*/);
 
-        IVector3D<T> pos( openglMatrix[12],
-        openglMatrix[13],
-        openglMatrix[14]);
+//        IVector3D<T> pos( openglMatrix[12],
+//        openglMatrix[13],
+//        openglMatrix[14]);
 
-        mPosition = pos;
-    }
+//        mPosition = pos;
+//    }
 
 
 //    /// Set the transform from an OpenGL transform matrix
@@ -246,30 +246,78 @@ public:
 
 
 
+//    /// Get the OpenGL matrix of the transform
+//    SIMD_INLINE void GetOpenGLMatrix(T* openglMatrix) const
+//    {
+//        const IMatrix3x3<T>& matrix = GetBasis();
+
+//        openglMatrix[0]  = matrix[0][0];
+//        openglMatrix[1]  = matrix[1][0];
+//        openglMatrix[2]  = matrix[2][0];
+//        openglMatrix[3]  = 0.0;
+
+//        openglMatrix[4]  = matrix[0][1];
+//        openglMatrix[5]  = matrix[1][1];
+//        openglMatrix[6]  = matrix[2][1];
+//        openglMatrix[7]  = 0.0;
+
+//        openglMatrix[8]  = matrix[0][2];
+//        openglMatrix[9]  = matrix[1][2];
+//        openglMatrix[10] = matrix[2][2];
+//        openglMatrix[11] = 0.0;
+
+//        openglMatrix[12] = mPosition.x;
+//        openglMatrix[13] = mPosition.y;
+//        openglMatrix[14] = mPosition.z;
+//        openglMatrix[15] = 1.0;
+
+//    }
+
+
+
+    /// Set the transform from an OpenGL transform matrix
+    SIMD_INLINE void SetTransformMatrix(const T* Matrix)
+    {
+        IMatrix3x3<T> matrix(Matrix[0], Matrix[4], Matrix[8],
+                             Matrix[1], Matrix[5], Matrix[9],
+                             Matrix[2], Matrix[6], Matrix[10]);
+
+        IVector3D<T> pos( Matrix[12],
+                          Matrix[13],
+                          Matrix[14]);
+
+        mBasis = (matrix/*.GetTranspose()*/);
+        mPosition = pos;
+    }
+
+
     /// Get the OpenGL matrix of the transform
-    SIMD_INLINE void GetOpenGLMatrix(T* openglMatrix) const
+    SIMD_INLINE const IMatrix4x4<T> GetTransformMatrix() const
     {
         const IMatrix3x3<T>& matrix = GetBasis();
+        T Matrix[16];
 
-        openglMatrix[0]  = matrix[0][0];
-        openglMatrix[1]  = matrix[1][0];
-        openglMatrix[2]  = matrix[2][0];
-        openglMatrix[3]  = 0.0;
+        Matrix[0]  = matrix[0][0];
+        Matrix[1]  = matrix[1][0];
+        Matrix[2]  = matrix[2][0];
+        Matrix[3]  = 0.0;
 
-        openglMatrix[4]  = matrix[0][1];
-        openglMatrix[5]  = matrix[1][1];
-        openglMatrix[6]  = matrix[2][1];
-        openglMatrix[7]  = 0.0;
+        Matrix[4]  = matrix[0][1];
+        Matrix[5]  = matrix[1][1];
+        Matrix[6]  = matrix[2][1];
+        Matrix[7]  = 0.0;
 
-        openglMatrix[8]  = matrix[0][2];
-        openglMatrix[9]  = matrix[1][2];
-        openglMatrix[10] = matrix[2][2];
-        openglMatrix[11] = 0.0;
+        Matrix[8]  = matrix[0][2];
+        Matrix[9]  = matrix[1][2];
+        Matrix[10] = matrix[2][2];
+        Matrix[11] = 0.0;
 
-        openglMatrix[12] = mPosition.x;
-        openglMatrix[13] = mPosition.y;
-        openglMatrix[14] = mPosition.z;
-        openglMatrix[15] = 1.0;
+        Matrix[12] = mPosition.x;
+        Matrix[13] = mPosition.y;
+        Matrix[14] = mPosition.z;
+        Matrix[15] = 1.0;
+
+        return IMatrix4x4<T>(Matrix);
 
     }
 

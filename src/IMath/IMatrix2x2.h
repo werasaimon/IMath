@@ -171,23 +171,34 @@ template<class T> class IMatrix2x2
 
 
         /**
-         * normalized matrix to be value matrix2x2
-         */
+        * normalized matrix to be value matrix2x2
+        */
         void OrthoNormalize()
         {
            mRows[0].Normalize();
            mRows[1].Normalize();
         }
 
+        /**
+        * Normalized matrix to be value matrix2x2
+        * Return matrix2x2
+        */
+        SIMD_INLINE IMatrix2x2<T> OrthoNormalized() const
+        {
+           IMatrix2x2<T> res(*this);
+           res.OrthoNormalize();
+           return res;
+        }
+
 
         /**
-         * Matrix entry accessor operator.
-         *
-         * @note Entry indicies are in the range 0 <= `index` <= 8.
-         *
-         * @param index Index for the entry to return.
-         * @return Entry at position `index`.
-         */
+        * Matrix entry accessor operator.
+        *
+        * @note Entry indicies are in the range 0 <= `index` <= 8.
+        *
+        * @param index Index for the entry to return.
+        * @return Entry at position `index`.
+        */
         SIMD_INLINE T operator[](std::size_t index) const
         {
             assert(index < components);

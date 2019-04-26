@@ -265,8 +265,8 @@ private:
 
 
     /**
-     * Resets matrix to be value matrix
-     */
+    * Resets matrix to be value matrix
+    */
     SIMD_INLINE void SetAllValues(T a1, T a2, T a3, T a4,
                                   T b1, T b2, T b3, T b4,
                                   T c1, T c2, T c3, T c4,
@@ -280,13 +280,25 @@ private:
 
 
     /**
-     * Normalized matrix to be value matrix3x3
-     */
+    * Normalized matrix to be value matrix3x3
+    */
     void OrthoNormalize()
     {
        IMatrix3x3<T> R = this->GetRotMatrix();
        R.OrthoNormalize();
        this->SetRotation(R);
+    }
+
+
+    /**
+    * Normalized matrix to be value matrix3x3
+    * Return matrix4x4
+    */
+    SIMD_INLINE IMatrix4x4<T> OrthoNormalized() const
+    {
+       IMatrix4x4<T> res(*this);
+       res.OrthoNormalize();
+       return res;
     }
 
     //---------------------[ Get operators ]------------------------------
@@ -1590,7 +1602,6 @@ private:
            return m * IMatrix4x4<T>::CreateTranslation(-eyePos);
 
        }
-
 
 
        /*!

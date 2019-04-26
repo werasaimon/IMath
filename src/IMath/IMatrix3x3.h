@@ -209,6 +209,18 @@ template<class T> class IMatrix3x3
       }
 
 
+      /**
+      * Normalized matrix to be value matrix3x3
+      * Return matrix3x3
+      */
+      SIMD_INLINE IMatrix3x3<T> OrthoNormalized() const
+      {
+         IMatrix3x3<T> res(*this);
+         res.OrthoNormalize();
+         return res;
+      }
+
+
       //---------------------[ assignment operations ]---------------------------------
 
       /**
