@@ -192,10 +192,10 @@ public:
      */
     SIMD_INLINE  IVector<T, N> operator - () const
     {
-        auto result = *this;
+        T result = T(0);
         for (std::size_t i = 0; i < N; ++i)
         {
-            result[i] = -result[i];
+            result += (*this)[i]*(*this)[i];
         }
         return result;
     }
@@ -214,7 +214,7 @@ public:
         auto result = T(0);
         for (std::size_t i = 0; i < N; ++i)
         {
-            result = result + (*this[i]) * (*this[i]);
+            result = result + (*this)[i] * (*this)[i];
         }
         return result;
     }
@@ -234,13 +234,12 @@ public:
      */
     SIMD_INLINE void Normalize()
     {
-        T s = Length();
+        const T s = Length();
         auto result = *this;
         for (std::size_t i = 0; i < N; ++i)
         {
-            result[i] = result[i] / s;
+            (*this)[i] = result[i] / s;
         }
-        return result;
     }
 
 
