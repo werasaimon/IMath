@@ -192,10 +192,10 @@ public:
      */
     SIMD_INLINE  IVector<T, N> operator - () const
     {
-        T result = T(0);
+        auto result = *this;
         for (std::size_t i = 0; i < N; ++i)
         {
-            result += (*this)[i]*(*this)[i];
+            result[i] = -result[i];
         }
         return result;
     }
