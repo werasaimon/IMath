@@ -133,8 +133,13 @@ public:
     }
 
 
+
+
     SIMD_INLINE explicit IVector4D(const T& scalar)
-        : x ( scalar ) , y ( scalar ) , z ( scalar ) , w( scalar )
+        : x( scalar ) ,
+          y( scalar ) ,
+          z( scalar ) ,
+          w( scalar )
     {
 
     }
@@ -392,9 +397,9 @@ public:
     SIMD_INLINE bool operator==(const IVector4D<T>& rhs) const
     {
         return IAbs(x - rhs.x) < MACHINE_EPSILON &&
-                IAbs(y - rhs.y) < MACHINE_EPSILON &&
-                IAbs(z - rhs.z) < MACHINE_EPSILON &&
-                IAbs(w - rhs.w) < MACHINE_EPSILON;
+               IAbs(y - rhs.y) < MACHINE_EPSILON &&
+               IAbs(z - rhs.z) < MACHINE_EPSILON &&
+               IAbs(w - rhs.w) < MACHINE_EPSILON;
     }
 
     /**
@@ -829,7 +834,7 @@ static IVector4D<T> Cross(const IVector4D<T>& a, const IVector4D<T>& b , const I
 template<class T> const
 static T Dot(const IVector4D<T>& a, const IVector4D<T>& b)
 {
-    return a.dot(b);
+    return a.Dot(b);
 }
 
 

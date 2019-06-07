@@ -303,7 +303,7 @@ template<class T> class IMatrix3x3
       */
       SIMD_INLINE const T* GetData() const
       {
-          return &mRows[0][0];
+          return mData;
       }
 
      /**
@@ -311,7 +311,7 @@ template<class T> class IMatrix3x3
       */
       SIMD_INLINE T* GetData()
       {
-          return &mRows[0][0];
+          return mData;
       }
 
 

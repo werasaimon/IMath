@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 
 SET(CMAKE_CXX_FLAGS "-std=c++11")
+SET(CMAKE_CXX_STANDARD 11)
 
 project(IMath)
 add_executable(${PROJECT_NAME}
@@ -12,6 +13,7 @@ add_executable(${PROJECT_NAME}
     IMath/ILineSegment3D.h
     IMath/ILorentzVector.h
     IMath/IMaths.h
+    IMath/IMatrix.h
     IMath/IMatrix2x2.h
     IMath/IMatrix3x3.h
     IMath/IMatrix4x4.h

@@ -4,7 +4,7 @@
 #include "IFunc.h"
 #include "IVectorType.h"
 #include "IVector.h"
-
+#include "IMatrix.h"
 
 #include <cmath>
 #include <cstddef>
@@ -91,7 +91,9 @@ ScalarType Length(const VectorType& vec)
 template <typename VectorType, typename ScalarType = typename VectorType::ScalarType>
 ScalarType Angle(const VectorType& lhs, const VectorType& rhs)
 {
-    return std::acos( Dot<VectorType, ScalarType>(lhs, rhs) / (Length<VectorType, ScalarType>(lhs) * Length<VectorType, ScalarType>(rhs)) );
+    return std::acos( Dot<VectorType, ScalarType>(lhs, rhs) /
+                      (Length<VectorType, ScalarType>(lhs) *
+                       Length<VectorType, ScalarType>(rhs)) );
 }
 
 //! Returns the angle (in radians) between the two normalized vectors 'lhs' and 'rhs'.
@@ -299,43 +301,43 @@ T Rescale(const T& t, const I& lower0, const I& upper0, const I& lower1, const I
 
 /* --- Global Operators --- */
 
-///**
-//\brief Multiplies the N-dimensional row-vector with the NxM matrix.
-//\remarks This is equivalent to: Transpose(rhs) * lhs.
-//*/
-//template <typename T, std::size_t Rows, std::size_t Cols>
-//IVector<T, Cols> operator * (const IVector<T, Rows>& lhs, const IMatrix<T, Rows, Cols>& rhs)
-//{
-//    IVector<T, Cols> result;
+/**
+\brief Multiplies the N-dimensional row-vector with the NxM matrix.
+\remarks This is equivalent to: Transpose(rhs) * lhs.
+*/
+template <typename T, std::size_t Rows, std::size_t Cols>
+IVector<T, Cols> operator * (const IVector<T, Rows>& lhs, const IMatrix<T, Rows, Cols>& rhs)
+{
+    IVector<T, Cols> result;
 
-//    for (std::size_t c = 0; c < Cols; ++c)
-//    {
-//        result[c] = T(0);
-//        for (std::size_t r = 0; r < Rows; ++r)
-//            result[c] += rhs(r, c)*lhs[r];
-//    }
+    for (std::size_t c = 0; c < Cols; ++c)
+    {
+        result[c] = T(0);
+        for (std::size_t r = 0; r < Rows; ++r)
+            result[c] += rhs(r, c)*lhs[r];
+    }
 
-//    return result;
-//}
+    return result;
+}
 
-///**
-//\brief Multiplies the NxM matrix with the M-dimensional column-vector.
-//\remarks This is equivalent to: rhs * Transpose(lhs).
-//*/
-//template <typename T, std::size_t Rows, std::size_t Cols>
-//IVector<T, Rows> operator * (const IMatrix<T, Rows, Cols>& lhs, const IVector<T, Cols>& rhs)
-//{
-//    IVector<T, Rows> result;
+/**
+\brief Multiplies the NxM matrix with the M-dimensional column-vector.
+\remarks This is equivalent to: rhs * Transpose(lhs).
+*/
+template <typename T, std::size_t Rows, std::size_t Cols>
+IVector<T, Rows> operator * (const IMatrix<T, Rows, Cols>& lhs, const IVector<T, Cols>& rhs)
+{
+    IVector<T, Rows> result;
 
-//    for (std::size_t r = 0; r < Rows; ++r)
-//    {
-//        result[r] = T(0);
-//        for (std::size_t c = 0; c < Cols; ++c)
-//            result[r] += lhs(r, c)*rhs[c];
-//    }
+    for (std::size_t r = 0; r < Rows; ++r)
+    {
+        result[r] = T(0);
+        for (std::size_t c = 0; c < Cols; ++c)
+            result[r] += lhs(r, c)*rhs[c];
+    }
 
-//    return result;
-//}
+    return result;
+}
 
 
 }

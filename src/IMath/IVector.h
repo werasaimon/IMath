@@ -21,7 +21,6 @@ template <typename T, std::size_t N>
 class IVector
 {
 
-
 private:
 
     T v_[N];
@@ -49,11 +48,15 @@ public:
         std::copy(std::begin(rhs.v_), std::end(rhs.v_), v_);
     }
 
+    IVector(const int& deciminal)
+    {
+        std::fill(std::begin(v_), std::end(v_), deciminal);
+    }
+
     explicit IVector(const T& scalar)
     {
         std::fill(std::begin(v_), std::end(v_), scalar);
     }
-
 
 
     IVector<T, N>& operator += (const IVector<T, N>& rhs)
@@ -98,10 +101,23 @@ public:
         return *this;
     }
 
+
+    IVector<T, N>& Dot(const IVector<T, N>& rhs) const
+    {
+        T result = T(0);
+        for (std::size_t i = 0; i < N; ++i)
+        {
+            result += (*this)[i]*rhs[i];
+        }
+
+        return result;
+    }
+
+
     /**
-          \brief Returns the specified vector component.
-          \param[in] component Specifies the vector component index. This must be in the range [0, N).
-          */
+     \brief Returns the specified vector component.
+     \param[in] component Specifies the vector component index. This must be in the range [0, N).
+    */
     T& operator [] (std::size_t component)
     {
         assert(component < N);
@@ -109,27 +125,21 @@ public:
     }
 
     /**
-          \brief Returns the specified vector component.
-          \param[in] component Specifies the vector component index. This must be in the range [0, N).
-          */
+     \brief Returns the specified vector component.
+     \param[in] component Specifies the vector component index. This must be in the range [0, N).
+     */
     const T& operator [] (std::size_t component) const
     {
         assert(component < N);
         return v_[component];
     }
 
-    IVector<T, N> operator - () const
-    {
-        auto result = *this;
-        for (std::size_t i = 0; i < N; ++i)
-            result[i] = -result[i];
-        return result;
-    }
+
 
     /**
-          Returns a type casted instance of this vector.
-          \tparam C Specifies the static cast type.
-          */
+     Returns a type casted instance of this vector.
+     \tparam C Specifies the static cast type.
+    */
     template <typename C>
     IVector<C, N> Cast() const
     {
@@ -174,13 +184,110 @@ public:
         return &v_[0];
     }
 
+
+    //-------------[ unary operations ]--------------------------
+    /**
+     * Unary negate operator
+     * @return negated vector
+     */
+    SIMD_INLINE  IVector<T, N> operator - () const
+    {
+        auto result = *this;
+        for (std::size_t i = 0; i < N; ++i)
+        {
+            result[i] = -result[i];
+        }
+        return result;
+    }
+
+    //-------------[ size operations ]---------------------------
+
+    /**
+     * Return square of length.
+     * @return length ^ 2
+     * @note This method is faster then length(). For comparison
+     * of length of two vector can be used just this value, instead
+     * of more expensive length()^ 2 method.
+     */
+    SIMD_INLINE T LengthSquare() const
+    {
+        auto result = T(0);
+        for (std::size_t i = 0; i < N; ++i)
+        {
+            result = result + (*this[i]) * (*this[i]);
+        }
+        return result;
+    }
+
+    /**
+     * Get length of vector.
+     * @return lenght of vector
+     */
+    SIMD_INLINE T Length() const
+    {
+        return ISqrt(LengthSquare());
+    }
+
+
+    /**
+     * Normalize vector
+     */
+    SIMD_INLINE void Normalize()
+    {
+        T s = Length();
+        auto result = *this;
+        for (std::size_t i = 0; i < N; ++i)
+        {
+            result[i] = result[i] / s;
+        }
+        return result;
+    }
+
+
+
+    /**
+     * Inverse vector
+     */
+    SIMD_INLINE IVector<T, N> GetInverse() const
+    {
+        T s = Length();
+        auto result = *this;
+        for (std::size_t i = 0; i < N; ++i)
+        {
+            result[i] = T(1.0)/result[i];
+        }
+        return result;
+    }
+
+
+    /**
+     * Normalize unit vector
+     */
+    SIMD_INLINE IVector<T, N> GetUnit() const
+    {
+        auto  v = (*this);
+        v.Normalize();
+        return v;
+    }
+
+    /**
+     * Normalize Unit vector (popular name to methods)
+     */
+    SIMD_INLINE IVector<T, N> Normalized() const
+    {
+        auto  v = (*this);
+        v.Normalize();
+        return v;
+    }
+
+
     //-------------[ output operator ]------------------------
     /**
-           * Output to stream operator
-           * @param lhs Left hand side argument of operator (commonly ostream instance).
-           * @param rhs Right hand side argument of operator.
-           * @return Left hand side argument - the ostream object passed to operator.
-           */
+     * Output to stream operator
+     * @param lhs Left hand side argument of operator (commonly ostream instance).
+     * @param rhs Right hand side argument of operator.
+     * @return Left hand side argument - the ostream object passed to operator.
+     */
     friend std::ostream& operator<<(std::ostream& lhs, const IVector<T, N>& rhs)
     {
         lhs << "[";

@@ -106,10 +106,12 @@ public:
     }
 
 
+
+
+
     SIMD_INLINE explicit IVector2D(const T& scalar)
         : x ( scalar ), y ( scalar )
     {
-
     }
 
     /**

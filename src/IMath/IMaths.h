@@ -36,6 +36,7 @@
 #include "IVector3D.h"
 #include "IVector4D.h"
 #include "ILorentzVector.h"
+#include "IMatrix.h"
 #include "IMatrix2x2.h"
 #include "IMatrix3x3.h"
 #include "IMatrix4x4.h"
