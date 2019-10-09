@@ -11,7 +11,7 @@ using namespace CMath;
 
 int main(void)
 {
-	/**/
+	/**
 
 	{
 		cout<< "*********************************" << endl;
