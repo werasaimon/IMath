@@ -295,6 +295,9 @@ public:
     }
 
 
+
+#ifdef ENABLE_STL_SUPPORT
+
     //-------------[ output operator ]------------------------
     /**
      * Output to stream operator
@@ -325,6 +328,8 @@ public:
         oss << *this;
         return oss.str();
     }
+
+#endif
 
 
 };

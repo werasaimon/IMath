@@ -799,13 +799,16 @@ public:
 
     }
 
+
+#ifdef ENABLE_STL_SUPPORT
+
     //-------------[ output operator ]------------------------
     /**
-         * Output to stream operator
-         * @param lhs Left hand side argument of operator (commonly ostream instance).
-         * @param rhs Right hand side argument of operator.
-         * @return Left hand side argument - the ostream object passed to operator.
-         */
+    * Output to stream operator
+    * @param lhs Left hand side argument of operator (commonly ostream instance).
+    * @param rhs Right hand side argument of operator.
+    * @return Left hand side argument - the ostream object passed to operator.
+    */
     friend std::ostream& operator<<(std::ostream& lhs, const IVector3D<T> rhs)
     {
         lhs << "[" << rhs[0] << "," << rhs[1] << "," << rhs[2] << "]";
@@ -822,7 +825,7 @@ public:
         return oss.str();
     }
 
-
+#endif
 
     //========================== plugins =========================//
 

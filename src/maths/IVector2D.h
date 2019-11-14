@@ -596,6 +596,9 @@ public:
         return &x;
     }
 
+
+#ifdef ENABLE_STL_SUPPORT
+
     //-------------[ output operator ]------------------------
     /**
      * Output to stream operator
@@ -619,6 +622,7 @@ public:
         return oss.str();
     }
 
+#endif
 
 public:
 
