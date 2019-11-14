@@ -654,6 +654,13 @@ public:
     }
 
 
+    /**
+    * Transpose Vector
+    */
+    SIMD_INLINE IVector4D<T> GetTranspose() const
+    {
+          return IVector4D<T>(w,z,y,x);
+    }
 
 
 
@@ -761,9 +768,6 @@ public:
         return &x;
     }
 
-
-#ifdef ENABLE_STL_SUPPORT
-
     //-------------[ output operator ]------------------------
     /**
     * Output to stream operator
@@ -786,8 +790,6 @@ public:
         oss << *this;
         return oss.str();
     }
-
-#endif
 
 
 public:

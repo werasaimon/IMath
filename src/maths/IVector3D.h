@@ -630,11 +630,20 @@ public:
     }
 
     /**
-    * Inverse vector
+     * Inverse vector
+     */
+     SIMD_INLINE IVector3D<T> GetInverse() const
+     {
+         return IVector3D<T>( T(1.0/x) , T(1.0/y) , T(1.0/z) );
+     }
+
+
+    /**
+    * Transpose Vector
     */
-    SIMD_INLINE IVector3D<T> GetInverse() const
+    SIMD_INLINE IVector3D<T> GetTranspose() const
     {
-        return IVector3D<T>( T(1.0/x) , T(1.0/y) , T(1.0/z) );
+          return IVector3D<T>(z,y,x);
     }
 
     /**
@@ -790,17 +799,13 @@ public:
 
     }
 
-
-
-#ifdef ENABLE_STL_SUPPORT
-
     //-------------[ output operator ]------------------------
     /**
-    * Output to stream operator
-    * @param lhs Left hand side argument of operator (commonly ostream instance).
-    * @param rhs Right hand side argument of operator.
-    * @return Left hand side argument - the ostream object passed to operator.
-    */
+         * Output to stream operator
+         * @param lhs Left hand side argument of operator (commonly ostream instance).
+         * @param rhs Right hand side argument of operator.
+         * @return Left hand side argument - the ostream object passed to operator.
+         */
     friend std::ostream& operator<<(std::ostream& lhs, const IVector3D<T> rhs)
     {
         lhs << "[" << rhs[0] << "," << rhs[1] << "," << rhs[2] << "]";
@@ -808,8 +813,8 @@ public:
     }
 
     /**
-    * Gets string representation.
-    */
+         * Gets string representation.
+         */
     std::string ToString() const
     {
         std::ostringstream oss;
@@ -817,7 +822,6 @@ public:
         return oss.str();
     }
 
-#endif
 
 
     //========================== plugins =========================//

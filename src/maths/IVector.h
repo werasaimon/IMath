@@ -260,6 +260,21 @@ public:
 
 
     /**
+    * Transpose Vector
+    */
+    SIMD_INLINE IVector<T, N> GetTranspose() const
+    {
+    	T s = Length();
+    	auto result = *this;
+    	for (std::size_t i = 0; i < N; ++i)
+    	{
+    		result[i] = result[(N-1) - i];
+    	}
+    	return result;
+    }
+
+
+    /**
      * Normalize unit vector
      */
     SIMD_INLINE IVector<T, N> GetUnit() const
@@ -279,8 +294,6 @@ public:
         return v;
     }
 
-
-#ifdef ENABLE_STL_SUPPORT
 
     //-------------[ output operator ]------------------------
     /**
@@ -304,8 +317,8 @@ public:
     }
 
     /**
-    * Gets string representation.
-    */
+           * Gets string representation.
+           */
     std::string ToString() const
     {
         std::ostringstream oss;
@@ -313,7 +326,6 @@ public:
         return oss.str();
     }
 
-#endif
 
 };
 

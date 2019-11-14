@@ -538,6 +538,14 @@ public:
 
 
 
+    /**
+    * Transpose Vector
+    */
+    SIMD_INLINE IVector2D<T> GetTranspose() const
+    {
+          return IVector2D<T>(y,x);
+    }
+
 
 
     //--------------[ misc. operations ]-----------------------
@@ -588,16 +596,13 @@ public:
         return &x;
     }
 
-
-#ifdef ENABLE_STL_SUPPORT
-
     //-------------[ output operator ]------------------------
     /**
-    * Output to stream operator
-    * @param lhs Left hand side argument of operator (commonly ostream instance).
-    * @param rhs Right hand side argument of operator.
-    * @return Left hand side argument - the ostream object passed to operator.
-    */
+     * Output to stream operator
+     * @param lhs Left hand side argument of operator (commonly ostream instance).
+     * @param rhs Right hand side argument of operator.
+     * @return Left hand side argument - the ostream object passed to operator.
+     */
     friend std::ostream& operator<<(std::ostream& lhs, const IVector2D<T>& rhs)
     {
         lhs << "[" << rhs[0] << "," << rhs[1] << "]";
@@ -605,16 +610,14 @@ public:
     }
 
     /**
-    * Gets string representation.
-    */
+     * Gets string representation.
+     */
     std::string ToString() const
     {
         std::ostringstream oss;
         oss << *this;
         return oss.str();
     }
-
-#endif
 
 
 public:
