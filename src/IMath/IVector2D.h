@@ -538,6 +538,14 @@ public:
 
 
 
+    /**
+    * Transpose Vector
+    */
+    SIMD_INLINE IVector2D<T> GetTranspose() const
+    {
+          return IVector2D<T>(y,x);
+    }
+
 
 
     //--------------[ misc. operations ]-----------------------

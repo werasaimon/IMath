@@ -260,6 +260,21 @@ public:
 
 
     /**
+    * Transpose Vector
+    */
+    SIMD_INLINE IVector<T, N> GetTranspose() const
+    {
+    	T s = Length();
+    	auto result = *this;
+    	for (std::size_t i = 0; i < N; ++i)
+    	{
+    		result[i] = result[(N-1) - i];
+    	}
+    	return result;
+    }
+
+
+    /**
      * Normalize unit vector
      */
     SIMD_INLINE IVector<T, N> GetUnit() const

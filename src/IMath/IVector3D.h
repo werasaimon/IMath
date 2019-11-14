@@ -630,11 +630,20 @@ public:
     }
 
     /**
-    * Inverse vector
+     * Inverse vector
+     */
+     SIMD_INLINE IVector3D<T> GetInverse() const
+     {
+         return IVector3D<T>( T(1.0/x) , T(1.0/y) , T(1.0/z) );
+     }
+
+
+    /**
+    * Transpose Vector
     */
-    SIMD_INLINE IVector3D<T> GetInverse() const
+    SIMD_INLINE IVector3D<T> GetTranspose() const
     {
-        return IVector3D<T>( T(1.0/x) , T(1.0/y) , T(1.0/z) );
+          return IVector3D<T>(z,y,x);
     }
 
     /**
