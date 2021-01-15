@@ -565,8 +565,6 @@ private:
 
 
      //--------------------[ multiply operators ]--------------------------------
-
-
     friend SIMD_INLINE IVector2D<T> operator*(const IVector2D<T>& point, const IMatrix4x4<T>& rhs)
     {
         T xin, yin;
@@ -785,7 +783,7 @@ private:
      * @return Determinant of matrix
      * @note This function does 3 * 4 * 6 mul, 3 * 6 add.
      */
-    SIMD_INLINE T GetDeterminant() const
+    SIMD_INLINE T Determinant() const
     {
 
         return  + mRows[3][0] * mRows[2][1] * mRows[1][2] * mRows[0][3] - mRows[2][0] * mRows[3][1] * mRows[1][2] * mRows[0][3]
@@ -814,11 +812,11 @@ private:
      * @note This is a little bit time consuming operation
      * (16 * 6 * 3 mul, 16 * 5 add + det() + mul() functions)
      */
-    SIMD_INLINE IMatrix4x4<T> GetInverse() const
+    SIMD_INLINE IMatrix4x4<T> Inverse() const
     {
 
         // Compute the determinant of the matrix
-        T determinant = GetDeterminant();
+        T determinant = Determinant();
           //determinant = (determinant > 0 && determinant < 0.001 ) ? 0.001 : determinant;
 
         // Check if the determinant is equal to zero
@@ -985,7 +983,7 @@ private:
     /**
     * Transpose matrix.
     */
-    SIMD_INLINE IMatrix4x4<T> GetTranspose() const
+    SIMD_INLINE IMatrix4x4<T> Transpose() const
     {
         IMatrix4x4<T> ret;
         for (int i = 0; i < 4; i++)
@@ -1000,7 +998,7 @@ private:
 
 
     /// Return the matrix with absolute values
-    SIMD_INLINE IMatrix4x4<T> GetAbsoluteMatrix() const
+    SIMD_INLINE IMatrix4x4<T> AbsoluteMatrix() const
     {
         return IMatrix4x4<T>(IAbs(mRows[0][0]), IAbs(mRows[0][1]), IAbs(mRows[0][2]), IAbs(mRows[0][3]),
                              IAbs(mRows[1][0]), IAbs(mRows[1][1]), IAbs(mRows[1][2]), IAbs(mRows[1][3]),
@@ -1010,7 +1008,7 @@ private:
 
 
     /// Return the trace of the matrix
-    SIMD_INLINE T GetTrace() const
+    SIMD_INLINE T Trace() const
     {
         // Compute and return the trace
         return (mRows[0][0] + mRows[1][1] + mRows[2][2] + mRows[3][3]);
@@ -1021,7 +1019,7 @@ private:
     /**
     * Return the coords of the matrix
     */
-    SIMD_INLINE IVector3D<T> GetTranslation() const
+    SIMD_INLINE IVector3D<T> Translation() const
     {
         return IVector3D<T>(mData[12],mData[13],mData[14]);
     }
@@ -1165,7 +1163,7 @@ private:
                                                        IVector3D<T>(0.f, 0.f, 1.f) };
 
        IMatrix4x4<T> rot[3];
-       for (std::size_t i = 0; i < 3;i++)
+       for (int i = 0; i < 3;i++)
        {
           rot[i] = IMatrix4x4<T>::CreateRotationAxis( directionUnary[i], /*IDegreesToRadians*/(rotation[i]) );
        }

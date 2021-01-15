@@ -15,7 +15,6 @@
 namespace IMath
 {
 
-
 /* --- Global Functions --- */
 
 //! Returns the value of 1 + 2 + ... + n = n*(n+1)/2.
@@ -48,53 +47,6 @@ T NormalDistribution(const T& x)
     return std::exp(-(x*x) / T(2)) / std::sqrt(T(2) * T(M_PI));
 }
 
-//! Returns the dot or rather scalar product between the two vectors 'lhs' and 'rhs'.
-template <typename VectorType, typename ScalarType = typename VectorType::ScalarType>
-ScalarType Dot(const VectorType& lhs, const VectorType& rhs)
-{
-    ScalarType result = ScalarType(0);
-
-    for (std::size_t i = 0; i < VectorType::components; ++i)
-        result += lhs[i]*rhs[i];
-
-    return result;
-}
-
-//! Returns the cross or rather vector product between the two vectors 'lhs' and 'rhs'.
-template <typename VectorType>
-VectorType Cross(const VectorType& lhs, const VectorType& rhs)
-{
-    static_assert(VectorType::components == 3, "Vector type must have exactly three components");
-    return VectorType
-    {
-        lhs.y*rhs.z - rhs.y*lhs.z,
-        rhs.x*lhs.z - lhs.x*rhs.z,
-        lhs.x*rhs.y - rhs.x*lhs.y
-    };
-}
-
-//! Returns the squared length of the specified vector.
-template <typename VectorType, typename ScalarType = typename VectorType::ScalarType>
-ScalarType LengthSq(const VectorType& vec)
-{
-    return Dot<VectorType, ScalarType>(vec, vec);
-}
-
-//! Returns the length (euclidian norm) of the specified vector.
-template <typename VectorType, typename ScalarType = typename VectorType::ScalarType>
-ScalarType Length(const VectorType& vec)
-{
-    return std::sqrt(LengthSq<VectorType, ScalarType>(vec));
-}
-
-//! Returns the angle (in radians) between the two (normalized or unnormalized) vectors 'lhs' and 'rhs'.
-template <typename VectorType, typename ScalarType = typename VectorType::ScalarType>
-ScalarType Angle(const VectorType& lhs, const VectorType& rhs)
-{
-    return std::acos( Dot<VectorType, ScalarType>(lhs, rhs) /
-                      (Length<VectorType, ScalarType>(lhs) *
-                       Length<VectorType, ScalarType>(rhs)) );
-}
 
 //! Returns the angle (in radians) between the two normalized vectors 'lhs' and 'rhs'.
 template <typename VectorType, typename ScalarType = typename VectorType::ScalarType>
@@ -103,23 +55,6 @@ ScalarType AngleNorm(const VectorType& lhs, const VectorType& rhs)
     return std::acos(Dot<VectorType, ScalarType>(lhs, rhs));
 }
 
-//! Returns the squared distance between the two vectors 'lhs' and 'rhs'.
-template <typename VectorType, typename ScalarType = typename VectorType::ScalarType>
-ScalarType DistanceSq(const VectorType& lhs, const VectorType& rhs)
-{
-    auto result = rhs;
-    result -= lhs;
-    return LengthSq<VectorType, ScalarType>(result);
-}
-
-//! Returns the distance between the two vectors 'lhs' and 'rhs'.
-template <typename VectorType, typename ScalarType = typename VectorType::ScalarType>
-ScalarType Distance(const VectorType& lhs, const VectorType& rhs)
-{
-    auto result = rhs;
-    result -= lhs;
-    return Length<VectorType, ScalarType>(result);
-}
 
 //! Returns the reflected vector of the incident vector for the specified surface normal.
 template <typename VectorType, typename ScalarType = typename VectorType::ScalarType>
@@ -131,31 +66,6 @@ VectorType Reflect(const VectorType& incident, const VectorType& normal)
     v += incident;
     return v;
 }
-
-//! Normalizes the specified vector to the unit length of 1.
-template <typename VectorType, typename ScalarType = typename VectorType::ScalarType>
-void Normalize(VectorType& vec)
-{
-    auto len = LengthSq<VectorType, ScalarType>(vec);
-    if (len != ScalarType(0) && len != ScalarType(1))
-    {
-        len = ScalarType(1) / std::sqrt(len);
-        vec *= len;
-    }
-}
-
-//! Resizes the specified vector to the specified length.
-template <typename VectorType, typename ScalarType = typename VectorType::ScalarType>
-void Resize(VectorType& vec, const ScalarType& length)
-{
-    auto len = LengthSq<VectorType, ScalarType>(vec);
-    if (len != ScalarType(0))
-    {
-        len = length / std::sqrt(len);
-        vec *= len;
-    }
-}
-
 
 
 /**
@@ -300,45 +210,6 @@ T Rescale(const T& t, const I& lower0, const I& upper0, const I& lower1, const I
 
 
 /* --- Global Operators --- */
-
-/**
-\brief Multiplies the N-dimensional row-vector with the NxM matrix.
-\remarks This is equivalent to: Transpose(rhs) * lhs.
-*/
-template <typename T, std::size_t Rows, std::size_t Cols>
-IVector<T, Cols> operator * (const IVector<T, Rows>& lhs, const IMatrix<T, Rows, Cols>& rhs)
-{
-    IVector<T, Cols> result;
-
-    for (std::size_t c = 0; c < Cols; ++c)
-    {
-        result[c] = T(0);
-        for (std::size_t r = 0; r < Rows; ++r)
-            result[c] += rhs(r, c)*lhs[r];
-    }
-
-    return result;
-}
-
-/**
-\brief Multiplies the NxM matrix with the M-dimensional column-vector.
-\remarks This is equivalent to: rhs * Transpose(lhs).
-*/
-template <typename T, std::size_t Rows, std::size_t Cols>
-IVector<T, Rows> operator * (const IMatrix<T, Rows, Cols>& lhs, const IVector<T, Cols>& rhs)
-{
-    IVector<T, Rows> result;
-
-    for (std::size_t r = 0; r < Rows; ++r)
-    {
-        result[r] = T(0);
-        for (std::size_t c = 0; c < Cols; ++c)
-            result[r] += lhs(r, c)*rhs[c];
-    }
-
-    return result;
-}
-
 
 }
 

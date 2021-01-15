@@ -648,7 +648,7 @@ public:
     /**
     * Inverse vector
     */
-    SIMD_INLINE IVector4D<T> GetInverse() const
+    SIMD_INLINE IVector4D<T> Inverse() const
     {
         return IVector4D<T>( T(1.0/x) , T(1.0/y) , T(1.0/z) , T(1.0/w));
     }
@@ -657,7 +657,7 @@ public:
     /**
     * Transpose Vector
     */
-    SIMD_INLINE IVector4D<T> GetTranspose() const
+    SIMD_INLINE IVector4D<T> Transpose() const
     {
           return IVector4D<T>(w,z,y,x);
     }
@@ -736,7 +736,7 @@ public:
 
 
     //! Returns the angle (in radians) between the two (normalized or unnormalized) vectors 'lhs' and 'rhs'.
-    SIMD_INLINE T GetAngleBetween( const IVector4D<T> &rhs ) const
+    SIMD_INLINE T AngleBetween( const IVector4D<T> &rhs ) const
     {
         IVector4D<T> lhs(*this);
         T dotProduct = lhs.Dot(rhs);

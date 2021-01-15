@@ -514,7 +514,7 @@ template<class T> class IMatrix3x3
       /**
       * Return the determinant minor of the matrix
       */
-      SIMD_INLINE T GetDeterminantOfMinor( int  theRowHeightY , int  theColumnWidthX ) const
+      SIMD_INLINE T DeterminantOfMinor( int  theRowHeightY , int  theColumnWidthX ) const
       {
           int x1 = theColumnWidthX == 0 ? 1 : 0;  /* always either 0 or 1 */
           int x2 = theColumnWidthX == 2 ? 1 : 2;  /* always either 1 or 2 */
@@ -530,11 +530,11 @@ template<class T> class IMatrix3x3
        * @return Determinant of matrix
        * @note This function does.
        */
-      SIMD_INLINE T GetDeterminant() const
+      SIMD_INLINE T Determinant() const
       {
-          return ( mRows[0][0] * GetDeterminantOfMinor(0,0) )
-              -  ( mRows[1][0] * GetDeterminantOfMinor(1,0) )
-              +  ( mRows[2][0] * GetDeterminantOfMinor(2,0) );
+          return ( mRows[0][0] * DeterminantOfMinor(0,0) )
+              -  ( mRows[1][0] * DeterminantOfMinor(1,0) )
+              +  ( mRows[2][0] * DeterminantOfMinor(2,0) );
       }
 
       /**
@@ -542,10 +542,10 @@ template<class T> class IMatrix3x3
       * @return Inverse matrix of this matrix.
       * @note This is a little bit time consuming operation
       */
-      SIMD_INLINE IMatrix3x3<T> GetInverse() const
+      SIMD_INLINE IMatrix3x3<T> Inverse() const
       {
           // Compute the determinant of the matrix
-            T determinant = GetDeterminant();
+            T determinant = Determinant();
 
             // Check if the determinant is equal to zero
              assert(IAbs(determinant) > MACHINE_EPSILON);
@@ -571,7 +571,7 @@ template<class T> class IMatrix3x3
       /**
       * Transpose matrix.
       */
-      SIMD_INLINE IMatrix3x3<T> GetTranspose() const
+      SIMD_INLINE IMatrix3x3<T> Transpose() const
       {
           IMatrix3x3<T> ret;
           for (int i = 0; i < 3; i++)
@@ -589,7 +589,7 @@ template<class T> class IMatrix3x3
       /**
       * Return the matrix with absolute values
       */
-      SIMD_INLINE IMatrix3x3<T> GetAbsoluteMatrix() const
+      SIMD_INLINE IMatrix3x3<T> AbsoluteMatrix() const
       {
           return IMatrix3x3<T>(IAbs(mRows[0][0]), IAbs(mRows[0][1]), IAbs(mRows[0][2]),
                                IAbs(mRows[1][0]), IAbs(mRows[1][1]), IAbs(mRows[1][2]),
@@ -600,7 +600,7 @@ template<class T> class IMatrix3x3
       /**
       * Return the trace of the matrix
       */
-      SIMD_INLINE T GetTrace() const
+      SIMD_INLINE T Trace() const
       {
           // Compute and return the trace
           return (mRows[0][0] + mRows[1][1] + mRows[2][2]);
@@ -692,7 +692,7 @@ template<class T> class IMatrix3x3
       /**
       * Return the diagonalize of the matrix
       */
-      SIMD_INLINE IMatrix3x3<T> GetDiagonalize( T threshold, int maxSteps )
+      SIMD_INLINE IMatrix3x3<T> Diagonalize( T threshold, int maxSteps )
       {
           IMatrix3x3<T> rot;
           rot.SetToIdentity();

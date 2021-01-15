@@ -1,6 +1,11 @@
 #include <iostream>
+#include <iostream>
+#include <cstdio>
+#include <ctime>
 
 #include "IMath/IMaths.h"
+
+
 
 using namespace std;
 
@@ -21,10 +26,569 @@ typedef IMath::IOctonion<scalar>       Octonion;
 typedef IMath::ILine3D<scalar>         Line3;
 typedef IMath::ILineSegment3D<scalar>  LineSegment3;
 typedef IMath::IPlane<scalar>          Plane;
+typedef IMath::IMatrix<scalar,3,3>     Matrix;
+
+
+template<class T>
+class Vec3 : public IMath::IVector<T,3>
+{
+public:
+    Vec3(){}
+    Vec3(T _x , T _y , T _z)
+    {
+        this->Set(_x,_y,_z);
+    }
+
+    T x() const { return this->Ptr()[0];}
+    T y() const { return this->Ptr()[1];}
+    T z() const { return this->Ptr()[2];}
+
+    void setX(T _x) { this->Ptr()[0] = _x;}
+    void setY(T _y) { this->Ptr()[0] = _y;}
+    void setZ(T _z) { this->Ptr()[0] = _z;}
+
+};
+
+using Vec3i = Vec3<int>;
+using Vec3f = Vec3<float>;
+using Vec3d = Vec3<double>;
+
+
+template<class T>
+class Vec4 : public IMath::IVector<T,4>
+{
+
+public:
+
+    Vec4(){}
+
+    Vec4(T _x , T _y , T _z, T _w)
+    {
+        this->Set(_x,_y,_z,_w);
+    }
+
+    T x() const { return this->Ptr()[0];}
+    T y() const { return this->Ptr()[1];}
+    T z() const { return this->Ptr()[2];}
+
+    void setX(T _x) { this->Ptr()[0] = _x;}
+    void setY(T _y) { this->Ptr()[0] = _y;}
+    void setZ(T _z) { this->Ptr()[0] = _z;}
+
+};
+
+using Vec4i = Vec4<int>;
+using Vec4f = Vec4<float>;
+using Vec4d = Vec4<double>;
+
+
+template<class T>
+class Mat3x3 : public IMath::IMatrix<T,3,3>
+{
+public:
+    Mat3x3(){}
+    Mat3x3(T _m00 , T _m01 , T _m02 ,
+           T _m10 , T _m11 , T _m12 ,
+           T _m20 , T _m21 , T _m22)
+    {
+        this->Set(_m00 , _m01 , _m02 ,
+                  _m10 , _m11 , _m12 ,
+                  _m20 , _m21 , _m22);
+    }
+};
+
+using Mat3x3i = Mat3x3<int>;
+using Mat3x3f = Mat3x3<float>;
+using Mat3x3d = Mat3x3<double>;
+
+
+template<class T>
+class Mat4x4 : public IMath::IMatrix<T,4,4>
+{
+public:
+    Mat4x4(){}
+    Mat4x4(T _m00 , T _m01 , T _m02 ,T _m03,
+           T _m10 , T _m11 , T _m12 ,T _m13,
+           T _m20 , T _m21 , T _m22 ,T _m23,
+           T _m30 , T _m31 , T _m32 ,T _m33)
+    {
+        this->Set(_m00 , _m01 , _m02 , _m03 ,
+                  _m10 , _m11 , _m12 , _m13 ,
+                  _m20 , _m21 , _m22 , _m23 ,
+                  _m30 , _m31 , _m32 , _m33);
+    }
+};
+
+using Mat4x4i = Mat4x4<int>;
+using Mat4x4f = Mat4x4<float>;
+using Mat4x4d = Mat4x4<double>;
 
 int main()
 {
-    cout << "Hello World!" << endl;
+    cout << "Hello World! - Unit Testing" << endl;
+
+
+
+    {
+        cout<< "*********************************" << endl;
+        cout<< "---- Unit test IVector<float,2> -----" <<endl<<endl;
+
+        IMath::IVector<float,2> v0({7.f , 3.f});
+        IMath::IVector<float,2> v1({1 , 6});
+
+        cout<< "----constant operator----" <<endl;
+        cout << " Vector<float,2>:  " <<  v0 << " + " << v1 << " = " << (v0 + v1) <<endl;
+        cout << " Vector<float,2>:  " <<  v0 << " - " << v1 << " = " << (v0 - v1) <<endl;
+        cout << " Vector<float,2>:  " <<  v0 << " * " << v1 << " = " << (v0 * v1) <<endl;
+        cout << " Vector<float,2>:  " <<  v0 << " / " << v1 << " = " << (v0 / v1) <<endl;
+        cout << "----dynamics operator----" <<endl;
+        cout << " Vector<float,2>:  " <<  v0 << " += " << v1 << " = " << (v0 += v1) <<endl;
+        cout << " Vector<float,2>:  " <<  v0 << " -= " << v1 << " = " << (v0 -= v1) <<endl;
+        cout << " Vector<float,2>:  " <<  v0 << " *= " << v1 << " = " << (v0 *= v1) <<endl;
+        cout << " Vector<float,2>:  " <<  v0 << " /= " << v1 << " = " << (v0 /= v1) <<endl;
+        cout << "----dynamics operator----" <<endl;
+        cout << " Vector<float,2>:  " <<  v0 << " .dot " << v1 << " = " << (v0.Dot(v1)) <<endl;
+        cout << " Vector<float,2>:  " <<  v0 << " .angle " << v1 << " = " << (v0.AngleBetween(v1)) <<endl;
+        cout << "----function operator----" <<endl;
+        cout << " Vector<float,2>:  " <<  v0 << ".lengthSquare" << " = " << v0.LengthSquare() <<endl;
+        cout << " Vector<float,2>:  " <<  v0 << ".length" << " = " << v0.Length() <<endl;
+        cout << " Vector<float,2>:  " <<  v0 << ".inverse" << " = " << v0.Inverse() <<endl;
+        cout << " Vector<float,2>:  " <<  v0 << ".unit" << " = " << v0.GetUnit() <<endl;
+        IMath::IVector<float,2> v = v0; v.Normalize();
+        cout << " Vector<float,2>:  " <<  v0 << ".normalize" << " = " << v <<endl;
+        cout<<endl<<endl;
+    }
+
+
+    {
+
+        cout<< "*********************************" << endl;
+        cout<< "---- Unit test Vector<float,3> -----" <<endl<<endl;
+
+        IMath::IVector<float,3> v0({7 , 3 , 1});
+        IMath::IVector<float,3> v1({1 , 6 , 8});
+
+        cout<< "----constant operator----" <<endl;
+        cout << " Vector<float,3>:  " <<  v0 << " + " << v1 << " = " << (v0 + v1) <<endl;
+        cout << " Vector<float,3>:  " <<  v0 << " - " << v1 << " = " << (v0 - v1) <<endl;
+        cout << " Vector<float,3>:  " <<  v0 << " * " << v1 << " = " << (v0 * v1) <<endl;
+        cout << " Vector<float,3>:  " <<  v0 << " / " << v1 << " = " << (v0 / v1) <<endl;
+        cout << "----dynamics operator----" <<endl;
+        cout << " Vector<float,3>:  " <<  v0 << " += " << v1 << " = " << (v0 += v1) <<endl;
+        cout << " Vector<float,3>:  " <<  v0 << " -= " << v1 << " = " << (v0 -= v1) <<endl;
+        cout << " Vector<float,3>:  " <<  v0 << " *= " << v1 << " = " << (v0 *= v1) <<endl;
+        cout << " Vector<float,3>:  " <<  v0 << " /= " << v1 << " = " << (v0 /= v1) <<endl;
+        cout << "----dynamics operator----" <<endl;
+        cout << " Vector<float,3>:  " <<  v0 << " .dot " << v1 << " = " << (v0.Dot(v1)) <<endl;
+        cout << " Vector<float,3>:  " <<  v0 << " .cross " << v1 << " = " << (v0.Cross(v1)) <<endl;
+        cout << " Vector<float,3>:  " <<  v0 << " .angle " << v1 << " = " << (v0.AngleBetween(v1)) <<endl;
+        cout << "----function operator----" <<endl;
+        cout << " Vector<float,3>:  " <<  v0 << ".lengthSquare" << " = " << v0.LengthSquare() <<endl;
+        cout << " Vector<float,3>:  " <<  v0 << ".length" << " = " << v0.Length() <<endl;
+        cout << " Vector<float,3>:  " <<  v0 << ".inverse" << " = " << v0.Inverse() <<endl;
+        cout << " Vector<float,3>:  " <<  v0 << ".unit" << " = " << v0.GetUnit() <<endl;
+        IMath::IVector<float,3> v = v0; v.Normalize();
+        cout << " Vector<float,3>:  " <<  v0 << ".normalize" << " = " << v <<endl;
+        cout<<endl<<endl;
+
+    }
+
+    {
+
+        cout<< "*********************************" << endl;
+        cout<< "---- Unit test Vector<float,4> -----" <<endl<<endl;
+
+        IMath::IVector<float,4> v0({7 , 3 , 1, 2});
+        IMath::IVector<float,4> v1({1 , 6 , 8, 9});
+
+        IMath::IVector<float,4> c({1 , 1 , 2, 9});
+
+        cout<< "----constant operator----" <<endl;
+        cout << " Vector<float,4>:  " <<  v0 << " + " << v1 << " = " << (v0 + v1) <<endl;
+        cout << " Vector<float,4>:  " <<  v0 << " - " << v1 << " = " << (v0 - v1) <<endl;
+        cout << " Vector<float,4>:  " <<  v0 << " * " << v1 << " = " << (v0 * v1) <<endl;
+        cout << " Vector<float,4>:  " <<  v0 << " / " << v1 << " = " << (v0 / v1) <<endl;
+        cout << "----dynamics operator----" <<endl;
+        cout << " Vector<float,4>:  " <<  v0 << " += " << v1 << " = " << (v0 += v1) <<endl;
+        cout << " Vector<float,4>:  " <<  v0 << " -= " << v1 << " = " << (v0 -= v1) <<endl;
+        cout << " Vector<float,4>:  " <<  v0 << " *= " << v1 << " = " << (v0 *= v1) <<endl;
+        cout << " Vector<float,4>:  " <<  v0 << " /= " << v1 << " = " << (v0 /= v1) <<endl;
+        cout << "----dynamics operator----" <<endl;
+        cout << " Vector<float,4>:  " <<  v0 << " .dot " << v1 << " = " << (v0.Dot(v1)) <<endl;
+        cout << " Vector<float,4>:  " <<  v0 << " .cross " << v1 << "," << c << " = " << (v0.Cross(v1,c)) <<endl;
+        //cout << " Vector<float,4>:  " <<  v0 << " .angle " << v1 << " = " << (v0.getAngleBetween(v1)) <<endl;
+        cout << "----function operator----" <<endl;
+        cout << " Vector<float,4>:  " <<  v0 << ".lengthSquare" << " = " << v0.LengthSquare() <<endl;
+        cout << " Vector<float,4>:  " <<  v0 << ".length" << " = " << v0.Length() <<endl;
+        cout << " Vector<float,4>:  " <<  v0 << ".inverse" << " = " << v0.Inverse() <<endl;
+        cout << " Vector<float,4>:  " <<  v0 << ".unit" << " = " << v0.GetUnit() <<endl;
+        IMath::IVector<float,4> v = v0; v.Normalize();
+        cout << "Vector<float,4>:  " <<  v0 << ".normalize" << " = " << v <<endl;
+        cout<<endl<<endl;
+
+    }
+
+
+    {
+
+        cout<< "*********************************" << endl;
+        cout<< "---- Unit test Matrix<float,2,2> -----" <<endl<<endl;
+
+        IMath::IMatrix<float,2,2> m0({-2.0 , 7.0 ,
+                                      -4.0 , 2.0});
+        IMath::IMatrix<float,2,2> m1({3.0 , 1.0 ,
+                                      2.0 , 4.0});
+
+
+
+        cout << "------ operator + --------" <<endl<<endl;
+        cout<< m0 << " + " <<endl ;
+        cout<< m1 << " = "  <<endl;
+        cout<< (m0 + m1) <<endl<<endl;
+
+        cout << "------ operator - --------" <<endl<<endl;
+        cout<< m0 << " - " <<endl ;
+        cout<< m1 << " = "  <<endl;
+        cout<< (m0 - m1) <<endl<<endl;
+
+        cout << "------ operator += -------" <<endl<<endl;
+        cout<< m0 << " += " <<endl ;
+        cout<< m1 << " = "  <<endl;
+        cout<< (m0 += m1) <<endl<<endl;
+
+        cout << "------ operator -= -------" <<endl<<endl;
+        cout<< m0 << " -= " <<endl ;
+        cout<< m1 << " = "  <<endl;
+        cout<< (m0 -= m1) <<endl<<endl;
+
+        cout << "------ operator * -------" <<endl<<endl;
+        cout<< m0 << " * " <<endl ;
+        cout<< m1 << " = "  <<endl;
+        cout<< (m0 * m1) <<endl<<endl;
+
+
+        cout << "------ operator / -------" <<endl<<endl;
+        cout<< m0 << " / " <<endl ;
+        cout<< m1 << " = "  <<endl;
+        cout<< (m0 * m1.Inverse()) <<endl<<endl;
+
+
+        scalar mT = 8.9;
+
+        cout << "------ operator * -------" <<endl<<endl;
+        cout<< m0 << " * " <<endl ;
+        cout<< mT <<endl;
+        cout<<  " = "  <<endl;
+        cout<< (m0 * mT) <<endl<<endl;
+
+
+//        cout << "------ operator / -------" <<endl<<endl;
+//        cout<< m0 << " / " <<endl ;
+//        cout<< mT <<endl;
+//        cout<<  " = "  <<endl;
+//        cout<< (m0 / mT) <<endl<<endl;
+
+
+        cout << "------ operator *= -------" <<endl<<endl;
+        cout<< m0 << " *= " <<endl ;
+        cout<< mT <<endl;
+        cout<<  " = "  <<endl;
+        cout<< (m0 *= mT) <<endl<<endl;
+
+
+        cout << "------ operator /= -------" <<endl<<endl;
+        cout<< m0 << " /= " <<endl ;
+        cout<< mT <<endl;
+        cout<<  " = "  <<endl;
+        cout<< (m0 /= mT) <<endl<<endl;
+
+
+
+        cout << "------ Matrix Function -------" <<endl<<endl;
+
+        cout << "------------------------------" <<endl<<endl;
+        cout<< m0  <<endl ;
+        cout<<  " .determinat = " << (m0.Determinant()) <<endl<<endl;
+
+        cout << "------------------------------" <<endl<<endl;
+        cout<< m0  <<endl ;
+        cout<<  " .trace = " << (m0.Trace()) <<endl<<endl;
+
+
+        cout << "------------------------------" <<endl<<endl;
+        cout<< m0  <<endl ;
+        cout<<  " .inverse = " <<endl;
+        cout<< (m0.Inverse()) <<endl<<endl;
+
+
+        cout << "------------------------------" <<endl<<endl;
+        cout<< m0  <<endl ;
+        cout<<  " .transpose = " <<endl;
+        cout<< (m0.Transpose()) <<endl<<endl;
+
+
+        cout << "------------------------------" <<endl<<endl;
+        cout<< m0  <<endl ;
+        cout<<  " .absolute = " <<endl;
+        cout<< (m0.AbsoluteMatrix()) <<endl<<endl;
+
+    }
+
+
+
+    {
+
+        cout<< "*********************************" << endl;
+        cout<< "---- Unit test Matrix<float,3,3> -----" <<endl<<endl;
+
+        IMath::IMatrix<float,3,3> m0({-2.0 , 7.0 , 1.1 ,
+                                      -4.0 , 2.0 , 2.5 ,
+                                       2.0 , 1.0 , 1.0 });
+
+        IMath::IMatrix<float,3,3> m1({ 3.0 , 1.0 , 1.1 ,
+                                       2.0 , 4.0 , 2.1 ,
+                                       1.0 , 5.0 , 1.0});
+
+
+
+        cout << "------ operator + --------" <<endl<<endl;
+        cout<< m0 << " + " <<endl ;
+        cout<< m1 << " = "  <<endl;
+        cout<< (m0 + m1) <<endl<<endl;
+
+        cout << "------ operator - --------" <<endl<<endl;
+        cout<< m0 << " - " <<endl ;
+        cout<< m1 << " = "  <<endl;
+        cout<< (m0 - m1) <<endl<<endl;
+
+        cout << "------ operator += -------" <<endl<<endl;
+        cout<< m0 << " += " <<endl ;
+        cout<< m1 << " = "  <<endl;
+        cout<< (m0 += m1) <<endl<<endl;
+
+        cout << "------ operator -= -------" <<endl<<endl;
+        cout<< m0 << " -= " <<endl ;
+        cout<< m1 << " = "  <<endl;
+        cout<< (m0 -= m1) <<endl<<endl;
+
+        cout << "------ operator * -------" <<endl<<endl;
+        cout<< m0 << " * " <<endl ;
+        cout<< m1 << " = "  <<endl;
+        cout<< (m0 * m1) <<endl<<endl;
+
+
+        cout << "------ operator / -------" <<endl<<endl;
+        cout<< m0 << " / " <<endl ;
+        cout<< m1 << " = "  <<endl;
+        cout<< (m0 * m1.Inverse()) <<endl<<endl;
+
+
+        float mT = 8.9;
+
+        cout << "------ operator * -------" <<endl<<endl;
+        cout<< m0 << " * " <<endl ;
+        cout<< mT <<endl;
+        cout<<  " = "  <<endl;
+        cout<< (m0 * mT) <<endl<<endl;
+
+
+        cout << "------ operator / -------" <<endl<<endl;
+        cout<< m0 << " / " <<endl ;
+        cout<< mT <<endl;
+        cout<<  " = "  <<endl;
+        //cout<< (m0 / mT) <<endl<<endl;
+
+
+        cout << "------ operator *= -------" <<endl<<endl;
+        cout<< m0 << " *= " <<endl ;
+        cout<< mT <<endl;
+        cout<<  " = "  <<endl;
+        cout<< (m0 *= mT) <<endl<<endl;
+
+
+        cout << "------ operator /= -------" <<endl<<endl;
+        cout<< m0 << " /= " <<endl ;
+        cout<< mT <<endl;
+        cout<<  " = "  <<endl;
+        cout<< (m0 /= mT) <<endl<<endl;
+
+
+        IMath::IVector<float,3> mV({2,4,4});
+
+        cout << "------ operator * -------" <<endl<<endl;
+        cout<< m0 << " * " <<endl ;
+        cout<< mV <<endl;
+        cout<<  " = "  <<endl;
+        cout<< (mV * m0) <<endl<<endl;
+
+
+        cout << "------ operator / -------" <<endl<<endl;
+        cout<< m0 << " / " <<endl ;
+        cout<< mV <<endl;
+        cout<<  " = "  <<endl;
+        cout<< (m0.Inverse() * mV) <<endl<<endl;
+
+
+        cout << "------ Matrix Function -------" <<endl<<endl;
+
+        cout << "------------------------------" <<endl<<endl;
+        cout<< m0  <<endl ;
+        cout<<  " .determinat = " << (m0.Determinant()) <<endl<<endl;
+
+        cout << "------------------------------" <<endl<<endl;
+        cout<< m0  <<endl ;
+        cout<<  " .trace = " << (m0.Trace()) <<endl<<endl;
+
+
+        cout << "------------------------------" <<endl<<endl;
+        cout<< m0  <<endl ;
+        cout<<  " .inverse = " <<endl;
+        cout<< (m0.Inverse()) <<endl<<endl;
+
+
+        cout << "------------------------------" <<endl<<endl;
+        cout<< m0  <<endl ;
+        cout<<  " .transpose = " <<endl;
+        cout<< (m0.Transpose()) <<endl<<endl;
+
+
+        cout << "------------------------------" <<endl<<endl;
+        cout<< m0  <<endl ;
+        cout<<  " .absolute = " <<endl;
+        cout<< (m0.AbsoluteMatrix()) <<endl<<endl;
+
+        cout << "------------------------------" <<endl<<endl;
+        cout<< m0  <<endl ;
+        cout<<  " .diagonalize = " <<endl;
+        cout<< (m0.Diagonalize())<<endl;
+
+    }
+
+
+    {
+
+        cout<< "*********************************" << endl;
+        cout<< "---- Unit test Matrix<float,4,4> -----" <<endl<<endl;
+
+        IMath::IMatrix<float,4,4> m0({ -2.0 , 7.0 , 1.1 , 2.2 ,
+                                       -4.0 , 2.0 , 2.5 , 3.3 ,
+                                        2.0 , 1.0 , 1.0 , 2.3 ,
+                                        1.0 , 2.0 , 4.0 , 8.8});
+
+        IMath::IMatrix<float,4,4> m1({3.0 , 1.0 , 1.1 , 2.0 ,
+                                      2.0 , 4.0 , 2.1 , 1.0 ,
+                                      1.0 , 5.0 , 1.0 , 2.2 ,
+                                      1.0 , 2.0 , 2.0 , 3.3});
+
+
+
+        cout << "------ operator + --------" <<endl<<endl;
+        cout<< m0 << " + "  <<endl ;
+        cout<< m1 << " = "  <<endl;
+        cout<< (m0 + m1) <<endl<<endl;
+
+        cout << "------ operator - --------" <<endl<<endl;
+        cout<< m0 << " - " <<endl ;
+        cout<< m1 << " = "  <<endl;
+        cout<< (m0 - m1) <<endl<<endl;
+
+        cout << "------ operator += -------" <<endl<<endl;
+        cout<< m0 << " += " <<endl ;
+        cout<< m1 << " = "  <<endl;
+        cout<< (m0 += m1) <<endl<<endl;
+
+        cout << "------ operator -= -------" <<endl<<endl;
+        cout<< m0 << " -= " <<endl ;
+        cout<< m1 << " = "  <<endl;
+        cout<< (m0 -= m1) <<endl<<endl;
+
+        cout << "------ operator * -------" <<endl<<endl;
+        cout<< m0 << " * " <<endl ;
+        cout<< m1 << " = "  <<endl;
+        cout<< (m0 * m1) <<endl<<endl;
+
+
+        cout << "------ operator / -------" <<endl<<endl;
+        cout<< m0 << " / " <<endl ;
+        cout<< m1 << " = "  <<endl;
+        cout<< (m0 * m1.Inverse()) <<endl<<endl;
+
+
+        scalar mT = 8.9;
+
+        cout << "------ operator * -------" <<endl<<endl;
+        cout<< m0 << " * " <<endl ;
+        cout<< mT <<endl;
+        cout<<  " = "  <<endl;
+        cout<< (m0 * mT) <<endl<<endl;
+
+
+//        cout << "------ operator / -------" <<endl<<endl;
+//        cout<< m0 << " / " <<endl ;
+//        cout<< mT <<endl;
+//        cout<<  " = "  <<endl;
+//        cout<< (m0 / mT) <<endl<<endl;
+
+
+        cout << "------ operator *= -------" <<endl<<endl;
+        cout<< m0 << " *= " <<endl ;
+        cout<< mT <<endl;
+        cout<<  " = "  <<endl;
+        cout<< (m0 *= mT) <<endl<<endl;
+
+
+        cout << "------ operator /= -------" <<endl<<endl;
+        cout<< m0 << " /= " <<endl ;
+        cout<< mT <<endl;
+        cout<<  " = "  <<endl;
+        cout<< (m0 /= mT) <<endl<<endl;
+
+
+        IMath::IVector<float,4> _mV({2,4,4 ,2.3});
+
+        cout << "------ operator * -------" <<endl<<endl;
+        cout<< m0 << " * " <<endl ;
+        cout<< _mV <<endl;
+        cout<<  " = "  <<endl;
+        cout<< (m0 * _mV) <<endl<<endl;
+
+
+        cout << "------ operator / -------" <<endl<<endl;
+        cout<< m0 << " / " <<endl ;
+        cout<< _mV <<endl;
+        cout<<  " = "  <<endl;
+        cout<< (m0.Inverse() * _mV) <<endl<<endl;
+
+
+        cout << "------ Matrix Function -------" <<endl<<endl;
+
+        cout << "------------------------------" <<endl<<endl;
+        cout<< m0  <<endl ;
+        cout<<  " .determinat = " << (m0.Determinant()) <<endl<<endl;
+
+        cout << "------------------------------" <<endl<<endl;
+        cout<< m0  <<endl ;
+        cout<<  " .trace = " << (m0.Trace()) <<endl<<endl;
+
+
+        cout << "------------------------------" <<endl<<endl;
+        cout<< m0  <<endl ;
+        cout<<  " .inverse = " <<endl;
+        cout<< (m0.Inverse()) <<endl<<endl;
+
+
+        cout << "------------------------------" <<endl<<endl;
+        cout<< m0  <<endl ;
+        cout<<  " .transpose = " <<endl;
+        cout<< (m0.Transpose()) <<endl<<endl;
+
+
+        cout << "------------------------------" <<endl<<endl;
+        cout<< m0  <<endl ;
+        cout<<  " .absolute = " <<endl;
+        cout<< (m0.AbsoluteMatrix()) <<endl<<endl;
+
+    }
 
 
 
@@ -50,17 +614,17 @@ int main()
             cout << "----dynamics operator----" <<endl;
             cout << " Vector2:  " <<  v0 << " .dot " << v1 << " = " << (v0.Dot(v1)) <<endl;
             cout << " Vector2:  " <<  v0 << " .cross " << v1 << " = " << (v0.Cross(v1)) <<endl;
-            cout << " Vector2:  " <<  v0 << " .angle " << v1 << " = " << (v0.GetAngleBetween(v1)) <<endl;
+            cout << " Vector2:  " <<  v0 << " .angle " << v1 << " = " << (v0.AngleBetween(v1)) <<endl;
             cout << "----function operator----" <<endl;
             cout << " Vector2:  " <<  v0 << ".lengthSquare" << " = " << v0.LengthSquare() <<endl;
             cout << " Vector2:  " <<  v0 << ".length" << " = " << v0.Length() <<endl;
-            cout << " Vector2:  " <<  v0 << ".inverse" << " = " << v0.GetInverse() <<endl;
+            cout << " Vector2:  " <<  v0 << ".inverse" << " = " << v0.Inverse() <<endl;
             cout << " Vector2:  " <<  v0 << ".unit" << " = " << v0.GetUnit() <<endl;
             Vector2 v = v0; v.Normalize();
             cout << " Vector2:  " <<  v0 << ".normalize" << " = " << v <<endl;
             cout<<endl<<endl;
         }
-
+/**/
 
         {
 
@@ -83,11 +647,11 @@ int main()
             cout << "----dynamics operator----" <<endl;
             cout << " Vector3:  " <<  v0 << " .dot " << v1 << " = " << (v0.Dot(v1)) <<endl;
             cout << " Vector3:  " <<  v0 << " .cross " << v1 << " = " << (v0.Cross(v1)) <<endl;
-            cout << " Vector3:  " <<  v0 << " .angle " << v1 << " = " << (v0.GetAngleBetween(v1)) <<endl;
+            cout << " Vector3:  " <<  v0 << " .angle " << v1 << " = " << (v0.AngleBetween(v1)) <<endl;
             cout << "----function operator----" <<endl;
             cout << " Vector3:  " <<  v0 << ".lengthSquare" << " = " << v0.LengthSquare() <<endl;
             cout << " Vector3:  " <<  v0 << ".length" << " = " << v0.Length() <<endl;
-            cout << " Vector3:  " <<  v0 << ".inverse" << " = " << v0.GetInverse() <<endl;
+            cout << " Vector3:  " <<  v0 << ".inverse" << " = " << v0.Inverse() <<endl;
             cout << " Vector3:  " <<  v0 << ".unit" << " = " << v0.GetUnit() <<endl;
             Vector3 v = v0; v.Normalize();
             cout << " Vector3:  " <<  v0 << ".normalize" << " = " << v <<endl;
@@ -121,7 +685,7 @@ int main()
             cout << "----function operator----" <<endl;
             cout << " Vector4:  " <<  v0 << ".lengthSquare" << " = " << v0.LengthSquare() <<endl;
             cout << " Vector4:  " <<  v0 << ".length" << " = " << v0.Length() <<endl;
-            cout << " Vector4:  " <<  v0 << ".inverse" << " = " << v0.GetInverse() <<endl;
+            cout << " Vector4:  " <<  v0 << ".inverse" << " = " << v0.Inverse() <<endl;
             cout << " Vector4:  " <<  v0 << ".unit" << " = " << v0.GetUnit() <<endl;
             Vector4 v = v0; v.Normalize();
             cout << " Vector4:  " <<  v0 << ".normalize" << " = " << v <<endl;
@@ -358,7 +922,7 @@ int main()
                     cout << "------ operator / -------" <<endl<<endl;
                     cout<< m0 << " / " <<endl ;
                     cout<< m1 << " = "  <<endl;
-                    cout<< (m0 * m1.GetInverse()) <<endl<<endl;
+                    cout<< (m0 * m1.Inverse()) <<endl<<endl;
 
 
                     scalar mT = 8.9;
@@ -404,36 +968,36 @@ int main()
                     cout<< m0 << " / " <<endl ;
                     cout<< mV <<endl;
                     cout<<  " = "  <<endl;
-                    cout<< (m0.GetInverse() * mV) <<endl<<endl;
+                    cout<< (m0.Inverse() * mV) <<endl<<endl;
 
 
                     cout << "------ Matrix Function -------" <<endl<<endl;
 
                     cout << "------------------------------" <<endl<<endl;
                     cout<< m0  <<endl ;
-                    cout<<  " .determinat = " << (m0.GetDeterminant()) <<endl<<endl;
+                    cout<<  " .determinat = " << (m0.Determinant()) <<endl<<endl;
 
                     cout << "------------------------------" <<endl<<endl;
                     cout<< m0  <<endl ;
-                    cout<<  " .trace = " << (m0.GetTrace()) <<endl<<endl;
+                    cout<<  " .trace = " << (m0.Trace()) <<endl<<endl;
 
 
                     cout << "------------------------------" <<endl<<endl;
                     cout<< m0  <<endl ;
                     cout<<  " .inverse = " <<endl;
-                    cout<< (m0.GetInverse()) <<endl<<endl;
+                    cout<< (m0.Inverse()) <<endl<<endl;
 
 
                     cout << "------------------------------" <<endl<<endl;
                     cout<< m0  <<endl ;
                     cout<<  " .transpose = " <<endl;
-                    cout<< (m0.GetTranspose()) <<endl<<endl;
+                    cout<< (m0.Transpose()) <<endl<<endl;
 
 
                     cout << "------------------------------" <<endl<<endl;
                     cout<< m0  <<endl ;
                     cout<<  " .absolute = " <<endl;
-                    cout<< (m0.GetAbsoluteMatrix()) <<endl<<endl;
+                    cout<< (m0.AbsoluteMatrix()) <<endl<<endl;
 
                 }
 
@@ -482,7 +1046,7 @@ int main()
                     cout << "------ operator / -------" <<endl<<endl;
                     cout<< m0 << " / " <<endl ;
                     cout<< m1 << " = "  <<endl;
-                    cout<< (m0 * m1.GetInverse()) <<endl<<endl;
+                    cout<< (m0 * m1.Inverse()) <<endl<<endl;
 
 
                     scalar mT = 8.9;
@@ -521,48 +1085,48 @@ int main()
                     cout<< m0 << " * " <<endl ;
                     cout<< mV <<endl;
                     cout<<  " = "  <<endl;
-                    cout<< (m0 * mV) <<endl<<endl;
+                    cout<< (mV * m0) <<endl<<endl;
 
 
                     cout << "------ operator / -------" <<endl<<endl;
                     cout<< m0 << " / " <<endl ;
                     cout<< mV <<endl;
                     cout<<  " = "  <<endl;
-                    cout<< (m0.GetInverse() * mV) <<endl<<endl;
+                    cout<< (m0.Inverse() * mV) <<endl<<endl;
 
 
                     cout << "------ Matrix Function -------" <<endl<<endl;
 
                     cout << "------------------------------" <<endl<<endl;
                     cout<< m0  <<endl ;
-                    cout<<  " .determinat = " << (m0.GetDeterminant()) <<endl<<endl;
+                    cout<<  " .determinat = " << (m0.Determinant()) <<endl<<endl;
 
                     cout << "------------------------------" <<endl<<endl;
                     cout<< m0  <<endl ;
-                    cout<<  " .trace = " << (m0.GetTrace()) <<endl<<endl;
+                    cout<<  " .trace = " << (m0.Trace()) <<endl<<endl;
 
 
                     cout << "------------------------------" <<endl<<endl;
                     cout<< m0  <<endl ;
                     cout<<  " .inverse = " <<endl;
-                    cout<< (m0.GetInverse()) <<endl<<endl;
+                    cout<< (m0.Inverse()) <<endl<<endl;
 
 
                     cout << "------------------------------" <<endl<<endl;
                     cout<< m0  <<endl ;
                     cout<<  " .transpose = " <<endl;
-                    cout<< (m0.GetTranspose()) <<endl<<endl;
+                    cout<< (m0.Transpose()) <<endl<<endl;
 
 
                     cout << "------------------------------" <<endl<<endl;
                     cout<< m0  <<endl ;
                     cout<<  " .absolute = " <<endl;
-                    cout<< (m0.GetAbsoluteMatrix()) <<endl<<endl;
+                    cout<< (m0.AbsoluteMatrix()) <<endl<<endl;
 
                     cout << "------------------------------" <<endl<<endl;
                     cout<< m0  <<endl ;
                     cout<<  " .diagonalize = " <<endl;
-                    cout<< (m0.GetDiagonalize(0.01 , 10)) <<endl<<endl;
+                    cout<< (m0.Diagonalize(0.01 , 10)) <<endl<<endl;
 
                 }
 
@@ -614,7 +1178,7 @@ int main()
                     cout << "------ operator / -------" <<endl<<endl;
                     cout<< m0 << " / " <<endl ;
                     cout<< m1 << " = "  <<endl;
-                    cout<< (m0 * m1.GetInverse()) <<endl<<endl;
+                    cout<< (m0 * m1.Inverse()) <<endl<<endl;
 
 
                     scalar mT = 8.9;
@@ -660,7 +1224,7 @@ int main()
                     cout<< m0 << " / " <<endl ;
                     cout<< mV <<endl;
                     cout<<  " = "  <<endl;
-                    cout<< (m0.GetInverse() * mV) <<endl<<endl;
+                    cout<< (m0.Inverse() * mV) <<endl<<endl;
 
 
                     Vector4 _mV(2,4,4 ,2.3);
@@ -676,36 +1240,36 @@ int main()
                     cout<< m0 << " / " <<endl ;
                     cout<< _mV <<endl;
                     cout<<  " = "  <<endl;
-                    cout<< (m0.GetInverse() * _mV) <<endl<<endl;
+                    cout<< (m0.Inverse() * _mV) <<endl<<endl;
 
 
                     cout << "------ Matrix Function -------" <<endl<<endl;
 
                     cout << "------------------------------" <<endl<<endl;
                     cout<< m0  <<endl ;
-                    cout<<  " .determinat = " << (m0.GetDeterminant()) <<endl<<endl;
+                    cout<<  " .determinat = " << (m0.Determinant()) <<endl<<endl;
 
                     cout << "------------------------------" <<endl<<endl;
                     cout<< m0  <<endl ;
-                    cout<<  " .trace = " << (m0.GetTrace()) <<endl<<endl;
+                    cout<<  " .trace = " << (m0.Trace()) <<endl<<endl;
 
 
                     cout << "------------------------------" <<endl<<endl;
                     cout<< m0  <<endl ;
                     cout<<  " .inverse = " <<endl;
-                    cout<< (m0.GetInverse()) <<endl<<endl;
+                    cout<< (m0.Inverse()) <<endl<<endl;
 
 
                     cout << "------------------------------" <<endl<<endl;
                     cout<< m0  <<endl ;
                     cout<<  " .transpose = " <<endl;
-                    cout<< (m0.GetTranspose()) <<endl<<endl;
+                    cout<< (m0.Transpose()) <<endl<<endl;
 
 
                     cout << "------------------------------" <<endl<<endl;
                     cout<< m0  <<endl ;
                     cout<<  " .absolute = " <<endl;
-                    cout<< (m0.GetAbsoluteMatrix()) <<endl<<endl;
+                    cout<< (m0.AbsoluteMatrix()) <<endl<<endl;
 
                 }
 
@@ -796,7 +1360,7 @@ int main()
                     cout<< "Get Angle Y: " << eulerAngle.y << endl;
                     cout<< "Get Angle Z: " << eulerAngle.z << endl;
                 }
-
+/**/
 
     return 0;
 }

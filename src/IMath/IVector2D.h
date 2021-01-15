@@ -437,7 +437,7 @@ public:
     SIMD_INLINE bool operator==(const IVector2D<T>& rhs) const
     {
         return (IAbs(x - rhs.x) < MACHINE_EPSILON) &&
-                (IAbs(y - rhs.y) < MACHINE_EPSILON);
+               (IAbs(y - rhs.y) < MACHINE_EPSILON);
     }
 
     /**
@@ -531,7 +531,7 @@ public:
     /**
      * Inverse vector
      */
-    SIMD_INLINE IVector2D<T> GetInverse() const
+    SIMD_INLINE IVector2D<T> Inverse() const
     {
         return IVector2D<T>( T(1.0/x) , T(1.0/y) );
     }
@@ -541,7 +541,7 @@ public:
     /**
     * Transpose Vector
     */
-    SIMD_INLINE IVector2D<T> GetTranspose() const
+    SIMD_INLINE IVector2D<T> Transpose() const
     {
           return IVector2D<T>(y,x);
     }
@@ -566,7 +566,7 @@ public:
 
 
     //! Returns the angle (in radians) between the two (normalized or unnormalized) vectors 'lhs' and 'rhs'.
-    SIMD_INLINE T GetAngleBetween( const IVector2D<T> &rhs ) const
+    SIMD_INLINE T AngleBetween( const IVector2D<T> &rhs ) const
     {
         IVector2D<T> lhs(*this);
         T dotProduct = lhs.Dot(rhs);

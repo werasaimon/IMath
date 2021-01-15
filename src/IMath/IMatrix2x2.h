@@ -533,7 +533,7 @@ template<class T> class IMatrix2x2
          *
          * @return The determinant.
          */
-        SIMD_INLINE T GetDeterminant() const
+        SIMD_INLINE T Determinant() const
         {
         	return mData[0] * mData[3] - mData[1] * mData[2];
         }
@@ -543,10 +543,10 @@ template<class T> class IMatrix2x2
          *
          * @return The multiplicitive inverse of this matrix.
          */
-        SIMD_INLINE IMatrix2x2<T> GetInverse() const
+        SIMD_INLINE IMatrix2x2<T> Inverse() const
         {
         	// Ensure that the matrix is not singular.
-            const T det = GetDeterminant();
+            const T det = Determinant();
         	assert(det != 0.0f);
 
         	// Return a copy of the inverse of this matrix.
@@ -555,9 +555,9 @@ template<class T> class IMatrix2x2
                                  -mData[2] * invDet,  mData[0] * invDet );
         }
 
-        void Inverse()
+        void LoadInverse()
         {
-            *this = *this->GetInverse();
+            *this = *this->Inverse();
         }
 
         /**
@@ -566,7 +566,7 @@ template<class T> class IMatrix2x2
          *
          * @return Transposed copy of this matrix.
          */
-        SIMD_INLINE IMatrix2x2<T> GetTranspose() const
+        SIMD_INLINE IMatrix2x2<T> Transpose() const
         {
             IMatrix2x2<T> ret;
         	for (int i = 0; i < 2; i++)
@@ -583,7 +583,7 @@ template<class T> class IMatrix2x2
         /**
          * Return the matrix with absolute values
          */
-        SIMD_INLINE IMatrix2x2<T> GetAbsoluteMatrix() const
+        SIMD_INLINE IMatrix2x2<T> AbsoluteMatrix() const
         {
             return IMatrix2x2<T>(IAbs(mRows[0][0]), IAbs(mRows[0][1]),
                                  IAbs(mRows[1][0]), IAbs(mRows[1][1]));
@@ -593,7 +593,7 @@ template<class T> class IMatrix2x2
         /**
          * Return the trace of the matrix
          */
-        SIMD_INLINE T GetTrace() const
+        SIMD_INLINE T Trace() const
         {
         	// Compute and return the trace
         	return (mRows[0][0] + mRows[1][1]);

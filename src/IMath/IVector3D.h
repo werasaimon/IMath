@@ -55,7 +55,7 @@ template<class T> class  IMatrix3x3;
  * </ul>
  **/
 template<class T>
-class IVector3D
+class  IVector3D
 {
 
 public:
@@ -278,7 +278,7 @@ public:
      */
     SIMD_INLINE const T & operator[](int n) const
     {
-        static_assert(sizeof(*this) == sizeof(T[components]), "");
+        //static_assert(sizeof(*this) == sizeof(T[components]), "");
         assert(n >= 0 && n < 3);
         return (&x)[n];
     }
@@ -512,8 +512,8 @@ public:
     SIMD_INLINE bool operator==(const IVector3D<T>& rhs) const
     {
         return IAbs(x - rhs.x) < MACHINE_EPSILON &&
-                IAbs(y - rhs.y) < MACHINE_EPSILON &&
-                IAbs(z - rhs.z) < MACHINE_EPSILON;
+               IAbs(y - rhs.y) < MACHINE_EPSILON &&
+               IAbs(z - rhs.z) < MACHINE_EPSILON;
     }
 
     /**
@@ -632,7 +632,7 @@ public:
     /**
      * Inverse vector
      */
-     SIMD_INLINE IVector3D<T> GetInverse() const
+     SIMD_INLINE IVector3D<T> Inverse() const
      {
          return IVector3D<T>( T(1.0/x) , T(1.0/y) , T(1.0/z) );
      }
@@ -641,7 +641,7 @@ public:
     /**
     * Transpose Vector
     */
-    SIMD_INLINE IVector3D<T> GetTranspose() const
+    SIMD_INLINE IVector3D<T> Transpose() const
     {
           return IVector3D<T>(z,y,x);
     }
@@ -751,7 +751,7 @@ public:
 
 
     //! Returns the angle (in radians) between the two (Normalized or unNormalized) vectors 'lhs' and 'rhs'.
-    SIMD_INLINE T GetAngleBetween( const IVector3D<T> &rhs ) const
+    SIMD_INLINE T AngleBetween( const IVector3D<T> &rhs ) const
     {
         IVector3D<T> lhs(*this);
         T dotProduct = lhs.Dot(rhs);
