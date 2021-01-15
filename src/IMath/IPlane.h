@@ -74,8 +74,8 @@ public:
     }
 
     IPlane( const IVector3D<T>& p0,
-             const IVector3D<T>& p1,
-             const IVector3D<T>& p2 )
+            const IVector3D<T>& p1,
+            const IVector3D<T>& p2 )
     {
        Set( p0, p1, p2 );
     }
