@@ -12,6 +12,7 @@
 #include <vector>
 #include <type_traits>
 
+
 namespace IMath
 {
 
@@ -210,7 +211,8 @@ T Rescale(const T& t, const I& lower0, const I& upper0, const I& lower1, const I
 
 
 /* --- Global Operators --- */
-
 }
+
+
 
 #endif // IALGEBRA_H

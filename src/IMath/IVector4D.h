@@ -664,6 +664,8 @@ public:
 
 
 
+
+
     //    //--------------[ Logic-Plane ]-----------------------
 
 
@@ -708,11 +710,11 @@ public:
     //    }
 
 
-    //    SIMD_INLINE IVector3D<T> ClosestPoint( const IVector3D<T>& point ) const
-    //    {
-    //        IVector3D<T> Normal(x,y,z);
-    //        return point - (Normal.dot(point) - w)*Normal;
-    //    }
+    SIMD_INLINE IVector3D<T> ClosestPoint( const IVector3D<T>& point ) const
+    {
+        IVector3D<T> Normal(x,y,z);
+        return point - (Normal.Dot(point) - w)*Normal;
+    }
 
 
     //--------------[ misc. operations ]-----------------------
@@ -861,5 +863,6 @@ using IVector4ub   = IVector4D<std::uint8_t>;
 
 
 } /* namespace */
+
 
 #endif // IVECTOR4D_H

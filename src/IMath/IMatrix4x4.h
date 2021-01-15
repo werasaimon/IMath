@@ -305,6 +305,87 @@ private:
 
 
 
+    //-----------------------------------------------------------//
+
+    SIMD_INLINE void Scale(T x, T y, T z)
+    {
+        *this = *this * CreateScale(x,y,z);
+    }
+
+    SIMD_INLINE void Scale(T factor)
+    {
+        *this = *this * CreateScale(factor);
+    }
+
+    SIMD_INLINE void Scale(const IVector3D<T>& scale)
+    {
+        *this = *this * CreateScale(scale);
+    }
+
+    //------------------------------------//
+
+    SIMD_INLINE void Translate(T x, T y)
+    {
+        *this = *this * CreateTranslation(x,y,T(1.0));
+    }
+
+    SIMD_INLINE void Translate(T x, T y, T z)
+    {
+        *this = *this * CreateTranslation(x,y,z);
+    }
+
+    SIMD_INLINE void Translate(const IVector3D<T>& position)
+    {
+        *this = *this * CreateTranslation(position);
+    }
+
+    //------------------------------------//
+
+    SIMD_INLINE void Rotate(T angle, T x, T y, T z = T(0.0f))
+    {
+        *this = *this * CreateRotationAxis(IVector3D<T>(x,y,z),angle);
+    }
+
+    SIMD_INLINE void RotateAxis(T angle, const IVector3D<T>& axis)
+    {
+        *this = *this * CreateRotationAxis(axis,angle);
+    }
+
+    SIMD_INLINE void Rotate(const IQuaternion<T>& quaternion)
+    {
+        *this = *this * CreateRotation(quaternion);
+    }
+
+    //------------------------------------//
+
+    SIMD_INLINE void Ortho(T left, T right, T bottom, T top, T nearPlane, T farPlane)
+    {
+        *this = *this * CreateOrtho( left,right, bottom, top , nearPlane , farPlane);
+    }
+
+    SIMD_INLINE void Frustum(T left, T right, T bottom, T top, T nearPlane, T farPlane)
+    {
+        *this = *this * CreateFrustum( left,right, bottom, top , nearPlane , farPlane);
+    }
+
+    SIMD_INLINE void Perspective(T verticalAngle, T aspectRatio, T nearPlane, T farPlane)
+    {
+        *this = *this * CreatePerspective(verticalAngle,aspectRatio,nearPlane,farPlane);
+    }
+
+    SIMD_INLINE void LookAt(const IVector3D<T>& eye, const IVector3D<T>& center, const IVector3D<T>& up)
+    {
+        *this = *this * CreateLookAt(eye,center,up);
+    }
+
+    SIMD_INLINE void Viewport(T left, T bottom, T width, T height, T nearPlane = T(0.0f), T farPlane = T(1.0f))
+    {
+        *this = *this * CreateViewport(left,bottom,width,height,nearPlane,farPlane);
+    }
+
+    //-----------------------------------------------------------//
+
+
     //---------------------[ Equality operators ]------------------------------
 
     /**
@@ -476,6 +557,32 @@ private:
         mRows[3][3]  = 1.0;
     }
 
+
+       /**
+        * Sets position part (vector3) of matrix.
+        *
+        * @param m Translation part of matrix
+        */
+       SIMD_INLINE void SetTranslation(const IVector3D<T>& v)
+       {
+           mRows[3][0]  = v.x;
+           mRows[3][1]  = v.y;
+           mRows[3][2]  = v.z;
+           mRows[3][3]  = 1.0;
+       }
+
+       /**
+        * Sets position part (vector4) of matrix.
+        *
+        * @param m Translation part of matrix
+        */
+       SIMD_INLINE void SetTranslation(const IVector4D<T>& v)
+       {
+           mRows[3][0]  = v.x;
+           mRows[3][1]  = v.y;
+           mRows[3][2]  = v.z;
+           mRows[3][3]  = v.w;
+       }
 
 
     //--------------------[ matrix with matrix operations ]---------------------
@@ -1014,6 +1121,15 @@ private:
         return (mRows[0][0] + mRows[1][1] + mRows[2][2] + mRows[3][3]);
     }
 
+
+
+    /**
+    * Return the coords of the matrix
+    */
+    SIMD_INLINE IVector3D<T> GetTranslation() const
+    {
+        return IVector3D<T>(mData[12],mData[13],mData[14]);
+    }
 
 
     /**
@@ -1892,6 +2008,7 @@ using IMatrix4x4ub   = IMatrix4x4<std::uint8_t>;
 
 
 
-} /* namespace  */
+}
+/* namespace  */
 
 #endif /* IMATRIX4X4_H_ */

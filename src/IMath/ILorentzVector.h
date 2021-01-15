@@ -35,6 +35,7 @@
 #include "IReal.h"
 #include "IVector3D.h"
 
+
 namespace IMath
 {
 
@@ -86,19 +87,19 @@ template<class T> class  ILorentzVector
     }
 
 
-    // Copy-constructor
-    SIMD_INLINE ILorentzVector(const IVector3D<T>& vector , T time)
-    : x(vector.x), y(vector.y), z(vector.z) , t(time)
-    {
+//    // Copy-constructor
+//    SIMD_INLINE ILorentzVector(const IVector3D<T>& vector , T time)
+//    : x(vector.x), y(vector.y), z(vector.z) , t(time)
+//    {
 
-    }
+//    }
 
-    // Copy-constructor
-    SIMD_INLINE ILorentzVector( T time , const IVector3D<T>& vector )
-    : x(vector.x), y(vector.y), z(vector.z) , t(time)
-    {
+//    // Copy-constructor
+//    SIMD_INLINE ILorentzVector( T time , const IVector3D<T>& vector )
+//    : x(vector.x), y(vector.y), z(vector.z) , t(time)
+//    {
 
-    }
+//    }
 
 
     //---------------------- Methods ---------------------//

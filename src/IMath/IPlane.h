@@ -34,8 +34,7 @@
 
 #include "IVector3D.h"
 #include "IQuaternion.h"
-#include "ILine3D.h"
-#include "ILineSegment3D.h"
+
 
 namespace IMath
 {
@@ -251,24 +250,7 @@ public:
     }
 
 
-    // vIntersectionLineToPlane(): find the 3D intersection of a segment and a plane
-    //    Input:  S = a segment, and Pn = a plane = {Point V0;  Vector n;}
-    //    Output: *I0 = the intersect point (when it exists)
-    IVector3D<T> VIntersectionLineToPlane( const ILineSegment3D<T>& _edge , bool parallel_test) const
-    {
-        IVector3D<T> N = mNormal;
-        IVector3D<T> P = _edge.GetEndpoint0();
-        IVector3D<T> W = _edge.GetDirection();
 
-        T  d =  InvTest(P);
-        T  e =  N.Dot(W);
-
-        if(parallel_test)
-        if( IAbs(e) < MACHINE_EPSILON  ) return P;
-
-        T param = d/e;
-        return P + W * param;
-    }
 
     // vIntersectionLineToRay(): find the 3D intersection of a segment and a plane
     //    Input:  S = a segment, and Pn = a plane = {Point V0;  Vector n;}

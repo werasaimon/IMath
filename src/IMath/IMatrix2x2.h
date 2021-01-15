@@ -36,6 +36,7 @@
 
 #include "IVector2D.h"
 
+
 namespace IMath
 {
 
@@ -839,6 +840,5 @@ using IMatrix2x2ub   = IMatrix2x2<std::uint8_t>;
 
 
 } /* namespace */
-
 
 #endif // IMATRIX2X2_H

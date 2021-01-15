@@ -420,52 +420,53 @@ namespace IMath
 
 
 
-//                /// Quaternion using Euler angles
-//                SIMD_INLINE IVector3D<T> GetEulerAngles2() const
-//                {
-//                    // Euler angles in radians
-//                    T pitch;
-//                    T yaw;
-//                    T roll;
+        /// Quaternion using Euler angles
+                SIMD_INLINE IVector3D<T> GetEulerAngles2() const
+                {
+                    // Euler angles in radians
+                    T pitch;
+                    T yaw;
+                    T roll;
 
-//                    IQuaternion<T> q(*this);
+                    IQuaternion<T> q(*this);
 
-//                    T sqw = q.w * q.w;
-//                    T sqx = q.v.x * q.v.x;
-//                    T sqy = q.v.y * q.v.y;
-//                    T sqz = q.v.z * q.v.z;
+                    T sqw = q.w * q.w;
+                    T sqx = q.v.x * q.v.x;
+                    T sqy = q.v.y * q.v.y;
+                    T sqz = q.v.z * q.v.z;
 
-//                    // If quaternion is normalised the unit is one, otherwise it is the correction factor
-//                    T unit = sqx + sqy + sqz + sqw;
-//                    T val = q.v.x * q.v.y + q.v.z * q.w;
+                    // If quaternion is normalised the unit is one, otherwise it is the correction factor
+                    T unit = sqx + sqy + sqz + sqw;
+                    T val = q.v.x * q.v.y + q.v.z * q.w;
 
-//                    if (val > T(0.4999) * unit)                                // 0.4999f OR 0.5f - EPSILON
-//                    {
-//                        // Singularity at north pole
-//                        pitch = 2.f * IAtan2(q.v.x, q.w);          // Yaw
-//                        yaw = M_PI * 0.5f;                         // Pitch
-//                        roll = 0.f;                                // Roll
-//                    }
-//                    else if (val < -T(0.4999) * unit)                          // -0.4999f OR -0.5f + EPSILON
-//                    {
-//                        // Singularity at south pole
-//                        pitch = -2.f * IAtan2(q.v.x, q.w);         // Yaw
-//                        yaw = -M_PI * 0.5f;                        // Pitch
-//                        roll = 0.f;                                // Roll
-//                    }
-//                    else
-//                    {
-//                        pitch = IAtan2(2.f * q.v.y * q.w - 2.f * q.v.x * q.v.z,  sqx - sqy - sqz + sqw);   // Yaw
-//                        yaw   = IASin(2.f * val / unit);                                                   // Pitch
-//                        roll  = IAtan2(2.f * q.v.x * q.w - 2.f * q.v.y * q.v.z, -sqx + sqy - sqz + sqw);   // Roll
-//                    }
+                    if (val > T(0.4999) * unit)                                // 0.4999f OR 0.5f - EPSILON
+                    {
+                        // Singularity at north pole
+                        pitch = 2.f * IAtan2(q.v.x, q.w);          // Yaw
+                        yaw = M_PI * 0.5f;                         // Pitch
+                        roll = 0.f;                                // Roll
+                    }
+                    else if (val < -T(0.4999) * unit)                          // -0.4999f OR -0.5f + EPSILON
+                    {
+                        // Singularity at south pole
+                        pitch = -2.f * IAtan2(q.v.x, q.w);         // Yaw
+                        yaw = -M_PI * 0.5f;                        // Pitch
+                        roll = 0.f;                                // Roll
+                    }
+                    else
+                    {
+                        pitch = IAtan2(2.f * q.v.y * q.w - 2.f * q.v.x * q.v.z,  sqx - sqy - sqz + sqw);   // Yaw
+                        yaw   = IASin(2.f * val / unit);                                                   // Pitch
+                        roll  = IAtan2(2.f * q.v.x * q.w - 2.f * q.v.y * q.v.z, -sqx + sqy - sqz + sqw);   // Roll
+                    }
 
-////                   pitch =  atan2(2*(v.y*v.z + w*v.x), w*w - v.x*v.x - v.y*v.y + v.z*v.z);
-////                   yaw =  asin(-2*(v.x*v.z - w*v.y));
-////                   roll = atan2(2*(v.x*v.y + w*v.z), w*w + v.x*v.x - v.y*v.y - v.z*v.z);
+//                   pitch =  atan2(2*(v.y*v.z + w*v.x), w*w - v.x*v.x - v.y*v.y + v.z*v.z);
+//                   yaw =  asin(-2*(v.x*v.z - w*v.y));
+//                   roll = atan2(2*(v.x*v.y + w*v.z), w*w + v.x*v.x - v.y*v.y - v.z*v.z);
 
-//                    return IVector3D<T>(roll,pitch,yaw);
-//                }
+                    return /*NormalizeAngles*/(IVector3D<T>(roll,pitch,yaw));
+                }
+
 
 
 
@@ -851,6 +852,20 @@ namespace IMath
                                w*Q.z + x*Q.y - y*Q.x + z*Q.w);
         }
 
+
+
+        /**
+        * Quaternion multiplication operator
+        * @param rhs Right hand side argument of binary operator.
+        */
+        SIMD_INLINE IVector3D<T> operator*(const IVector3D<T>& rhs) const
+        {
+            IVector3D<T> u(x, y, z);
+            return u * (u.Dot(rhs) * T(2.0)) + rhs * (w * w - u.Dot(u)) + u.Cross(rhs) * (T(2.0) * w);
+        }
+
+
+
         /// multiplication operator dot vector
         SIMD_INLINE IVector3D<T> nVidia_dot(const IVector3D<T>& _v) const
         {
@@ -1098,36 +1113,38 @@ namespace IMath
     }
 
 
-     /**
-     * Creates IQuaternion for eulers angles.
-     * @param x Rotation around x axis (in degrees).
-     * @param y Rotation around y axis (in degrees).
-     * @param z Rotation around z axis (in degrees).
-     * @return IQuaternion object representing transformation.
-     */
-     static SIMD_INLINE IQuaternion<T> FromEulerAngles(T x, T y, T z)
-     {
-            IQuaternion<T> ret = FromAxisRot(IVector3D<T>(1, 0, 0), x) *
-                                 FromAxisRot(IVector3D<T>(0, 1, 0), y) *
-                                 FromAxisRot(IVector3D<T>(0, 0, 1), z);
-            return ret;
-     }
+
+    /**
+        * Creates IQuaternion for eulers angles.
+        * @param x Rotation around x axis (in degrees).
+        * @param y Rotation around y axis (in degrees).
+        * @param z Rotation around z axis (in degrees).
+        * @return IQuaternion object representing transformation.
+        */
+        static SIMD_INLINE IQuaternion<T> FromEulerAngles(T x, T y, T z)
+        {
+               IQuaternion<T> ret = FromAngleAxis(IVector3D<T>(1, 0, 0), x) *
+                                    FromAngleAxis(IVector3D<T>(0, 1, 0), y) *
+                                    FromAngleAxis(IVector3D<T>(0, 0, 1), z);
+               return ret;
+        }
 
 
-     /**
-     * Creates IQuaternion for eulers angles.
-     * @param x Rotation around x axis (in degrees).
-     * @param y Rotation around y axis (in degrees).
-     * @param z Rotation around z axis (in degrees).
-     * @return IQuaternion object representing transformation.
-     */
-     static SIMD_INLINE IQuaternion<T> FromEulerAngles(const IVector3D<T>& euler_angles)
-     {
-         IQuaternion<T> ret = FromAxisRot(IVector3D<T>(1, 0, 0), euler_angles.x) *
-                              FromAxisRot(IVector3D<T>(0, 1, 0), euler_angles.y) *
-                              FromAxisRot(IVector3D<T>(0, 0, 1), euler_angles.z);
-         return ret;
-     }
+
+        /**
+        * Creates IQuaternion as rotation around axis.
+        * @param axis Unit vector expressing axis of rotation.
+        * @param angleDeg Angle of rotation around axis (in degrees).
+        */
+        static SIMD_INLINE IQuaternion<T> FromAngleAxis(const IVector3D<T> axis, T radianDegrees)
+        {
+               T angleRad = /*IDegreesToRadians*/(radianDegrees) * T(0.5);
+               T sa2 = ISin(angleRad);
+               T ca2 = ICos(angleRad);
+               return IQuaternion<T>( ca2 , sa2 * axis );
+        }
+
+
 
      /**
      * Creates IQuaternion as rotation around axis.

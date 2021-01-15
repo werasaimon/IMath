@@ -1043,5 +1043,4 @@ using IOctonionub   = IOctonion<std::uint8_t>;
 } /* namespace */
 
 
-
 #endif /* IOCTONION_HPP_ */

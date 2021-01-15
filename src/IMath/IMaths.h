@@ -45,12 +45,9 @@
 #include "IComplex.h"
 #include "IRay.h"
 #include "ITransform.h"
-#include "IAxisAlignedBox3D.h"
+
 
 #include "ISpherical.h"
-
-#include "ILine3D.h"
-#include "ILineSegment3D.h"
 #include "IPlane.h"
 
 

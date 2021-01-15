@@ -4,11 +4,9 @@
 #include "IFunc.h"
 #include "IVector3D.h"
 
+
 namespace IMath
 {
-
-
-
     /**
     \brief Spherical coordinate class with components: radius, theta, phi.
     \tparam T Specifies the data type of the vector components.

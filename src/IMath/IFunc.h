@@ -222,7 +222,7 @@ template<typename T>  bool IsZero( T a, T epsilon = MACHINE_EPSILON )
 //-------------------------------------------------------------------------------
 template<typename T>  bool IIsZero( T a, T epsilon = MACHINE_EPSILON )
 {
-    return (Abs(a) <= epsilon);
+    return (IAbs(a) <= epsilon);
 }
 
 
@@ -368,5 +368,6 @@ template<typename T> SIMD_INLINE bool ISameSign(T a, T b)
 
 
 }  /* namespace */
+
 
 #endif // FUNC_H

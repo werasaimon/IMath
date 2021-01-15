@@ -3,6 +3,7 @@
 
 #include <cmath>
 
+
 namespace IMath
 {
 
@@ -19,5 +20,6 @@ using Real = double;
 #endif
 
 }
+
 
 #endif // IREAL_H

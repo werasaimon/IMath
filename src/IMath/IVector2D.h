@@ -34,9 +34,9 @@
 #include "IReal.h"
 #include "IFunc.h"
 
+
 namespace IMath
 {
-
 
 template<class T> class  IMatrix2x2;
 
@@ -673,6 +673,7 @@ using IVector2b    = IVector2D<std::int8_t>;
 using IVector2ub   = IVector2D<std::uint8_t>;
 
 } /* namespace */
+
 
 
 #endif // IVECTOR2_H

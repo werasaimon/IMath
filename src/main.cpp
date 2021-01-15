@@ -20,8 +20,6 @@ typedef IMath::IRay<scalar>            Ray;
 typedef IMath::ITransform<scalar>      Transform;
 typedef IMath::IComplex<scalar>        Complex;
 typedef IMath::IOctonion<scalar>       Octonion;
-typedef IMath::ILine3D<scalar>         Line3;
-typedef IMath::ILineSegment3D<scalar>  LineSegment3;
 typedef IMath::IPlane<scalar>          Plane;
 typedef IMath::IMatrix<scalar,3,3>     Matrix;
 
@@ -52,7 +50,7 @@ using Vec3d = Vec3<double>;
 
 
 template<class T>
-class Vec4 : public IMath::IVector<T,4>
+class Vec4 : public IMath::IVector<T,4u>
 {
 
 public:
@@ -80,7 +78,7 @@ using Vec4d = Vec4<double>;
 
 
 template<class T>
-class Mat3x3 : public IMath::IMatrix<T,3,3>
+class Mat3x3 : public IMath::IMatrix<T,3u,3u>
 {
 public:
     Mat3x3(){}
@@ -100,7 +98,7 @@ using Mat3x3d = Mat3x3<double>;
 
 
 template<class T>
-class Mat4x4 : public IMath::IMatrix<T,4,4>
+class Mat4x4 : public IMath::IMatrix<T,4u,4u>
 {
 public:
     Mat4x4(){}
@@ -1268,65 +1266,6 @@ int main()
                     cout<<  " .absolute = " <<endl;
                     cout<< (m0.AbsoluteMatrix()) <<endl<<endl;
 
-                }
-
-
-
-                {
-                    cout<< "*********************************" << endl;
-                    cout<< "---- Unit test Line3 -----" <<endl<<endl;
-
-                    Vector3 A(1,2,3);
-                    Vector3 B(9,6,3);
-                    Vector3 C(0,9,4);
-                    Vector3 D(0,0,1);
-
-
-                    Line3 line_a(A,B-A);
-                    Line3 line_b(C,D-C);
-
-                    cout<<  " line_line_a " << line_a <<endl;
-                    cout<<  " line_line_b " << line_b <<endl;
-
-                    Vector3 cross_a;
-                    Vector3 cross_b;
-                    Line3::ClosestPoints(line_a , line_b , cross_a , cross_b);
-
-                    cout<< endl;
-                    cout<< " cross pointA in lineA to lineB: = " << cross_a <<endl;
-                    cout<< " cross pointB in lineA to lineB: = " << cross_b <<endl;
-
-                    cout<<endl;
-                    cout<< " closset point B to point in lineA " << line_a.ClosestPoint(B) << endl;
-                }
-
-
-
-                {
-                    cout<< "*********************************" << endl;
-                    cout<< "---- Unit test LineSegment3 -----" <<endl<<endl;
-
-                    Vector3 A(1,2,3);
-                    Vector3 B(9,6,3);
-                    Vector3 C(0,9,4);
-                    Vector3 D(0,0,1);
-
-                    LineSegment3 line_a(A,B);
-                    LineSegment3 line_b(C,D);
-
-                    cout<<  " line_segment_a " << line_a <<endl;
-                    cout<<  " line_segment_b " << line_b <<endl;
-
-                    Vector3 cross_a;
-                    Vector3 cross_b;
-                    LineSegment3::ClosestPoints(line_a , line_b , cross_a , cross_b);
-
-                    cout<< endl;
-                    cout<< " cross pointA in segmetnA to segmentB: = " << cross_a <<endl;
-                    cout<< " cross pointB in segmetnA to segmentB: = " << cross_b <<endl;
-
-                    cout<<endl;
-                    cout<< " closset point B to point in segmentA " << line_a.ClosestPoint(B) << endl;
                 }
 
 

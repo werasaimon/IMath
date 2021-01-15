@@ -437,6 +437,57 @@ template<class T> class IMatrix3x3
       }
 
 
+      //-------------------------------------------------------------------------//
+
+
+      //-----------------------------------------------------------//
+
+          SIMD_INLINE void Scale(T x, T y, T z)
+          {
+              *this = *this * CreateScale(x,y,z);
+          }
+
+          SIMD_INLINE void Scale(T factor)
+          {
+              *this = *this * CreateScale(factor);
+          }
+
+          SIMD_INLINE void Scale(const IVector3D<T>& scale)
+          {
+              *this = *this * CreateScale(scale);
+          }
+
+          //----------------------------------------------//
+
+          SIMD_INLINE void Translate(T x, T y)
+          {
+              *this = *this * CreateTranslation(IVector2D<T>(x,y));
+          }
+
+          SIMD_INLINE void Translate(const IVector2D<T>& pos)
+          {
+              *this = *this * CreateTranslation(pos.x,pos.y);
+          }
+
+          //----------------------------------------------//
+
+          SIMD_INLINE void Rotate( T x, T y, T z )
+          {
+              *this = *this * CreateEulerAnglesToRotationMatrix(IVector3D<T>(x,y,z));
+          }
+
+          SIMD_INLINE void RotateAxis(T angle, const IVector3D<T>& axis)
+          {
+              *this = *this * CreateRotationAxis(axis,angle);
+          }
+
+          SIMD_INLINE void Rotate(const IQuaternion<T>& quaternion)
+          {
+              *this = *this * CreateRotation(quaternion);
+          }
+
+          //-----------------------------------------------------------//
+
 
       //--------------------[ multiply operators ]--------------------------------
 

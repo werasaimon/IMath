@@ -156,9 +156,9 @@ public:
 
 
     /**@brief Return the inverse of this transform */
-    SIMD_INLINE ITransform<T> GetInverse() const
+    SIMD_INLINE ITransform<T> Inverse() const
     {
-        IMatrix3x3<T> inv = mBasis.GetInverse();
+        IMatrix3x3<T> inv = mBasis.Inverse();
         return ITransform<T>(inv * -mPosition , inv , T(1.0) / mTime);
     }
 

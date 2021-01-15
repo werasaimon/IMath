@@ -7,6 +7,7 @@ SET(CMAKE_CXX_STANDARD 11)
 project(IMath)
 add_executable(${PROJECT_NAME}
     main.cpp
+    IMath/IAffineTransform.h
     IMath/IReal.h
     IMath/IFunc.h
     IMath/IAlgebra.h

@@ -38,11 +38,13 @@
 #include <cstdint>
 #include <initializer_list>
 #include <assert.h>
+#include <vector>
 
 #include "IReal.h"
 #include "IFunc.h"
 
 #include "IVector.h"
+
 
 namespace IMath
 {
@@ -889,6 +891,7 @@ T Determinante(const IMatrix<T, N, N>& m)
 
 
 } // /namespace Gs
+
 
 
 #endif // IMATRIX_H
