@@ -529,7 +529,7 @@ public:
 
 
     /**
-     * Inverse vector
+     * @Inverse vector
      */
     SIMD_INLINE IVector2D<T> Inverse() const
     {
@@ -539,13 +539,24 @@ public:
 
 
     /**
-    * Transpose Vector
+    * @Transpose Vector
     */
     SIMD_INLINE IVector2D<T> Transpose() const
     {
           return IVector2D<T>(y,x);
     }
 
+
+    /**
+    * @Randomize Vector
+    */
+    SIMD_INLINE T Random( T l, T h ) const
+    {
+      T a = (T)rand( );
+      a /= RAND_MAX;
+      a = (h - l) * a + l;
+      return a;
+    }
 
 
     //--------------[ misc. operations ]-----------------------

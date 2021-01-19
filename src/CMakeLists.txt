@@ -160,8 +160,6 @@ add_executable(${PROJECT_NAME}
     IMath/IVector4D.h
     IMath/IComplex.h
     IMath/IOctonion.h
-    IMath/ISpherical.h
-    IMath/IScalarType.h
-    IMath/IVectorType.h)
+    IMath/ISpherical.h)
 
 

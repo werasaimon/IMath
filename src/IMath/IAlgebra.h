@@ -2,7 +2,6 @@
 #define IALGEBRA_H
 
 #include "IFunc.h"
-#include "IVectorType.h"
 #include "IVector.h"
 #include "IMatrix.h"
 

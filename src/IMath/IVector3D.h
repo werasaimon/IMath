@@ -647,6 +647,19 @@ public:
           return IVector3D<T>(z,y,x);
     }
 
+
+    /**
+    * @Randomize Vector
+    */
+    SIMD_INLINE T Random( T l, T h ) const
+    {
+      T a = (T)rand( );
+      a /= RAND_MAX;
+      a = (h - l) * a + l;
+      return a;
+    }
+
+
     /**
     * Orthogonal unit vector
     */
