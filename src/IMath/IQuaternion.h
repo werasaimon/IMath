@@ -1195,7 +1195,7 @@ namespace IMath
         */
         SIMD_INLINE IQuaternion<T> Lerp(T fact, const IQuaternion<T>& rhs) const
         {
-             return IQuaternion<T>((1 - fact) * w + fact * rhs.w, v.lerp(fact, rhs.v));
+             return IQuaternion<T>((1 - fact) * w + fact * rhs.w, v.Lerp(fact, rhs.v));
         }
 
 
