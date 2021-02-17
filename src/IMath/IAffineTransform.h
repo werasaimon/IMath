@@ -193,7 +193,7 @@ namespace IMath
     void IAffineTransform<T>::RotateAroundLocalPoint(const IVector3D<T>& axis, float angle, const IVector3D<T>& worldPoint)
     {
         // Convert the world point into the local coordinate system
-        IVector3D<T> localPoint = mTransformMatrix.GetInverse() * worldPoint;
+        IVector3D<T> localPoint = mTransformMatrix.Inverse() * worldPoint;
 
         mTransformMatrix = mTransformMatrix * IMatrix4x4<T>::CreateTranslation(localPoint)
                                             * IMatrix4x4<T>::CreateRotationAxis(axis, angle)
@@ -213,7 +213,7 @@ namespace IMath
     void IAffineTransform<T>::ScaleAroundLocalPoint(const IVector3D<T> &axis, float scale, const IVector3D<T> &worldPoint)
     {
         // Convert the world point into the local coordinate system
-        IVector3D<T> localPoint = mTransformMatrix.GetInverse() * worldPoint;
+        IVector3D<T> localPoint = mTransformMatrix.Inverse() * worldPoint;
 
         mTransformMatrix = mTransformMatrix * IMatrix4x4<T>::CreateTranslation(localPoint)
                                             * IMatrix4x4<T>::CreateScaleAroundAxis(axis, scale)
